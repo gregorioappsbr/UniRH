@@ -1,7 +1,7 @@
 
 'use client'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -33,8 +33,8 @@ export default function NewServerPage() {
     };
 
   return (
-    <div className="p-4 h-[calc(100vh-5rem)]">
-      <Card className="bg-card text-card-foreground border-border h-full">
+    <div className="p-4 h-screen">
+      <Card className="bg-card text-card-foreground border-border h-full flex flex-col">
         <CardContent className="p-4 space-y-4 h-full flex flex-col">
           <header className="relative flex items-center justify-center">
             <h1 className="text-3xl font-bold">Novo Servidor</h1>
@@ -45,7 +45,7 @@ export default function NewServerPage() {
             </Button>
           </header>
 
-          <Tabs defaultValue="pessoais" className="w-full flex flex-col flex-1">
+          <Tabs defaultValue="pessoais" className="w-full flex flex-col flex-1 overflow-hidden">
              <div className="border rounded-md">
                 <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
                     <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Pessoais</TabsTrigger>
@@ -54,7 +54,7 @@ export default function NewServerPage() {
                     <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Observações</TabsTrigger>
                 </TabsList>
             </div>
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto mt-4">
               <TabsContent value="pessoais" className="mt-8 md:mt-10">
                 <div className="space-y-8">
                   <div className="space-y-6">
