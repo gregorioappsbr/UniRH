@@ -42,19 +42,22 @@ export default function Home() {
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="item-1" className="border-none">
           <Card className="bg-card">
-            <AccordionTrigger className="w-full hover:no-underline">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 w-full">
-                <div className='flex items-center space-x-4'>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                  <CardTitle className="text-sm font-medium">
-                    Total de Servidores
-                  </CardTitle>
+            <AccordionTrigger className="w-full hover:no-underline p-4">
+              <div className="flex justify-between items-start w-full">
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Users className="h-5 w-5 text-muted-foreground" />
+                    <CardTitle className="text-sm font-medium">
+                      Total de Servidores
+                    </CardTitle>
+                  </div>
+                  <div className="flex items-center gap-2">
+                     <User className="h-8 w-8 text-primary" />
+                    <div className="text-4xl font-bold">5</div>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                    <div className="text-4xl font-bold mr-2">5</div>
-                    <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
-                </div>
-              </CardHeader>
+                <ChevronDown className="h-5 w-5 shrink-0 transition-transform duration-200" />
+              </div>
             </AccordionTrigger>
             <AccordionContent>
               <CardContent>
