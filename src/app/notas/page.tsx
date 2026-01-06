@@ -45,7 +45,7 @@ export default function NotesPage() {
 
       <Accordion type="single" collapsible className="w-full space-y-4">
         {notes.map((note, index) => (
-          <AccordionItem key={index} value={`item-${index}`} className="bg-card border-none rounded-lg overflow-hidden">
+          <AccordionItem key={index} value={`item-${index}`} className="bg-card border rounded-lg overflow-hidden">
             <AccordionTrigger className="p-4 hover:no-underline">
               <div className="flex flex-col items-start text-left">
                 <span className="text-xs text-muted-foreground">Atualizado em {note.updatedAt}</span>
