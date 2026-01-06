@@ -133,7 +133,7 @@ export default function ServerProfilePage() {
       </Card>
       
       <Tabs defaultValue="faltas" className="w-full flex-1 flex flex-col">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
           <TabsTrigger value="ficha">Ficha</TabsTrigger>
           <TabsTrigger value="faltas">Faltas</TabsTrigger>
           <TabsTrigger value="licencas">Licenças</TabsTrigger>
