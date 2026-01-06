@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Award, KeyRound, Briefcase } from 'lucide-react';
+import { Phone, Award, KeyRound, Briefcase, MinusCircle, AlertCircle } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -45,6 +45,18 @@ export function ServerList() {
         return 'text-red-400';
     };
 
+    const getStatusClass = (status: string) => {
+      if (status === 'Ativo') return 'text-green-400 border-green-400';
+      if (status === 'Licença') return 'text-yellow-400 border-yellow-400';
+      return 'text-red-400 border-red-400';
+    };
+
+    const getStatusIcon = (status: string) => {
+      if (status === 'Ativo') return <KeyRound className="w-3 h-3 mr-1" />;
+      if (status === 'Licença') return <AlertCircle className="w-3 h-3 mr-1" />;
+      return <MinusCircle className="w-3 h-3 mr-1" />;
+    }
+
 
   return (
     <Card className="bg-card">
@@ -64,8 +76,8 @@ export function ServerList() {
                         <AvatarFallback>{server.initials}</AvatarFallback>
                       </Avatar>
                       {server.status && (
-                        <Badge variant="outline" className={cn("text-xs", server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400")}>
-                          {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
+                        <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
+                          {getStatusIcon(server.status)}
                           {server.status}
                         </Badge>
                       )}
@@ -115,8 +127,8 @@ export function ServerList() {
                         </div>
                       </TableCell>
                       <TableCell>
-                         <Badge variant="outline" className={cn(server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400")}>
-                            {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
+                         <Badge variant="outline" className={cn(getStatusClass(server.status))}>
+                            {getStatusIcon(server.status)}
                             {server.status}
                           </Badge>
                       </TableCell>

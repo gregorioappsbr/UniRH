@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Phone } from 'lucide-react';
+import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Phone, MinusCircle, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -51,6 +51,18 @@ export default function ServerListPage() {
     if (rating >= 4) return 'text-yellow-400';
     return 'text-red-400';
   };
+
+  const getStatusClass = (status: string) => {
+    if (status === 'Ativo') return 'text-green-400 border-green-400';
+    if (status === 'Licença') return 'text-yellow-400 border-yellow-400';
+    return 'text-red-400 border-red-400';
+  };
+
+  const getStatusIcon = (status: string) => {
+    if (status === 'Ativo') return <KeyRound className="w-3 h-3 mr-1" />;
+    if (status === 'Licença') return <AlertCircle className="w-3 h-3 mr-1" />;
+    return <MinusCircle className="w-3 h-3 mr-1" />;
+  }
 
   return (
     <div className="p-4 space-y-4">
@@ -101,8 +113,8 @@ export default function ServerListPage() {
                   <p className="text-sm text-muted-foreground">{server.email}</p>
                   <div className="flex items-center gap-4 mt-2 text-xs">
                     {server.status && (
-                       <Badge variant="outline" className={server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400"}>
-                        {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
+                       <Badge variant="outline" className={cn(getStatusClass(server.status))}>
+                        {getStatusIcon(server.status)}
                         {server.status}
                       </Badge>
                     )}

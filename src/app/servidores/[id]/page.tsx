@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ArrowLeft, Mail, Phone, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -47,6 +47,18 @@ export default function ServerProfilePage() {
     return 'text-red-400 border-red-400';
   };
 
+  const getStatusClass = (status: string) => {
+    if (status === 'Ativo') return 'bg-green-500/20 text-green-400 border-green-500/50';
+    if (status === 'Licença') return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
+    return 'bg-red-500/20 text-red-400 border-red-500/50';
+  };
+
+  const getStatusIcon = (status: string) => {
+    if (status === 'Ativo') return <CheckCircle className="h-3 w-3 mr-1" />;
+    if (status === 'Licença') return <AlertCircle className="h-3 w-3 mr-1" />;
+    return <MinusCircle className="h-3 w-3 mr-1" />;
+  }
+
   return (
     <div className="p-4 space-y-4 flex flex-col flex-1 h-full">
       <header className="flex items-center gap-4">
@@ -71,8 +83,8 @@ export default function ServerProfilePage() {
               <p className="text-muted-foreground">{server.role}</p>
             </div>
             <div className="flex gap-2">
-              <Badge className="bg-green-500/20 text-green-400 border-green-500/50">
-                <CheckCircle className="h-3 w-3 mr-1" />
+              <Badge className={cn(getStatusClass(server.status))}>
+                {getStatusIcon(server.status)}
                 {server.status}
               </Badge>
               <Badge variant="outline" className={cn(getRatingClass(server.rating))}>
