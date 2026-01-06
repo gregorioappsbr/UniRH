@@ -210,7 +210,6 @@ export default function ServerListPage() {
                       </div>
                     </TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Nota</TableHead>
                     <TableHead>Função</TableHead>
                     <TableHead className="text-right pr-8">Telefone</TableHead>
                   </TableRow>
@@ -233,16 +232,16 @@ export default function ServerListPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                         <Badge variant="outline" className={cn(getStatusClass(server.status))}>
-                            {getStatusIcon(server.status)}
-                            {server.status}
+                        <div className="flex flex-col gap-1">
+                          <Badge variant="outline" className={cn("w-fit", getStatusClass(server.status))}>
+                              {getStatusIcon(server.status)}
+                              {server.status}
                           </Badge>
-                      </TableCell>
-                      <TableCell>
-                         <div className={cn("flex items-center", getRatingClass(server.rating))}>
-                            <Award className="w-3 h-3 mr-1 fill-current" />
-                            <span>{server.rating}</span>
+                          <div className={cn("flex items-center", getRatingClass(server.rating))}>
+                              <Award className="w-3 h-3 mr-1 fill-current" />
+                              <span>{server.rating}</span>
                           </div>
+                        </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
