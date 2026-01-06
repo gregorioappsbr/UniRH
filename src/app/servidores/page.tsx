@@ -15,7 +15,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Label } from '@/components/ui/label';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
-import type { jsPDF } from "jspdf";
+import { jsPDF } from "jspdf";
 
 const servers = [
   {
@@ -409,25 +409,73 @@ export default function ServerListPage() {
   };
 
   const getSelectedServersDetails = (server: (typeof servers)[0]) => {
-      return `
-*FICHA DO SERVIDOR*
-------------------------------------
-*Nome:* ${server.nomeCompleto}
-*Email:* ${server.emailInstitucional}
-*Telefone:* ${server.telefonePrincipal}
-*Função:* ${server.funcao}
-*Vínculo:* ${server.vinculo}
-*Status:* ${server.status}
-*Nota:* ${server.rating}
-------------------------------------
-      `.trim();
+      let details = `*FICHA COMPLETA - ${server.nomeCompleto}*\n\n`;
+
+      details += "*DADOS PESSOAIS*\n";
+      details += `Nome Completo: ${server.nomeCompleto}\n`;
+      details += `Nome Social: ${server.nomeSocial}\n`;
+      details += `CPF: ${server.cpf}\n`;
+      details += `RG: ${server.rg}\n`;
+      details += `Data de Nascimento: ${server.dataNascimento}\n`;
+      details += `Gênero: ${server.genero}\n`;
+      details += `Cor/Raça: ${server.corRaca}\n`;
+      details += `Estado Civil: ${server.estadoCivil}\n`;
+      details += `Nacionalidade: ${server.nacionalidade}\n`;
+      details += `Naturalidade: ${server.naturalidade}\n`;
+      details += `PCD: ${server.pcd}\n\n`;
+
+      details += "*CONTATO*\n";
+      details += `Telefone Principal: ${server.telefonePrincipal}\n`;
+      if (server.telefoneSecundario) details += `Telefone Secundário: ${server.telefoneSecundario}\n`;
+      details += `E-mail Pessoal: ${server.emailPessoal}\n`;
+      details += `Contato de Emergência: ${server.contatoEmergenciaNome} - ${server.contatoEmergenciaTelefone}\n\n`;
+
+      details += "*ENDEREÇO*\n";
+      details += `CEP: ${server.cep}\n`;
+      details += `Logradouro: ${server.logradouro}\n`;
+      if (server.complemento) details += `Complemento: ${server.complemento}\n`;
+      details += `Bairro: ${server.bairro}\n`;
+      details += `Cidade/Estado: ${server.cidade}/${server.uf}\n\n`;
+
+      details += "*DADOS PROFISSIONAIS*\n";
+      details += `Vínculo: ${server.vinculo}\n`;
+      if (server.matricula) details += `Matrícula: ${server.matricula}\n`;
+      details += `Cargo: ${server.cargo}\n`;
+      details += `Função: ${server.funcao}\n`;
+      details += `Data de Início: ${server.dataInicio}\n`;
+      details += `Possui DGA?: ${server.possuiDGA}\n`;
+      if (server.especificacaoDGA) details += `Especificação DGA: ${server.especificacaoDGA}\n`;
+      details += `Setor: ${server.setor}\n`;
+      details += `Ramal: ${server.ramal}\n`;
+      details += `Jornada: ${server.jornada}\n`;
+      details += `Turno: ${server.turno}\n`;
+      details += `Status: ${server.status}\n`;
+      details += `E-mail Institucional: ${server.emailInstitucional}\n\n`;
+
+      details += "*FORMAÇÃO*\n";
+      details += `Escolaridade: ${server.escolaridade}\n`;
+      details += `Curso de Graduação: ${server.cursoGraduacao}\n`;
+      details += `Instituição da Graduação: ${server.instituicaoGraduacao}\n`;
+      details += `Ano de Conclusão (Grad.): ${server.anoConclusaoGrad}\n`;
+      if (server.escolaridade === 'Pós-Graduação') {
+        details += `Tipo de Pós-Graduação: ${server.tipoPosGraduacao}\n`;
+        details += `Curso de Pós-Graduação: ${server.cursoPosGraduacao}\n`;
+        details += `Instituição da Pós-Grad.: ${server.instituicaoPosGrad}\n`;
+        details += `Ano de Conclusão (Pós-Grad.): ${server.anoConclusaoPosGrad}\n`;
+      }
+      details += `\n`;
+
+      details += "*OBSERVAÇÕES*\n";
+      details += `${server.observacoes}\n`;
+
+      return details.trim();
   };
 
   const getAllSelectedServersDetails = () => {
     return servers
       .filter(server => selectedServers[server.emailInstitucional])
       .map(server => getSelectedServersDetails(server))
-      .join('\n\n');
+      .join('\n\n---\n\n');
   }
 
   const handleShare = async () => {
