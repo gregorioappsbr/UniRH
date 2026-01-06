@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound } from 'lucide-react';
+import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -90,6 +90,7 @@ export default function ServerListPage() {
   const [statusFilters, setStatusFilters] = React.useState<string[]>([]);
   const [vinculoFilters, setVinculoFilters] = React.useState<string[]>([]);
 
+  const selectionCount = Object.values(selectedServers).filter(Boolean).length;
 
   const handleSelectAll = (checked: boolean) => {
     const newSelectedServers: Record<string, boolean> = {};
@@ -188,72 +189,88 @@ export default function ServerListPage() {
         </p>
       </header>
 
-      <Button asChild className="w-full bg-blue-500 hover:bg-blue-600 text-white">
-        <Link href="/servidores/novo">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Adicionar Novo Servidor
-        </Link>
-      </Button>
+      {selectionCount === 0 ? (
+        <>
+          <Button asChild className="w-full bg-blue-500 hover:bg-blue-600 text-white">
+            <Link href="/servidores/novo">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Adicionar Novo Servidor
+            </Link>
+          </Button>
 
-      <div className="grid grid-cols-2 gap-2">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline">
-              <Filter className="mr-2 h-4 w-4" />
-              Filtrar
+          <div className="grid grid-cols-2 gap-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline">
+                  <Filter className="mr-2 h-4 w-4" />
+                  Filtrar
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Filtrar Servidores</SheetTitle>
+                  <SheetDescription>
+                    Refine sua busca por status ou tipo de vínculo.
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="py-4 space-y-6">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold">Status</h4>
+                    <div className="space-y-2">
+                      {statusOptions.map(status => (
+                        <div key={status} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={`filter-status-${status}`} 
+                            checked={statusFilters.includes(status)}
+                            onCheckedChange={() => handleStatusFilterChange(status)}
+                          />
+                          <Label htmlFor={`filter-status-${status}`} className="font-normal text-base">{status}</Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="font-semibold">Vínculo</h4>
+                     <div className="space-y-2">
+                      {vinculoOptions.map(vinculo => (
+                        <div key={vinculo} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={`filter-vinculo-${vinculo}`} 
+                            checked={vinculoFilters.includes(vinculo)}
+                            onCheckedChange={() => handleVinculoFilterChange(vinculo)}
+                          />
+                          <Label htmlFor={`filter-vinculo-${vinculo}`} className="font-normal text-base">{vinculo}</Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <SheetFooter>
+                  <Button variant="outline" onClick={clearFilters}>Limpar Filtros</Button>
+                  <SheetClose asChild>
+                    <Button>Aplicar</Button>
+                  </SheetClose>
+                </SheetFooter>
+              </SheetContent>
+            </Sheet>
+            <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
+              Partilhar Formulário
             </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Filtrar Servidores</SheetTitle>
-              <SheetDescription>
-                Refine sua busca por status ou tipo de vínculo.
-              </SheetDescription>
-            </SheetHeader>
-            <div className="py-4 space-y-6">
-              <div className="space-y-3">
-                <h4 className="font-semibold">Status</h4>
-                <div className="space-y-2">
-                  {statusOptions.map(status => (
-                    <div key={status} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={`filter-status-${status}`} 
-                        checked={statusFilters.includes(status)}
-                        onCheckedChange={() => handleStatusFilterChange(status)}
-                      />
-                      <Label htmlFor={`filter-status-${status}`} className="font-normal text-base">{status}</Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-3">
-                <h4 className="font-semibold">Vínculo</h4>
-                 <div className="space-y-2">
-                  {vinculoOptions.map(vinculo => (
-                    <div key={vinculo} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={`filter-vinculo-${vinculo}`} 
-                        checked={vinculoFilters.includes(vinculo)}
-                        onCheckedChange={() => handleVinculoFilterChange(vinculo)}
-                      />
-                      <Label htmlFor={`filter-vinculo-${vinculo}`} className="font-normal text-base">{vinculo}</Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <SheetFooter>
-              <Button variant="outline" onClick={clearFilters}>Limpar Filtros</Button>
-              <SheetClose asChild>
-                <Button>Aplicar</Button>
-              </SheetClose>
-            </SheetFooter>
-          </SheetContent>
-        </Sheet>
-        <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
-          Partilhar Formulário
-        </Button>
-      </div>
+          </div>
+        </>
+      ) : (
+        <div className="grid grid-cols-2 gap-2">
+            <Button variant="outline" className="text-foreground">
+                <Share className="mr-2 h-4 w-4"/>
+                Compartilhar
+            </Button>
+            <Button variant="destructive">
+                <Trash2 className="mr-2 h-4 w-4"/>
+                Excluir
+            </Button>
+        </div>
+      )}
+
 
       <Card>
         <CardContent className="p-0">
