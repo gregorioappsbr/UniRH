@@ -221,7 +221,7 @@ export default function ServerListPage() {
                         checked={statusFilters.includes(status)}
                         onCheckedChange={() => handleStatusFilterChange(status)}
                       />
-                      <Label htmlFor={`filter-status-${status}`} className="font-normal">{status}</Label>
+                      <Label htmlFor={`filter-status-${status}`} className="font-normal text-base">{status}</Label>
                     </div>
                   ))}
                 </div>
@@ -236,7 +236,7 @@ export default function ServerListPage() {
                         checked={vinculoFilters.includes(vinculo)}
                         onCheckedChange={() => handleVinculoFilterChange(vinculo)}
                       />
-                      <Label htmlFor={`filter-vinculo-${vinculo}`} className="font-normal">{vinculo}</Label>
+                      <Label htmlFor={`filter-vinculo-${vinculo}`} className="font-normal text-base">{vinculo}</Label>
                     </div>
                   ))}
                 </div>
