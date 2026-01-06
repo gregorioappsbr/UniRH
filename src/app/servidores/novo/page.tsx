@@ -172,11 +172,34 @@ export default function NewServerPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="cidade">Cidade</Label>
-                  <Input id="cidade" />
+                  <Input id="cidade" placeholder="Ex: Campo Grande"/>
                 </div>
                  <div className="space-y-2">
                   <Label htmlFor="uf">UF</Label>
-                  <Input id="uf" />
+                  <Select>
+                    <SelectTrigger id="uf">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="MS">MS</SelectItem>
+                      <SelectItem value="SP">SP</SelectItem>
+                      <SelectItem value="RJ">RJ</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <h2 className="text-lg font-semibold">Contato de Emergência</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="contato-emergencia-nome">Nome</Label>
+                  <Input id="contato-emergencia-nome" placeholder="Ex: Maria da Silva" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contato-emergencia-telefone">Telefone</Label>
+                  <Input id="contato-emergencia-telefone" type="tel" placeholder="(00) 00000-0000" />
                 </div>
               </div>
             </div>
