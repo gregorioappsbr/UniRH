@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -77,15 +76,65 @@ export default function ServerProfilePage() {
         setLoading(false);
     }, [id]);
 
-  const fichaItems = [
-    { icon: User, label: "Dados Pessoais", content: server ? `Nome Social: ${server.nomeSocial || ''}\nCPF: ${server.cpf || ''}\nRG: ${server.rg || ''}\nÓrgão Emissor: ${server.orgaoEmissor || ''}\nData de Nascimento: ${server.dataNascimento || ''}\nGênero: ${server.genero || ''}\nCor/Raça: ${server.corRaca || ''}\nEstado Civil: ${server.estadoCivil || ''}\nNacionalidade: ${server.nacionalidade || ''}\nNaturalidade: ${server.naturalidade || ''}\nPCD: ${server.isPCD === 'sim' ? `Sim - ${server.pcdDescricao}` : 'Não'}` : "" },
-    { icon: WhatsAppIcon, label: "Contato", content: server ? `Telefone Principal: ${server.telefonePrincipal || ''}\nTelefone Secundário: ${server.telefoneSecundario || ''}\nEmail Pessoal: ${server.emailPessoal || ''}`: "" },
-    { icon: Heart, label: "Contato de Emergência", content: server ? `Nome: ${server.contatoEmergenciaNome || ''}\nTelefone: ${server.contatoEmergenciaTelefone || ''}` : "" },
-    { icon: Home, label: "Endereço", content: server ? `CEP: ${server.cep || ''}\nLogradouro: ${server.logradouro || ''}, Nº ${server.numero || ''}\nComplemento: ${server.complemento || ''}\nBairro: ${server.bairro || ''}\nCidade/UF: ${server.cidade || ''}/${server.uf || ''}`: "" },
-    { icon: Briefcase, label: "Dados Profissionais", content: server ? `Função: ${server.funcao || ''}\nData de Início: ${server.dataInicio || ''}\nJornada: ${server.jornada || ''}\nTurno: ${server.turno || ''}` : "" },
-    { icon: GraduationCap, label: "Formação", content: "Conteúdo de Formação." },
-    { icon: Info, label: "Observações", content: server ? server.observacoes || 'Nenhuma observação.' : "" },
-  ];
+  const fichaItems = server ? [
+    { 
+      icon: User, 
+      label: "Dados Pessoais", 
+      content: [
+        { label: "Nome Social", value: server.nomeSocial },
+        { label: "CPF", value: server.cpf },
+        { label: "RG", value: server.rg },
+        { label: "Órgão Emissor", value: server.orgaoEmissor },
+        { label: "Data de Nascimento", value: server.dataNascimento },
+        { label: "Gênero", value: server.genero },
+        { label: "Cor/Raça", value: server.corRaca },
+        { label: "Estado Civil", value: server.estadoCivil },
+        { label: "Nacionalidade", value: server.nacionalidade },
+        { label: "Naturalidade", value: server.naturalidade },
+        { label: "PCD", value: server.isPCD === 'sim' ? `Sim - ${server.pcdDescricao}` : 'Não' },
+      ]
+    },
+    { 
+      icon: WhatsAppIcon, 
+      label: "Contato", 
+      content: [
+        { label: "Telefone Principal", value: server.telefonePrincipal },
+        { label: "Telefone Secundário", value: server.telefoneSecundario },
+        { label: "Email Pessoal", value: server.emailPessoal },
+      ]
+    },
+    { 
+      icon: Heart, 
+      label: "Contato de Emergência", 
+      content: [
+        { label: "Nome", value: server.contatoEmergenciaNome },
+        { label: "Telefone", value: server.contatoEmergenciaTelefone },
+      ]
+    },
+    { 
+      icon: Home, 
+      label: "Endereço", 
+      content: [
+        { label: "CEP", value: server.cep },
+        { label: "Logradouro", value: `${server.logradouro || ''}, Nº ${server.numero || ''}` },
+        { label: "Complemento", value: server.complemento },
+        { label: "Bairro", value: server.bairro },
+        { label: "Cidade/UF", value: `${server.cidade || ''}/${server.uf || ''}` },
+      ]
+    },
+    { 
+      icon: Briefcase, 
+      label: "Dados Profissionais", 
+      content: [
+        { label: "Função", value: server.funcao },
+        { label: "Data de Início", value: server.dataInicio },
+        { label: "Jornada", value: server.jornada },
+        { label: "Turno", value: server.turno },
+      ]
+    },
+    { icon: GraduationCap, label: "Formação", content: [{ label: "Em breve", value: "Conteúdo de Formação." }] },
+    { icon: Info, label: "Observações", content: [{ label: "Observação", value: server.observacoes || 'Nenhuma observação.' }] },
+  ] : [];
 
   const faltas = [
     {
@@ -194,18 +243,18 @@ export default function ServerProfilePage() {
       </Card>
       
       <Tabs defaultValue="ficha" className="w-full flex-1 flex flex-col">
-        <div className="border dark:border-white/60 rounded-md">
+        <div className="border dark:border-white/80 rounded-md">
           <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
             <TabsTrigger value="ficha" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Ficha</TabsTrigger>
             <TabsTrigger value="faltas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Faltas</TabsTrigger>
-            <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Licenças</TabsTrigger>
+            <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground w-1/2 md:w_auto flex-grow">Licenças</TabsTrigger>
             <TabsTrigger value="ferias" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Férias</TabsTrigger>
           </TabsList>
         </div>
         <TabsContent value="ficha" className="mt-8 flex-1 flex flex-col md:mt-10">
           <Accordion type="single" collapsible className="w-full space-y-2">
             {fichaItems.map((item, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="bg-card border-border dark:border-white/60 border rounded-lg">
+              <AccordionItem key={index} value={`item-${index}`} className="bg-card border-border dark:border-white/80 border rounded-lg">
                 <AccordionTrigger className="p-4 hover:no-underline">
                   <div className="flex items-center gap-3">
                     <item.icon className="h-5 w-5 text-primary" />
@@ -213,7 +262,14 @@ export default function ServerProfilePage() {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="p-4 pt-0">
-                  <p className="text-muted-foreground whitespace-pre-wrap">{item.content}</p>
+                  <div className="space-y-2">
+                    {item.content.map((detail, detailIndex) => detail.value && (
+                      <div key={detailIndex} className="flex justify-between items-center text-sm">
+                        <span className="font-semibold text-muted-foreground">{detail.label}:</span>
+                        <span className="text-right">{detail.value}</span>
+                      </div>
+                    ))}
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             ))}
