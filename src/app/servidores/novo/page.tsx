@@ -52,7 +52,8 @@ export default function NewServerPage() {
                 <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Observações</TabsTrigger>
             </TabsList>
         </div>
-          <TabsContent value="pessoais" className="mt-8 md:mt-10">
+        <div className="border border-t-0 rounded-b-lg p-6 flex-1">
+          <TabsContent value="pessoais" className="mt-0">
             <div className="space-y-8">
               <div className="space-y-6">
                 <h2 className="text-lg font-semibold">Identificação</h2>
@@ -321,7 +322,7 @@ export default function NewServerPage() {
 
             </div>
           </TabsContent>
-          <TabsContent value="profissionais" className="mt-8 md:mt-10">
+          <TabsContent value="profissionais" className="mt-0">
             <div className="space-y-8">
               <div className="space-y-6">
                 <h2 className="text-lg font-semibold">Informações do Cargo</h2>
@@ -441,7 +442,7 @@ export default function NewServerPage() {
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="formacao" className="mt-8 md:mt-10">
+          <TabsContent value="formacao" className="mt-0">
             <div className="space-y-8">
               <div className="space-y-6">
                 <h2 className="text-lg font-semibold">Formação Acadêmica</h2>
@@ -518,7 +519,7 @@ export default function NewServerPage() {
 
             </div>
           </TabsContent>
-          <TabsContent value="observacoes" className="mt-8 md:mt-10 flex flex-col flex-1">
+          <TabsContent value="observacoes" className="mt-0 flex flex-col flex-1">
              <div className="space-y-6 flex-1">
               <h2 className="text-lg font-semibold">Observações Gerais</h2>
               <div className="space-y-2">
@@ -530,7 +531,10 @@ export default function NewServerPage() {
                 <Button className="w-full">Adicionar Servidor</Button>
             </div>
           </TabsContent>
+        </div>
       </Tabs>
     </div>
   )
 }
+
+    
