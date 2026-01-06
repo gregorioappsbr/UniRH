@@ -21,6 +21,7 @@ export default function NewServerPage() {
     const [contatoEmergencia, setContatoEmergencia] = useState('');
     const [possuiCNH, setPossuiCNH] = useState('nao');
     const [genero, setGenero] = useState('');
+    const [isPCD, setIsPCD] = useState('nao');
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, masker: (value: string) => string, setter: React.Dispatch<React.SetStateAction<string>>) => {
@@ -185,7 +186,7 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="pcd">É PCD?</Label>
-                       <Select>
+                       <Select onValueChange={setIsPCD} defaultValue="nao">
                         <SelectTrigger id="pcd">
                           <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
@@ -195,6 +196,12 @@ export default function NewServerPage() {
                         </SelectContent>
                       </Select>
                     </div>
+                    {isPCD === 'sim' && (
+                      <div className="space-y-2 md:col-span-2">
+                        <Label htmlFor="pcd-descricao">Descrição</Label>
+                        <Textarea id="pcd-descricao" placeholder="Descreva a deficiência..." />
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -486,3 +493,6 @@ export default function NewServerPage() {
     
 
 
+
+
+    
