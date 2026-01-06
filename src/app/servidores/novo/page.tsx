@@ -393,8 +393,10 @@ export default function NewServerPage() {
                           <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="integral">Integral</SelectItem>
-                          <SelectItem value="parcial">Parcial</SelectItem>
+                          <SelectItem value="20h">20h</SelectItem>
+                          <SelectItem value="30h">30h</SelectItem>
+                          <SelectItem value="40h">40h</SelectItem>
+                          <SelectItem value="dedicacao-exclusiva">Dedicação Exclusiva</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
