@@ -56,7 +56,7 @@ export default function Home() {
                     <div className="text-4xl font-bold">5</div>
                   </div>
                 </div>
-                <ChevronDown className="h-5 w-5 shrink-0 transition-transform duration-200" />
+                <Users className="h-5 w-5 shrink-0 transition-transform duration-200" />
               </div>
             </AccordionTrigger>
             <AccordionContent>
@@ -83,3 +83,4 @@ export default function Home() {
     </div>
   );
 }
+
