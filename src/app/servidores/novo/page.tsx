@@ -26,7 +26,7 @@ export default function NewServerPage() {
 
           <Tabs defaultValue="pessoais" className="w-full">
             <div className="border rounded-md">
-              <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap md:grid w-full md:grid-cols-4 text-foreground bg-muted">
+              <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted">
                 <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Pessoais</TabsTrigger>
                 <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Profissionais</TabsTrigger>
                 <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Formação</TabsTrigger>
@@ -44,7 +44,7 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="nome-social">Nome Social</Label>
-                      <Input id="nome-social" placeholder="Ex: Joanna" />
+                      <Input id="nome-social" placeholder="Ex: João" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="cpf">CPF</Label>
@@ -405,5 +405,3 @@ export default function NewServerPage() {
     </div>
   )
 }
-
-    
