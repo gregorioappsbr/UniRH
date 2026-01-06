@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -264,9 +265,9 @@ export default function ServerProfilePage() {
                 <AccordionContent className="p-4 pt-0">
                   <div className="space-y-2">
                     {item.content.map((detail, detailIndex) => detail.value && (
-                      <div key={detailIndex} className="flex justify-between items-center text-sm">
+                      <div key={detailIndex} className="flex justify-between items-center text-sm p-2 bg-background rounded-md">
                         <span className="font-semibold text-muted-foreground">{detail.label}:</span>
-                        <span className="text-right">{detail.value}</span>
+                        <span className="text-right text-foreground">{detail.value}</span>
                       </div>
                     ))}
                   </div>
@@ -324,3 +325,4 @@ export default function ServerProfilePage() {
     
 
     
+
