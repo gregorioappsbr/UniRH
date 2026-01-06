@@ -247,6 +247,52 @@ export default function NewServerPage() {
                     </SelectContent>
                   </Select>
                 </div>
+                 <div className="space-y-2">
+                  <Label htmlFor="setor-lotacao">Setor / Lotação</Label>
+                  <Input id="setor-lotacao" placeholder="Ex: Tecnologia da Informação" />
+                </div>
+                 <div className="space-y-2">
+                  <Label htmlFor="ramal">Ramal</Label>
+                  <Input id="ramal" placeholder="Ex: 1234" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="jornada">Jornada</Label>
+                  <Select>
+                    <SelectTrigger id="jornada">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="integral">Integral</SelectItem>
+                      <SelectItem value="parcial">Parcial</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="turno">Turno</Label>
+                  <Select>
+                    <SelectTrigger id="turno">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="matutino">Matutino</SelectItem>
+                      <SelectItem value="vespertino">Vespertino</SelectItem>
+                       <SelectItem value="noturno">Noturno</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                 <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="status">Status</Label>
+                  <Select>
+                    <SelectTrigger id="status">
+                      <SelectValue placeholder="Selecione o status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ativo">Ativo</SelectItem>
+                      <SelectItem value="inativo">Inativo</SelectItem>
+                       <SelectItem value="licenca">Licença</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
