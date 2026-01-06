@@ -3,7 +3,9 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Notebook, Share, Edit, Trash2 } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/hooks/use-toast';
+import { PlusCircle, Notebook, Share, Edit, Trash2, FileText, Copy } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
@@ -34,6 +36,7 @@ type Note = {
 
 export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     const storedNotes = localStorage.getItem('notes');
@@ -49,6 +52,47 @@ export default function NotesPage() {
     const newNotes = notes.filter((_, index) => index !== indexToDelete);
     setNotes(newNotes);
     localStorage.setItem('notes', JSON.stringify(newNotes));
+  };
+  
+  const handleShare = async (note: Note) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: note.title,
+          text: note.content,
+        });
+      } catch (error) {
+        console.error('Erro ao compartilhar', error);
+        toast({
+          variant: 'destructive',
+          title: 'Erro ao compartilhar',
+          description: 'Não foi possível compartilhar a nota.',
+        });
+      }
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Não suportado',
+        description: 'Seu navegador não suporta a API de compartilhamento.',
+      });
+    }
+  };
+
+  const handleCopy = (note: Note) => {
+    const textToCopy = `*${note.title}*\n\n${note.content}`;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      toast({
+        title: 'Copiado!',
+        description: 'O conteúdo da nota foi copiado para a área de transferência.',
+      });
+    }).catch(err => {
+      console.error('Erro ao copiar', err);
+       toast({
+          variant: 'destructive',
+          title: 'Erro ao copiar',
+          description: 'Não foi possível copiar a nota.',
+        });
+    });
   };
 
   return (
@@ -83,14 +127,30 @@ export default function NotesPage() {
                <div className="space-y-4">
                 <p>{note.content}</p>
                 <div className="flex justify-end space-x-2">
-                  <Button variant="ghost" size="icon">
-                    <Share className="h-5 w-5 text-green-500" />
-                  </Button>
+                   <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Share className="h-5 w-5 text-green-500" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => handleShare(note)}>
+                        <FileText className="mr-2 h-4 w-4" />
+                        <span>Compartilhar como Texto</span>
+                      </DropdownMenuItem>
+                       <DropdownMenuItem onClick={() => handleCopy(note)}>
+                        <Copy className="mr-2 h-4 w-4" />
+                        <span>Copiar Texto</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
                   <Button variant="ghost" size="icon" asChild>
                     <Link href={{ pathname: '/notas/novo', query: { title: note.title, content: note.content, originalTitle: note.title } }}>
                       <Edit className="h-5 w-5 text-blue-500" />
                     </Link>
                   </Button>
+
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon">
