@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ArrowLeft, Mail, Phone, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, Type, Building, Edit, Trash2, Medal, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -76,7 +76,7 @@ export default function ServerProfilePage() {
                 {server.status}
               </Badge>
               <Badge variant="outline" className={cn(getRatingClass(server.rating))}>
-                <Award className="h-3 w-3 mr-1" />
+                <Medal className="h-3 w-3 mr-1" />
                 Nota: {server.rating.toFixed(1)}
               </Badge>
             </div>
