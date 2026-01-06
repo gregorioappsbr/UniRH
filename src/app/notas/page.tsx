@@ -73,10 +73,12 @@ export default function NotesPage() {
           // User cancelled the share sheet, do nothing.
         } else {
           console.error('Erro ao compartilhar', error);
+          // Fallback for desktop or if share fails
+          handleCopy(note);
           toast({
             variant: 'destructive',
-            title: 'Erro ao compartilhar',
-            description: 'Não foi possível compartilhar a nota usando a função nativa.',
+            title: 'Compartilhamento não disponível',
+            description: 'A função de compartilhar não está disponível neste navegador. O conteúdo da nota foi copiado para a área de transferência.',
           });
         }
       }
@@ -111,13 +113,39 @@ export default function NotesPage() {
     try {
       const { jsPDF } = await import('jspdf');
       const doc = new jsPDF();
+      const pageHeight = doc.internal.pageSize.height;
+      let y = 20;
+
+      // --- Título ---
+      doc.setFillColor(66, 153, 225); // Blue color
+      doc.rect(15, y - 5, doc.internal.pageSize.width - 30, 8, 'F');
+      doc.setFontSize(14);
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.text("TÍTULO", 20, y);
+      y += 12;
+
+      doc.setFontSize(16);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'normal');
+      const splitTitle = doc.splitTextToSize(note.title, 180);
+      doc.text(splitTitle, 15, y);
+      y += (splitTitle.length * 7) + 10;
       
-      doc.setFontSize(22);
-      doc.text(note.title, 15, 20);
+      // --- Assunto ---
+      doc.setFillColor(66, 153, 225); // Blue color
+      doc.rect(15, y - 5, doc.internal.pageSize.width - 30, 8, 'F');
+      doc.setFontSize(14);
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.text("ASSUNTO", 20, y);
+      y += 12;
 
       doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'normal');
       const splitContent = doc.splitTextToSize(note.content, 180);
-      doc.text(splitContent, 15, 30);
+      doc.text(splitContent, 15, y);
       
       doc.save(`${note.title.replace(/\s/g, '_')}.pdf`);
     } catch(error) {
