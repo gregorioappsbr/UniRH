@@ -25,6 +25,7 @@ export default function NewServerPage() {
     const [dataNascimento, setDataNascimento] = useState('');
     const [dataInicio, setDataInicio] = useState('');
     const [possuiDGA, setPossuiDGA] = useState('nao');
+    const [tipoVinculo, setTipoVinculo] = useState('');
 
     const handleChange = (setter: React.Dispatch<React.SetStateAction<string>>, masker: (value: string) => string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setter(masker(event.target.value));
@@ -328,7 +329,7 @@ export default function NewServerPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="tipo-vinculo">Tipo de Vínculo</Label>
-                      <Select>
+                      <Select onValueChange={setTipoVinculo}>
                         <SelectTrigger id="tipo-vinculo">
                           <SelectValue placeholder="Selecione o tipo de vínculo" />
                         </SelectTrigger>
@@ -341,6 +342,12 @@ export default function NewServerPage() {
                         </SelectContent>
                       </Select>
                     </div>
+                    {tipoVinculo === 'efetivo' && (
+                        <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor="matricula">Matrícula</Label>
+                            <Input id="matricula" placeholder="Digite a matrícula"/>
+                        </div>
+                    )}
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="cargo">Cargo</Label>
                       <Input id="cargo" placeholder="Ex: Desenvolvedor(a) Frontend" />
@@ -517,5 +524,3 @@ export default function NewServerPage() {
     </div>
   )
 }
-
-    
