@@ -70,6 +70,8 @@ const servers = [
   },
 ];
 
+servers.sort((a, b) => a.name.localeCompare(b.name));
+
 export default function ServerListPage() {
   const isMobile = useIsMobile();
   const [selectedServers, setSelectedServers] = React.useState<Record<string, boolean>>({});
