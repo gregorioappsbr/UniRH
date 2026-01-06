@@ -39,6 +39,13 @@ const servers = [
 export function ServerList() {
     const isMobile = useIsMobile();
 
+    const getRatingClass = (rating: number) => {
+        if (rating >= 8) return 'text-green-400';
+        if (rating >= 4) return 'text-yellow-400';
+        return 'text-red-400';
+    };
+
+
   return (
     <Card className="bg-card">
       <CardHeader className="text-center">
@@ -63,8 +70,8 @@ export function ServerList() {
                         </Badge>
                       )}
                       {server.rating && (
-                        <div className="flex items-center text-muted-foreground text-xs">
-                          <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
+                        <div className={cn("flex items-center text-muted-foreground text-xs", getRatingClass(server.rating))}>
+                          <Star className="w-3 h-3 mr-1 fill-current" />
                           <span>Nota: {server.rating}</span>
                         </div>
                       )}
@@ -114,8 +121,8 @@ export function ServerList() {
                           </Badge>
                       </TableCell>
                       <TableCell>
-                         <div className="flex items-center text-muted-foreground">
-                            <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
+                         <div className={cn("flex items-center", getRatingClass(server.rating))}>
+                            <Star className="w-3 h-3 mr-1 fill-current" />
                             <span>{server.rating}</span>
                           </div>
                       </TableCell>

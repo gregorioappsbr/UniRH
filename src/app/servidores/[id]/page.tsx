@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ArrowLeft, Mail, Phone, Type, Building, Edit, Trash2, Star, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export default function ServerProfilePage() {
   const server = {
@@ -16,7 +17,7 @@ export default function ServerProfilePage() {
     name: 'Lilian Tenório Carvalho',
     role: 'ATNM',
     status: 'Ativo',
-    rating: 10.0,
+    rating: 3.2,
     email: 'litencarv@uems.br',
     phone: '(67) 98167-2870',
     type: 'Efetivo',
@@ -39,6 +40,12 @@ export default function ServerProfilePage() {
       reason: 'Assuntos pessoais',
     }
   ];
+
+  const getRatingClass = (rating: number) => {
+    if (rating >= 8) return 'text-green-400 border-green-400';
+    if (rating >= 4) return 'text-yellow-400 border-yellow-400';
+    return 'text-red-400 border-red-400';
+  };
 
   return (
     <div className="p-4 space-y-4 flex flex-col flex-1 h-full">
@@ -68,7 +75,7 @@ export default function ServerProfilePage() {
                 <CheckCircle className="h-3 w-3 mr-1" />
                 {server.status}
               </Badge>
-              <Badge variant="outline" className="text-yellow-400 border-yellow-400">
+              <Badge variant="outline" className={cn(getRatingClass(server.rating))}>
                 <Star className="h-3 w-3 mr-1" />
                 Nota: {server.rating.toFixed(1)}
               </Badge>

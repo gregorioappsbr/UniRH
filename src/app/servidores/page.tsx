@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Star, Phone } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const servers = [
   {
@@ -33,9 +34,24 @@ const servers = [
     rating: 7.2,
     phone: '(67) 99999-4321',
   },
+    {
+    initials: 'JD',
+    name: 'João Dias',
+    email: 'joao.dias@exemplo.com',
+    status: 'Férias',
+    rating: 3.5,
+    phone: '(67) 98888-4321',
+  },
 ];
 
 export default function ServerListPage() {
+
+  const getRatingClass = (rating: number) => {
+    if (rating >= 8) return 'text-green-400';
+    if (rating >= 4) return 'text-yellow-400';
+    return 'text-red-400';
+  };
+
   return (
     <div className="p-4 space-y-4">
       <header className="space-y-2 text-center">
@@ -91,8 +107,8 @@ export default function ServerListPage() {
                       </Badge>
                     )}
                     {server.rating && (
-                      <div className="flex items-center text-muted-foreground">
-                        <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
+                      <div className={cn("flex items-center text-muted-foreground", getRatingClass(server.rating))}>
+                        <Star className="w-3 h-3 mr-1 fill-current" />
                         <span>Nota: {server.rating}</span>
                       </div>
                     )}
