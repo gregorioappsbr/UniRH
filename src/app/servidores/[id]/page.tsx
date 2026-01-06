@@ -7,9 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ArrowLeft, Mail, Phone, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle } from 'lucide-react';
+import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 
 export default function ServerProfilePage() {
   const server = {
@@ -26,7 +27,7 @@ export default function ServerProfilePage() {
 
   const fichaItems = [
     { icon: User, label: "Dados Pessoais", content: "Conteúdo de Dados Pessoais." },
-    { icon: Phone, label: "Contato", content: "Conteúdo de Contato." },
+    { icon: WhatsAppIcon, label: "Contato", content: "Conteúdo de Contato." },
     { icon: Heart, label: "Contato de Emergência", content: "Conteúdo de Contato de Emergência." },
     { icon: Home, label: "Endereço", content: "Conteúdo de Endereço." },
     { icon: Briefcase, label: "Dados Profissionais", content: "Conteúdo de Dados Profissionais." },
@@ -105,7 +106,7 @@ export default function ServerProfilePage() {
               <span className="text-sm">{server.email}</span>
             </div>
             <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base text-foreground hover:text-primary">
-              <Phone className="h-5 w-5 text-muted-foreground" />
+              <WhatsAppIcon className="h-5 w-5 text-muted-foreground" />
               <span className="text-base">{server.phone}</span>
             </a>
             <div className="flex items-center gap-4">

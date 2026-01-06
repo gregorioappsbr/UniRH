@@ -9,11 +9,12 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog, PenTool, GraduationCap } from 'lucide-react';
+import { Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog, PenTool, GraduationCap } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 
 
 const servers = [
@@ -120,7 +121,7 @@ export function ServerList() {
                       )}
                       {server.phone && (
                         <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
-                          <Phone className="h-4 w-4" />
+                          <WhatsAppIcon className="h-4 w-4" />
                           <span>{server.phone}</span>
                         </a>
                       )}
@@ -173,7 +174,7 @@ export function ServerList() {
                       </TableCell>
                        <TableCell className="whitespace-nowrap">
                          <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary">
-                            <Phone className="h-4 w-4" />
+                            <WhatsAppIcon className="h-4 w-4" />
                             <span>{server.phone}</span>
                         </a>
                       </TableCell>

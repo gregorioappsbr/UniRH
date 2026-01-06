@@ -5,9 +5,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Phone, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog } from 'lucide-react';
+import { Users, PlusCircle, Filter, Share2, KeyRound, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 
 const servers = [
   {
@@ -145,7 +146,7 @@ export default function ServerListPage() {
 
                   {server.phone && (
                     <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
-                      <Phone className="h-4 w-4" />
+                      <WhatsAppIcon className="h-4 w-4" />
                       <span>{server.phone}</span>
                     </a>
                   )}
