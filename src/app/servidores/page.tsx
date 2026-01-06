@@ -226,7 +226,7 @@ export default function ServerListPage() {
                             </Avatar>
                             <div>
                                 <p className="font-semibold">{server.name}</p>
-                                <p className="text-sm text-muted-foreground">{server.email}</p>
+                                <p className="text-sm text-muted-foreground break-all">{server.email}</p>
                             </div>
                         </Link>
                       </TableCell>
@@ -248,7 +248,7 @@ export default function ServerListPage() {
                           <span>{server.funcao}</span>
                         </div>
                       </TableCell>
-                       <TableCell className="whitespace-nowrap">
+                       <TableCell className="pr-8">
                          <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary">
                             <WhatsAppIcon className="h-4 w-4" />
                             <span>{server.phone}</span>
