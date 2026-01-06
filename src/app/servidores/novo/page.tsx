@@ -24,7 +24,7 @@ export default function NewServerPage() {
           </header>
 
           <Tabs defaultValue="pessoais" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 text-foreground bg-muted">
+            <TabsList className="grid w-full grid-cols-2 bg-muted md:grid-cols-4 text-foreground">
               <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground">Dados Pessoais</TabsTrigger>
               <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground">Dados Profissionais</TabsTrigger>
               <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground">Formação</TabsTrigger>
@@ -402,5 +402,3 @@ export default function NewServerPage() {
     </div>
   )
 }
-
-    
