@@ -67,12 +67,7 @@ export default function NovaNotaPage() {
         description: "Sua nota foi salva com sucesso.",
     });
 
-    if (!isEditing) {
-        router.push('/notas');
-    } else {
-        // Update originalTitle in case the title itself was changed
-        setOriginalTitle(title);
-    }
+    router.push('/notas');
   };
 
   return (
