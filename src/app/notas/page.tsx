@@ -70,8 +70,8 @@ export default function NotesPage() {
           text: textToShare,
         });
       } catch (error) {
-         if (error instanceof DOMException && error.name === 'AbortError') {
-          // User cancelled the share sheet, do nothing.
+         if (error instanceof DOMException && (error.name === 'AbortError' || error.name === 'NotAllowedError')) {
+          // User cancelled the share sheet or permission was denied, do nothing.
         } else {
           console.error('Erro ao compartilhar', error);
           // Fallback for desktop or if share fails
