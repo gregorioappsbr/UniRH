@@ -884,18 +884,9 @@ const handleExportPDF = async () => {
               </div>
               <div className="space-y-4 p-4">
                 {filteredServers.map((server) => (
-                  <Link
+                  <div
                     key={server.emailInstitucional}
-                    href={`/servidores/${server.emailInstitucional.split('@')[0]}`}
-                    className="flex items-start gap-4 pb-4 border-b last:border-b-0 cursor-pointer"
-                    onClick={(e) => {
-                      if (
-                        (e.target as HTMLElement).closest('input[type="checkbox"]') ||
-                        (e.target as HTMLElement).closest('a')
-                      ) {
-                        e.preventDefault();
-                      }
-                    }}
+                    className="flex items-start gap-4 pb-4 border-b last:border-b-0"
                   >
                     <Checkbox
                       id={`server-${server.emailInstitucional}`}
@@ -903,42 +894,54 @@ const handleExportPDF = async () => {
                       onCheckedChange={(checked) => handleSelectServer(server.emailInstitucional, checked as boolean)}
                       className="mt-1"
                     />
-                    <div className="flex flex-col items-center gap-2">
-                      <Avatar className="h-12 w-12">
-                        <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
-                      </Avatar>
-                       <div className="flex flex-col items-center gap-1">
-                        {server.status && (
-                          <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
-                            {getStatusIcon(server.status)}
-                            {server.status}
-                          </Badge>
-                        )}
-                        {server.rating && (
-                          <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
-                            <Award className="w-3 h-3 mr-1 fill-current" />
-                            <span>Nota: {server.rating}</span>
+                     <div 
+                      className="flex-1"
+                      onClick={(e) => {
+                        if (
+                          (e.target as HTMLElement).closest('a')
+                        ) {
+                          return;
+                        }
+                        router.push(`/servidores/${server.emailInstitucional.split('@')[0]}`);
+                      }}
+                    >
+                      <div className="flex flex-col items-center gap-2 float-left mr-4">
+                        <Avatar className="h-12 w-12">
+                          <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col items-center gap-1">
+                          {server.status && (
+                            <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
+                              {getStatusIcon(server.status)}
+                              {server.status}
+                            </Badge>
+                          )}
+                          {server.rating && (
+                            <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
+                              <Award className="w-3 h-3 mr-1 fill-current" />
+                              <span>Nota: {server.rating}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex-1 space-y-2 cursor-pointer">
+                        <p className="font-semibold">{server.nomeCompleto}</p>
+                        <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
+                        {server.funcao && (
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            {getFuncaoIcon(server.funcao)}
+                            <span>{server.funcao}</span>
                           </div>
+                        )}
+                        {server.telefonePrincipal && (
+                          <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
+                            <WhatsAppIcon className="h-4 w-4" />
+                            <span>{server.telefonePrincipal}</span>
+                          </a>
                         )}
                       </div>
                     </div>
-                    <div className="flex-1 space-y-2">
-                      <p className="font-semibold">{server.nomeCompleto}</p>
-                      <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
-                       {server.funcao && (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          {getFuncaoIcon(server.funcao)}
-                          <span>{server.funcao}</span>
-                        </div>
-                      )}
-                      {server.telefonePrincipal && (
-                        <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
-                          <WhatsAppIcon className="h-4 w-4" />
-                          <span>{server.telefonePrincipal}</span>
-                        </a>
-                      )}
-                    </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             </>

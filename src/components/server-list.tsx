@@ -127,14 +127,14 @@ export function ServerList() {
         {isMobile ? (
              <div className="space-y-4">
                 {recentServers.map((server, index) => (
-                  <Link
+                  <div
                     key={index}
-                    href={`/servidores/${server.email.split('@')[0]}`}
                     className="flex items-start gap-4 border-b pb-4 last:border-b-0 cursor-pointer"
                     onClick={(e) => {
                       if ((e.target as HTMLElement).closest('a')) {
-                        e.preventDefault();
+                        return;
                       }
+                      router.push(`/servidores/${server.email.split('@')[0]}`);
                     }}
                   >
                     <div className="flex flex-col items-center gap-2">
@@ -172,7 +172,7 @@ export function ServerList() {
                         </a>
                       )}
                     </div>
-                  </Link>
+                  </div>
                 ))}
             </div>
         ) : (
