@@ -46,7 +46,7 @@ export default function NewServerPage() {
                 <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
                     <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Pessoais</TabsTrigger>
                     <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Profissionais</TabsTrigger>
-                    <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Formação</TabsTrigger>
+                    <TabsTrigger value="formacao" className="data_-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Formação</TabsTrigger>
                     <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Observações</TabsTrigger>
                 </TabsList>
             </div>
@@ -251,7 +251,7 @@ export default function NewServerPage() {
                       <Label htmlFor="numero">Número</Label>
                       <Input id="numero" placeholder="Ex: 123" />
                     </div>
-                    <div className="spacey-2">
+                    <div className="space-y-2">
                       <Label htmlFor="complemento">Complemento</Label>
                       <Input id="complemento" placeholder="Ex: Apto 4B" />
                     </div>
@@ -347,7 +347,7 @@ export default function NewServerPage() {
                       <Label htmlFor="funcao">Função</Label>
                       <Input id="funcao" placeholder="Ex: Coordenador de Curso" />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 w-[90%] md:w-full">
                       <Label htmlFor="data-inicio">Data de Início</Label>
                       <Input id="data-inicio" type="date" />
                     </div>
@@ -513,3 +513,5 @@ export default function NewServerPage() {
     </div>
   )
 }
+
+    
