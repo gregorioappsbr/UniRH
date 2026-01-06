@@ -382,15 +382,18 @@ export default function NewServerPage() {
           </div>
         </TabsContent>
         <TabsContent value="observacoes" className="mt-6">
-           <div className="space-y-4">
-            <Label htmlFor="observacoes-text">Observações</Label>
-            <Textarea id="observacoes-text" placeholder="Adicione qualquer observação sobre o servidor." rows={8} />
+           <div className="space-y-6">
+            <h2 className="text-lg font-semibold">Observações Gerais</h2>
+            <div className="space-y-2">
+                <Label htmlFor="observacoes-text">Observações</Label>
+                <Textarea id="observacoes-text" placeholder="Adicione qualquer observação relevante aqui..." rows={8} />
+            </div>
           </div>
         </TabsContent>
       </Tabs>
 
        <div className="flex justify-end pt-6">
-        <Button>Salvar Servidor</Button>
+        <Button>Adicionar Servidor</Button>
       </div>
     </div>
   )
