@@ -14,9 +14,9 @@ export default function NewServerPage() {
     <div className="p-4">
       <Card>
         <CardContent className="p-4 space-y-4 bg-background text-foreground">
-          <header className="flex items-center justify-between">
+          <header className="relative flex items-center justify-center">
             <h1 className="text-xl font-bold">Novo Servidor</h1>
-            <Button variant="ghost" size="icon" asChild>
+            <Button variant="ghost" size="icon" asChild className="absolute right-0 top-1/2 -translate-y-1/2">
               <Link href="/servidores">
                 <X className="h-5 w-5" />
               </Link>
