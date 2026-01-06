@@ -40,12 +40,17 @@ export default function NotesPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const storedNotes = localStorage.getItem('notes');
-    if (storedNotes) {
-      setNotes(JSON.parse(storedNotes));
-    } else {
+    try {
+      const storedNotes = localStorage.getItem('notes');
+      if (storedNotes) {
+        setNotes(JSON.parse(storedNotes));
+      } else {
+        setNotes(initialNotes);
+        localStorage.setItem('notes', JSON.stringify(initialNotes));
+      }
+    } catch (error) {
+      console.error("Failed to access localStorage:", error);
       setNotes(initialNotes);
-      localStorage.setItem('notes', JSON.stringify(initialNotes));
     }
   }, []);
 
@@ -56,7 +61,7 @@ export default function NotesPage() {
   };
   
   const handleShare = async (note: Note) => {
-    const textToShare = `*${note.title}*\n\n${note.content}`;
+    const textToShare = `${note.title}\n\n${note.content}`;
     if (navigator.share) {
       try {
         await navigator.share({
@@ -65,28 +70,28 @@ export default function NotesPage() {
         });
       } catch (error) {
          if (error instanceof DOMException && error.name === 'AbortError') {
-          // User cancelled the share sheet
+          // User cancelled the share sheet, do nothing.
         } else {
           console.error('Erro ao compartilhar', error);
           toast({
             variant: 'destructive',
             title: 'Erro ao compartilhar',
-            description: 'Não foi possível compartilhar a nota.',
+            description: 'Não foi possível compartilhar a nota usando a função nativa.',
           });
         }
       }
     } else {
-      // Fallback for browsers that do not support navigator.share
+      // Fallback for browsers that do not support navigator.share (e.g., most desktop browsers)
       handleCopy(note);
       toast({
-        title: 'Copiado!',
-        description: 'Seu navegador não suporta compartilhamento. A nota foi copiada para a área de transferência.',
+        title: 'Link copiado!',
+        description: 'Seu navegador não suporta o compartilhamento nativo. O conteúdo da nota foi copiado para a área de transferência.',
       });
     }
   };
 
   const handleCopy = (note: Note) => {
-    const textToCopy = `*${note.title}*\n\n${note.content}`;
+    const textToCopy = `${note.title}\n\n${note.content}`;
     navigator.clipboard.writeText(textToCopy).then(() => {
       toast({
         title: 'Copiado!',
@@ -106,10 +111,14 @@ export default function NotesPage() {
     try {
       const { jsPDF } = await import('jspdf');
       const doc = new jsPDF();
-      doc.setFontSize(16);
-      doc.text(note.title, 10, 10);
+      
+      doc.setFontSize(22);
+      doc.text(note.title, 15, 20);
+
       doc.setFontSize(12);
-      doc.text(note.content, 10, 20);
+      const splitContent = doc.splitTextToSize(note.content, 180);
+      doc.text(splitContent, 15, 30);
+      
       doc.save(`${note.title.replace(/\s/g, '_')}.pdf`);
     } catch(error) {
        console.error('Erro ao exportar PDF', error);
