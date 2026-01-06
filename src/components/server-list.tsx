@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -137,7 +138,7 @@ export function ServerList() {
                     <TableHead>Status</TableHead>
                     <TableHead>Nota</TableHead>
                     <TableHead>Função</TableHead>
-                    <TableHead>Contato</TableHead>
+                    <TableHead>Telefone</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
