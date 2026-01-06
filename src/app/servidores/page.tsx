@@ -408,10 +408,74 @@ export default function ServerListPage() {
     }
   };
 
-  const getSelectedServersDetails = (server: (typeof servers)[0]) => {
-      let details = `*FICHA COMPLETA - ${server.nomeCompleto}*\n\n`;
+  const getSelectedServersDetails = (server: (typeof servers)[0], forWhatsApp: boolean = false) => {
+    if (forWhatsApp) {
+        const underline = '--------------------';
+        let details = `*FICHA COMPLETA - ${server.nomeCompleto.toUpperCase()}*\n${underline}\n\n`;
 
-      details += "*DADOS PESSOAIS*\n";
+        details += `*DADOS PESSOAIS*\n${underline}\n`;
+        details += `*NOME COMPLETO:* ${server.nomeCompleto.toUpperCase()}\n`;
+        details += `*NOME SOCIAL:* ${server.nomeSocial.toUpperCase()}\n`;
+        details += `*CPF:* ${server.cpf.toUpperCase()}\n`;
+        details += `*RG:* ${server.rg.toUpperCase()}\n`;
+        details += `*DATA DE NASCIMENTO:* ${server.dataNascimento.toUpperCase()}\n`;
+        details += `*GÊNERO:* ${server.genero.toUpperCase()}\n`;
+        details += `*COR/RAÇA:* ${server.corRaca.toUpperCase()}\n`;
+        details += `*ESTADO CIVIL:* ${server.estadoCivil.toUpperCase()}\n`;
+        details += `*NACIONALIDADE:* ${server.nacionalidade.toUpperCase()}\n`;
+        details += `*NATURALIDADE:* ${server.naturalidade.toUpperCase()}\n`;
+        details += `*PCD:* ${server.pcd.toUpperCase()}\n\n`;
+
+        details += `*CONTATO*\n${underline}\n`;
+        details += `*TELEFONE PRINCIPAL:* ${server.telefonePrincipal.toUpperCase()}\n`;
+        if (server.telefoneSecundario) details += `*TELEFONE SECUNDÁRIO:* ${server.telefoneSecundario.toUpperCase()}\n`;
+        details += `*E-MAIL PESSOAL:* ${server.emailPessoal.toUpperCase()}\n`;
+        details += `*CONTATO DE EMERGÊNCIA:* ${server.contatoEmergenciaNome.toUpperCase()} - ${server.contatoEmergenciaTelefone.toUpperCase()}\n\n`;
+
+        details += `*ENDEREÇO*\n${underline}\n`;
+        details += `*CEP:* ${server.cep.toUpperCase()}\n`;
+        details += `*LOGRADOURO:* ${server.logradouro.toUpperCase()}\n`;
+        if (server.complemento) details += `*COMPLEMENTO:* ${server.complemento.toUpperCase()}\n`;
+        details += `*BAIRRO:* ${server.bairro.toUpperCase()}\n`;
+        details += `*CIDADE/ESTADO:* ${server.cidade.toUpperCase()}/${server.uf.toUpperCase()}\n\n`;
+
+        details += `*DADOS PROFISSIONAIS*\n${underline}\n`;
+        details += `*VÍNCULO:* ${server.vinculo.toUpperCase()}\n`;
+        if (server.matricula) details += `*MATRÍCULA:* ${server.matricula.toUpperCase()}\n`;
+        details += `*CARGO:* ${server.cargo.toUpperCase()}\n`;
+        details += `*FUNÇÃO:* ${server.funcao.toUpperCase()}\n`;
+        details += `*DATA DE INÍCIO:* ${server.dataInicio.toUpperCase()}\n`;
+        details += `*POSSUI DGA?:* ${server.possuiDGA.toUpperCase()}\n`;
+        if (server.especificacaoDGA) details += `*ESPECIFICAÇÃO DGA:* ${server.especificacaoDGA.toUpperCase()}\n`;
+        details += `*SETOR:* ${server.setor.toUpperCase()}\n`;
+        details += `*RAMAL:* ${server.ramal.toUpperCase()}\n`;
+        details += `*JORNADA:* ${server.jornada.toUpperCase()}\n`;
+        details += `*TURNO:* ${server.turno.toUpperCase()}\n`;
+        details += `*STATUS:* ${server.status.toUpperCase()}\n`;
+        details += `*E-MAIL INSTITUCIONAL:* ${server.emailInstitucional.toUpperCase()}\n\n`;
+
+        details += `*FORMAÇÃO*\n${underline}\n`;
+        details += `*ESCOLARIDADE:* ${server.escolaridade.toUpperCase()}\n`;
+        details += `*CURSO DE GRADUAÇÃO:* ${server.cursoGraduacao.toUpperCase()}\n`;
+        details += `*INSTITUIÇÃO DA GRADUAÇÃO:* ${server.instituicaoGraduacao.toUpperCase()}\n`;
+        details += `*ANO DE CONCLUSÃO (GRAD.):* ${server.anoConclusaoGrad.toUpperCase()}\n`;
+        if (server.escolaridade === 'Pós-Graduação') {
+            details += `*TIPO DE PÓS-GRADUAÇÃO:* ${server.tipoPosGraduacao.toUpperCase()}\n`;
+            details += `*CURSO DE PÓS-GRADUAÇÃO:* ${server.cursoPosGraduacao.toUpperCase()}\n`;
+            details += `*INSTITUIÇÃO DA PÓS-GRAD.:* ${server.instituicaoPosGrad.toUpperCase()}\n`;
+            details += `*ANO DE CONCLUSÃO (PÓS-GRAD.):* ${server.anoConclusaoPosGrad.toUpperCase()}\n`;
+        }
+        details += `\n`;
+
+        details += `*OBSERVAÇÕES*\n${underline}\n`;
+        details += `${server.observacoes.toUpperCase()}\n`;
+
+        return details.trim();
+    }
+
+      let details = `FICHA COMPLETA - ${server.nomeCompleto}\n\n`;
+
+      details += "DADOS PESSOAIS\n";
       details += `Nome Completo: ${server.nomeCompleto}\n`;
       details += `Nome Social: ${server.nomeSocial}\n`;
       details += `CPF: ${server.cpf}\n`;
@@ -424,20 +488,20 @@ export default function ServerListPage() {
       details += `Naturalidade: ${server.naturalidade}\n`;
       details += `PCD: ${server.pcd}\n\n`;
 
-      details += "*CONTATO*\n";
+      details += "CONTATO\n";
       details += `Telefone Principal: ${server.telefonePrincipal}\n`;
       if (server.telefoneSecundario) details += `Telefone Secundário: ${server.telefoneSecundario}\n`;
       details += `E-mail Pessoal: ${server.emailPessoal}\n`;
       details += `Contato de Emergência: ${server.contatoEmergenciaNome} - ${server.contatoEmergenciaTelefone}\n\n`;
 
-      details += "*ENDEREÇO*\n";
+      details += "ENDEREÇO\n";
       details += `CEP: ${server.cep}\n`;
       details += `Logradouro: ${server.logradouro}\n`;
       if (server.complemento) details += `Complemento: ${server.complemento}\n`;
       details += `Bairro: ${server.bairro}\n`;
       details += `Cidade/Estado: ${server.cidade}/${server.uf}\n\n`;
 
-      details += "*DADOS PROFISSIONAIS*\n";
+      details += "DADOS PROFISSIONAIS\n";
       details += `Vínculo: ${server.vinculo}\n`;
       if (server.matricula) details += `Matrícula: ${server.matricula}\n`;
       details += `Cargo: ${server.cargo}\n`;
@@ -452,7 +516,7 @@ export default function ServerListPage() {
       details += `Status: ${server.status}\n`;
       details += `E-mail Institucional: ${server.emailInstitucional}\n\n`;
 
-      details += "*FORMAÇÃO*\n";
+      details += "FORMAÇÃO\n";
       details += `Escolaridade: ${server.escolaridade}\n`;
       details += `Curso de Graduação: ${server.cursoGraduacao}\n`;
       details += `Instituição da Graduação: ${server.instituicaoGraduacao}\n`;
@@ -465,16 +529,16 @@ export default function ServerListPage() {
       }
       details += `\n`;
 
-      details += "*OBSERVAÇÕES*\n";
+      details += "OBSERVAÇÕES\n";
       details += `${server.observacoes}\n`;
 
       return details.trim();
   };
 
-  const getAllSelectedServersDetails = () => {
+  const getAllSelectedServersDetails = (forWhatsApp: boolean = false) => {
     return servers
       .filter(server => selectedServers[server.emailInstitucional])
-      .map(server => getSelectedServersDetails(server))
+      .map(server => getSelectedServersDetails(server, forWhatsApp))
       .join('\n\n---\n\n');
   }
 
@@ -526,7 +590,7 @@ export default function ServerListPage() {
   };
 
   const handleShareWhatsApp = () => {
-    const textToShare = getAllSelectedServersDetails();
+    const textToShare = getAllSelectedServersDetails(true);
     const encodedText = encodeURIComponent(textToShare);
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
     window.open(whatsappUrl, '_blank');
