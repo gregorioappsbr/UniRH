@@ -88,11 +88,17 @@ export function ServerList() {
                         </div>
                       )}
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 space-y-2">
                       <p className="font-semibold">{server.name}</p>
                       <p className="text-sm text-muted-foreground">{server.email}</p>
+                      {server.funcao && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Briefcase className="h-4 w-4" />
+                          <span>{server.funcao}</span>
+                        </div>
+                      )}
                       {server.phone && (
-                        <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Phone className="h-4 w-4" />
                           <span>{server.phone}</span>
                         </div>
