@@ -15,7 +15,7 @@ import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
 export default function NewServerPage() {
     const [cpf, setCpf] = useState('');
     const [rg, setRg] = useState('');
-    const [cep, setCep] = useState('');
+    const [cep, setCep]_useState('');
     const [telefonePrincipal, setTelefonePrincipal] = useState('');
     const [telefoneSecundario, setTelefoneSecundario] = useState('');
     const [contatoEmergencia, setContatoEmergencia] = useState('');
@@ -54,7 +54,7 @@ export default function NewServerPage() {
                     <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Observações</TabsTrigger>
                 </TabsList>
             </div>
-            <div className="flex-1 overflow-y-auto mt-4">
+            <div className="flex-1 overflow-y-auto mt-4 pb-24">
               <TabsContent value="pessoais" className="mt-8 md:mt-10">
                 <div className="space-y-8">
                   <div className="space-y-6">
