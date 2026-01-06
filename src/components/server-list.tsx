@@ -31,7 +31,7 @@ const servers = [
 export function ServerList() {
   return (
     <Card className="bg-card">
-      <CardHeader>
+      <CardHeader className="text-center">
         <CardTitle>Servidores Recentes</CardTitle>
         <CardDescription>
           Uma lista das últimas adições à sua equipe.
