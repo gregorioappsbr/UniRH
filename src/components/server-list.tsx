@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog, PenTool, GraduationCap, ChevronRight } from 'lucide-react';
+import { Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog, PenTool, GraduationCap, ArrowUpRight } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -232,7 +232,7 @@ export function ServerList() {
         <Button asChild className="w-full bg-blue-500 hover:bg-blue-600 text-white">
           <Link href="/servidores">
             Ver todos
-            <ChevronRight className="h-4 w-4 ml-2" />
+            <ArrowUpRight className="h-4 w-4 ml-2" />
           </Link>
         </Button>
       </CardFooter>
