@@ -12,8 +12,8 @@ import Link from "next/link"
 export default function NewServerPage() {
   return (
     <div className="p-4">
-      <Card>
-        <CardContent className="p-4 space-y-4 bg-background text-foreground">
+      <Card className="bg-card text-card-foreground">
+        <CardContent className="p-4 space-y-4">
           <header className="relative flex items-center justify-center">
             <h1 className="text-xl font-bold">Novo Servidor</h1>
             <Button variant="ghost" size="icon" asChild className="absolute right-0 top-1/2 -translate-y-1/2">

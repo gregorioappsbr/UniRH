@@ -139,7 +139,7 @@ export default function ServerProfilePage() {
           <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground">Licenças</TabsTrigger>
           <TabsTrigger value="ferias" className="data-[state=active]:text-primary-foreground">Férias</TabsTrigger>
         </TabsList>
-        <TabsContent value="ficha" className="mt-6 flex-1 flex flex-col">
+        <TabsContent value="ficha" className="mt-8 flex-1 flex flex-col">
           <Accordion type="single" collapsible className="w-full space-y-2">
             {fichaItems.map((item, index) => (
               <AccordionItem key={index} value={`item-${index}`} className="bg-card border-none rounded-lg">
@@ -159,7 +159,7 @@ export default function ServerProfilePage() {
             <Button className="w-full">Salvar Alterações</Button>
           </div>
         </TabsContent>
-        <TabsContent value="faltas" className="mt-6 flex flex-col flex-1">
+        <TabsContent value="faltas" className="mt-8 flex flex-col flex-1">
            <Card className="bg-card">
             <CardHeader className="flex flex-row items-center justify-between">
               <div className="flex items-center gap-2">
@@ -189,10 +189,10 @@ export default function ServerProfilePage() {
             <Button className="w-full">Salvar Alterações</Button>
           </div>
         </TabsContent>
-        <TabsContent value="licencas" className="mt-6">
+        <TabsContent value="licencas" className="mt-8">
           <p className="text-center text-muted-foreground">Conteúdo de Licenças.</p>
         </TabsContent>
-        <TabsContent value="ferias" className="mt-6">
+        <TabsContent value="ferias" className="mt-8">
           <p className="text-center text-muted-foreground">Conteúdo de Férias.</p>
         </TabsContent>
       </Tabs>
