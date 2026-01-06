@@ -152,23 +152,23 @@ export default function NewServerPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="cep">CEP</Label>
-                  <Input id="cep" />
+                  <Input id="cep" placeholder="00000-000" />
                 </div>
                 <div className="space-y-2 col-span-2">
                   <Label htmlFor="logradouro">Logradouro</Label>
-                  <Input id="logradouro" />
+                  <Input id="logradouro" placeholder="Ex: Rua das Flores" />
                 </div>
                  <div className="space-y-2">
                   <Label htmlFor="numero">Número</Label>
-                  <Input id="numero" />
+                  <Input id="numero" placeholder="Ex: 123" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="complemento">Complemento</Label>
-                  <Input id="complemento" />
+                  <Input id="complemento" placeholder="Ex: Apto 4B" />
                 </div>
                  <div className="space-y-2">
                   <Label htmlFor="bairro">Bairro</Label>
-                  <Input id="bairro" />
+                  <Input id="bairro" placeholder="Ex: Centro" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="cidade">Cidade</Label>
