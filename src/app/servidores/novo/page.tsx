@@ -23,6 +23,7 @@ export default function NewServerPage() {
     const [genero, setGenero] = useState('');
     const [isPCD, setIsPCD] = useState('nao');
     const [dataNascimento, setDataNascimento] = useState('');
+    const [dataInicio, setDataInicio] = useState('');
 
     const handleChange = (setter: React.Dispatch<React.SetStateAction<string>>, masker: (value: string) => string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setter(masker(event.target.value));
@@ -33,7 +34,7 @@ export default function NewServerPage() {
       <Card className="bg-card text-card-foreground border-border">
         <CardContent className="p-4 space-y-4">
           <header className="relative flex items-center justify-center">
-            <h1 className="text-xl font-bold">Novo Servidor</h1>
+            <h1 className="text-2xl font-bold">Novo Servidor</h1>
             <Button variant="ghost" size="icon" asChild className="absolute right-0 top-1/2 -translate-y-1/2">
               <Link href="/servidores">
                 <X className="h-5 w-5" />
@@ -349,7 +350,7 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2 w-[90%] md:w-full">
                       <Label htmlFor="data-inicio">Data de Início</Label>
-                      <Input id="data-inicio" type="date" />
+                      <Input id="data-inicio" type="text" placeholder="dd/mm/aaaa" value={dataInicio} onChange={handleChange(setDataInicio, maskDate)} maxLength={10} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="possui-dga">Possui DGA?</Label>
@@ -513,5 +514,3 @@ export default function NewServerPage() {
     </div>
   )
 }
-
-    
