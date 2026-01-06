@@ -1,3 +1,4 @@
+
 'use client';
 import { Header } from '@/components/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -58,6 +59,7 @@ export default function Home() {
             <AccordionContent>
               <CardContent>
                  <p className="text-xs text-green-500 mb-4 ml-2">+2 este mês</p>
+                 <p className="text-sm text-muted-foreground mb-4">Detalhes por vínculo:</p>
                  <div className="space-y-4">
                   {vinculos.map((vinculo) => (
                     <div key={vinculo.nome} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50">
