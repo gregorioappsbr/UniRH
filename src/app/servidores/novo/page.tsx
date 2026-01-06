@@ -13,7 +13,7 @@ import Link from "next/link"
 export default function NewServerPage() {
   return (
     <div className="p-4">
-      <Card className="bg-card text-card-foreground">
+      <Card className="bg-card text-card-foreground border-border">
         <CardContent className="p-4 space-y-4">
           <header className="relative flex items-center justify-center">
             <h1 className="text-xl font-bold">Novo Servidor</h1>
@@ -405,3 +405,5 @@ export default function NewServerPage() {
     </div>
   )
 }
+
+    
