@@ -430,8 +430,8 @@ export default function NewServerPage() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="ativo">Ativo</SelectItem>
-                          <SelectItem value="inativo">Inativo</SelectItem>
                            <SelectItem value="licenca">Licença</SelectItem>
+                           <SelectItem value="inativo">Inativo</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
