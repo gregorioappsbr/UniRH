@@ -3,7 +3,7 @@
 import {
   Home,
   Users,
-  FileText,
+  Notebook,
   Settings,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 const navItems = [
   { href: '/', label: 'Painel', icon: Home },
   { href: '/servidores', label: 'Servidores', icon: Users },
-  { href: '/notas', label: 'Notas', icon: FileText },
+  { href: '/notas', label: 'Notas', icon: Notebook },
   { href: '/ajustes', label: 'Ajustes', icon: Settings },
 ];
 
@@ -23,7 +23,7 @@ export function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border/50 h-20 flex justify-around items-center z-50">
       {navItems.map((item) => {
-        const isActive = pathname === item.href;
+        const isActive = pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/');
         return (
           <Link href={item.href} key={item.href}>
             <div
