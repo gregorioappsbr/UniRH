@@ -331,8 +331,11 @@ export default function NewServerPage() {
                           <SelectValue placeholder="Selecione o tipo de vínculo" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="vinculo1">Vínculo 1</SelectItem>
-                          <SelectItem value="vinculo2">Vínculo 2</SelectItem>
+                          <SelectItem value="efetivo">Efetivo</SelectItem>
+                          <SelectItem value="terceirizado">Terceirizado</SelectItem>
+                          <SelectItem value="cedido">Cedido</SelectItem>
+                          <SelectItem value="contratado">Contratado</SelectItem>
+                          <SelectItem value="comissionado">Comissionado</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
