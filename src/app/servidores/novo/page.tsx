@@ -321,6 +321,14 @@ export default function NewServerPage() {
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="instituicao">Instituição</Label>
+                  <Input id="instituicao" placeholder="Nome da instituição" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ano-conclusao">Ano de Conclusão</Label>
+                  <Input id="ano-conclusao" placeholder="Ex: 2010" />
+                </div>
               </div>
             </div>
           </div>
