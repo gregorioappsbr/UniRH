@@ -280,7 +280,7 @@ export default function NewServerPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                 <div className="space-y-2 md:col-span-2">
+                 <div className="space-y-2">
                   <Label htmlFor="status">Status</Label>
                   <Select>
                     <SelectTrigger id="status">
@@ -292,6 +292,10 @@ export default function NewServerPage() {
                        <SelectItem value="licenca">Licença</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="email-institucional">E-mail Institucional</Label>
+                  <Input id="email-institucional" type="email" placeholder="nome@workwise.com" />
                 </div>
               </div>
             </div>
