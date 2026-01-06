@@ -176,6 +176,10 @@ export default function NewServerPage() {
                       </Select>
                     </div>
                      <div className="space-y-2">
+                      <Label htmlFor="nacionalidade">Nacionalidade</Label>
+                      <Input id="nacionalidade" placeholder="Ex: Brasileiro(a)" />
+                    </div>
+                     <div className="space-y-2">
                       <Label htmlFor="naturalidade">Naturalidade</Label>
                       <Input id="naturalidade" placeholder="Ex: Campo Grande/MS" />
                     </div>
@@ -480,4 +484,5 @@ export default function NewServerPage() {
     
 
     
+
 
