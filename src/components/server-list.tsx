@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Star, KeyRound, Award, Briefcase } from 'lucide-react';
+import { Phone, Award, KeyRound, Briefcase } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -71,7 +71,7 @@ export function ServerList() {
                       )}
                       {server.rating && (
                         <div className={cn("flex items-center text-muted-foreground text-xs", getRatingClass(server.rating))}>
-                          <Star className="w-3 h-3 mr-1 fill-current" />
+                          <Award className="w-3 h-3 mr-1 fill-current" />
                           <span>Nota: {server.rating}</span>
                         </div>
                       )}
@@ -122,7 +122,7 @@ export function ServerList() {
                       </TableCell>
                       <TableCell>
                          <div className={cn("flex items-center", getRatingClass(server.rating))}>
-                            <Star className="w-3 h-3 mr-1 fill-current" />
+                            <Award className="w-3 h-3 mr-1 fill-current" />
                             <span>{server.rating}</span>
                           </div>
                       </TableCell>

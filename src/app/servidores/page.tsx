@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Star, Phone } from 'lucide-react';
+import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Phone } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -108,7 +108,7 @@ export default function ServerListPage() {
                     )}
                     {server.rating && (
                       <div className={cn("flex items-center text-muted-foreground", getRatingClass(server.rating))}>
-                        <Star className="w-3 h-3 mr-1 fill-current" />
+                        <Award className="w-3 h-3 mr-1 fill-current" />
                         <span>Nota: {server.rating}</span>
                       </div>
                     )}
