@@ -464,25 +464,47 @@ export default function NewServerPage() {
                 </div>
               </div>
 
-              <Card className="bg-card border border-border">
-                <CardHeader>
-                  <CardTitle className="text-base">Graduação Base</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="curso-graduacao-base">Curso de Graduação</Label>
-                    <Input id="curso-graduacao-base" placeholder="Ex: Análise de Sistemas" />
-                  </div>
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="instituicao-graduacao">Instituição de Graduação</Label>
-                    <Input id="instituicao-graduacao" placeholder="Nome da universidade" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="ano-conclusao-graduacao">Ano de Conclusão da Graduação</Label>
-                    <Input id="ano-conclusao-graduacao" placeholder="Ex: 2014" />
-                  </div>
-                </CardContent>
-              </Card>
+              {(escolaridade === 'ensino-fundamental' || escolaridade === 'ensino-medio') && (
+                <Card className="bg-card border border-border">
+                  <CardHeader>
+                    <CardTitle className="text-base">
+                      {escolaridade === 'ensino-fundamental' ? 'Ensino Fundamental' : 'Ensino Médio'}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="instituicao-ensino">Instituição de Ensino</Label>
+                      <Input id="instituicao-ensino" placeholder="Nome da escola" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="ano-conclusao-ensino">Ano de Conclusão</Label>
+                      <Input id="ano-conclusao-ensino" placeholder="Ex: 2010" />
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {(escolaridade === 'graduacao' || escolaridade === 'pos-graduacao') && (
+                <Card className="bg-card border border-border">
+                  <CardHeader>
+                    <CardTitle className="text-base">Graduação Base</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="curso-graduacao-base">Curso de Graduação</Label>
+                      <Input id="curso-graduacao-base" placeholder="Ex: Análise de Sistemas" />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="instituicao-graduacao">Instituição de Graduação</Label>
+                      <Input id="instituicao-graduacao" placeholder="Nome da universidade" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="ano-conclusao-graduacao">Ano de Conclusão da Graduação</Label>
+                      <Input id="ano-conclusao-graduacao" placeholder="Ex: 2014" />
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
               
               {escolaridade === 'pos-graduacao' && (
                 <Card className="bg-card border border-border">
