@@ -67,8 +67,10 @@ export default function NotesPage() {
                   <Button variant="ghost" size="icon">
                     <Share className="h-5 w-5 text-green-500" />
                   </Button>
-                  <Button variant="ghost" size="icon">
-                    <Edit className="h-5 w-5 text-blue-500" />
+                  <Button variant="ghost" size="icon" asChild>
+                    <Link href={{ pathname: '/notas/novo', query: { title: note.title, content: note.content } }}>
+                      <Edit className="h-5 w-5 text-blue-500" />
+                    </Link>
                   </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
