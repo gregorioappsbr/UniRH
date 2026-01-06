@@ -7,15 +7,17 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog, PenTool, GraduationCap } from 'lucide-react';
+import { Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog, PenTool, GraduationCap, ChevronRight } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
+import { Button } from './ui/button';
 
 
 const servers = [
@@ -37,15 +39,52 @@ const servers = [
     phone: '(67) 99999-5678',
     funcao: 'Desenvolvedor Frontend',
   },
+  {
+    initials: 'CD',
+    name: 'Carla Dias',
+    email: 'carla.dias@exemplo.com',
+    status: 'Licença',
+    rating: 7.2,
+    phone: '(67) 99999-4321',
+    funcao: 'Designer UI/UX',
+  },
+    {
+    initials: 'JD',
+    name: 'João Dias',
+    email: 'joao.dias@exemplo.com',
+    status: 'Inativo',
+    rating: 3.5,
+    phone: '(67) 98888-4321',
+    funcao: 'Estagiário',
+  },
+  {
+    initials: 'LTC',
+    name: 'Lilian Tenório Carvalho',
+    email: 'litencarv@uems.br',
+    status: 'Ativo',
+    rating: 3.2,
+    phone: '(67) 98167-2870',
+    funcao: 'ATNM',
+  },
+   {
+    initials: 'FG',
+    name: 'Fernando Gomes',
+    email: 'fernando.gomes@exemplo.com',
+    status: 'Ativo',
+    rating: 8.8,
+    phone: '(67) 98888-1111',
+    funcao: 'Desenvolvedor Backend',
+  },
 ];
 
 export function ServerList() {
     const isMobile = useIsMobile();
+    const recentServers = servers.slice(0, 5);
 
     const getRatingClass = (rating: number) => {
-        if (rating >= 8) return 'text-green-400 border-green-400';
-        if (rating >= 4) return 'text-yellow-400 border-yellow-400';
-        return 'text-red-400 border-red-400';
+        if (rating >= 8) return 'text-green-400';
+        if (rating >= 4) return 'text-yellow-400';
+        return 'text-red-400';
     };
 
     const getStatusClass = (status: string) => {
@@ -71,6 +110,8 @@ export function ServerList() {
           return <UserCog className="h-4 w-4" />;
         case 'Desenvolvedor Frontend':
           return <Code className="h-4 w-4" />;
+        case 'Desenvolvedor Backend':
+          return <Code className="h-4 w-4" />;
         case 'Designer UI/UX':
           return <PenTool className="h-4 w-4" />;
         case 'Estagiário':
@@ -92,7 +133,7 @@ export function ServerList() {
       <CardContent>
         {isMobile ? (
              <div className="space-y-4">
-                {servers.map((server, index) => (
+                {recentServers.map((server, index) => (
                   <div key={index} className="flex items-start gap-4 border-b pb-4 last:border-b-0">
                     <div className="flex flex-col items-center gap-2">
                       <Avatar>
@@ -105,7 +146,7 @@ export function ServerList() {
                         </Badge>
                       )}
                       {server.rating && (
-                        <div className={cn("flex items-center text-muted-foreground text-xs", getRatingClass(server.rating))}>
+                        <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
                           <Award className="w-3 h-3 mr-1 fill-current" />
                           <span>Nota: {server.rating}</span>
                         </div>
@@ -142,7 +183,7 @@ export function ServerList() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {servers.map((server, index) => (
+                  {recentServers.map((server, index) => (
                     <TableRow key={index}>
                       <TableCell>
                         <div className="flex items-center gap-3">
@@ -185,6 +226,16 @@ export function ServerList() {
               </Table>
         )}
       </CardContent>
+       <CardFooter className="pt-6">
+        <Button asChild variant="outline" className="w-full">
+          <Link href="/servidores">
+            Ver todos
+            <ChevronRight className="h-4 w-4 ml-2" />
+          </Link>
+        </Button>
+      </CardFooter>
     </Card>
   );
 }
+
+    

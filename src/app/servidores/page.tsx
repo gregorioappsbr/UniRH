@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -47,14 +48,32 @@ const servers = [
     phone: '(67) 98888-4321',
     funcao: 'Estagiário',
   },
+  {
+    initials: 'LTC',
+    name: 'Lilian Tenório Carvalho',
+    email: 'litencarv@uems.br',
+    status: 'Ativo',
+    rating: 3.2,
+    phone: '(67) 98167-2870',
+    funcao: 'ATNM',
+  },
+   {
+    initials: 'FG',
+    name: 'Fernando Gomes',
+    email: 'fernando.gomes@exemplo.com',
+    status: 'Ativo',
+    rating: 8.8,
+    phone: '(67) 98888-1111',
+    funcao: 'Desenvolvedor Backend',
+  },
 ];
 
 export default function ServerListPage() {
 
   const getRatingClass = (rating: number) => {
-    if (rating >= 8) return 'text-green-400 border-green-400';
-    if (rating >= 4) return 'text-yellow-400 border-yellow-400';
-    return 'text-red-400 border-red-400';
+    if (rating >= 8) return 'text-green-400';
+    if (rating >= 4) return 'text-yellow-400';
+    return 'text-red-400';
   };
 
   const getStatusClass = (status: string) => {
@@ -79,6 +98,8 @@ export default function ServerListPage() {
       case 'Gerente de Projetos':
         return <UserCog className="h-4 w-4" />;
       case 'Desenvolvedor Frontend':
+        return <Code className="h-4 w-4" />;
+      case 'Desenvolvedor Backend':
         return <Code className="h-4 w-4" />;
       case 'Designer UI/UX':
         return <PenTool className="h-4 w-4" />;
@@ -174,3 +195,5 @@ export default function ServerListPage() {
     </div>
   );
 }
+
+    
