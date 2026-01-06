@@ -26,6 +26,7 @@ export default function NewServerPage() {
     const [dataInicio, setDataInicio] = useState('');
     const [possuiDGA, setPossuiDGA] = useState('nao');
     const [tipoVinculo, setTipoVinculo] = useState('');
+    const [turno, setTurno] = useState('');
 
     const handleChange = (setter: React.Dispatch<React.SetStateAction<string>>, masker: (value: string) => string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setter(masker(event.target.value));
@@ -402,7 +403,7 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="turno">Turno</Label>
-                      <Select>
+                      <Select onValueChange={setTurno}>
                         <SelectTrigger id="turno">
                           <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
@@ -410,9 +411,17 @@ export default function NewServerPage() {
                           <SelectItem value="matutino">Matutino</SelectItem>
                           <SelectItem value="vespertino">Vespertino</SelectItem>
                            <SelectItem value="noturno">Noturno</SelectItem>
+                           <SelectItem value="integral">Integral</SelectItem>
+                           <SelectItem value="outro">Outro</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
+                    {turno === 'outro' && (
+                        <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor="outro-turno">Qual?</Label>
+                            <Textarea id="outro-turno" placeholder="Descreva o turno..."/>
+                        </div>
+                    )}
                      <div className="space-y-2">
                       <Label htmlFor="status">Status</Label>
                       <Select>
