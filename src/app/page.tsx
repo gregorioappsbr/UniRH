@@ -45,14 +45,10 @@ export default function Home() {
             <AccordionTrigger className="w-full hover:no-underline p-4">
               <div className="flex justify-between items-start w-full">
                 <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <Users className="h-5 w-5 text-muted-foreground" />
-                    <CardTitle className="text-sm font-medium">
-                      Total de Servidores
-                    </CardTitle>
-                  </div>
+                  <CardTitle className="text-sm font-medium">
+                    Total de Servidores
+                  </CardTitle>
                   <div className="flex items-center gap-2">
-                     <User className="h-8 w-8 text-primary" />
                     <div className="text-4xl font-bold">5</div>
                   </div>
                 </div>
@@ -83,4 +79,3 @@ export default function Home() {
     </div>
   );
 }
-
