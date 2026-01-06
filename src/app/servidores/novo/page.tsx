@@ -269,33 +269,33 @@ export default function NewServerPage() {
                           <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="AC">Acre</SelectItem>
-                          <SelectItem value="AL">Alagoas</SelectItem>
-                          <SelectItem value="AP">Amapá</SelectItem>
-                          <SelectItem value="AM">Amazonas</SelectItem>
-                          <SelectItem value="BA">Bahia</SelectItem>
-                          <SelectItem value="CE">Ceará</SelectItem>
-                          <SelectItem value="DF">Distrito Federal</SelectItem>
-                          <SelectItem value="ES">Espírito Santo</SelectItem>
-                          <SelectItem value="GO">Goiás</SelectItem>
-                          <SelectItem value="MA">Maranhão</SelectItem>
-                          <SelectItem value="MT">Mato Grosso</SelectItem>
-                          <SelectItem value="MS">Mato Grosso do Sul</SelectItem>
-                          <SelectItem value="MG">Minas Gerais</SelectItem>
-                          <SelectItem value="PA">Pará</SelectItem>
-                          <SelectItem value="PB">Paraíba</SelectItem>
-                          <SelectItem value="PR">Paraná</SelectItem>
-                          <SelectItem value="PE">Pernambuco</SelectItem>
-                          <SelectItem value="PI">Piauí</SelectItem>
-                          <SelectItem value="RJ">Rio de Janeiro</SelectItem>
-                          <SelectItem value="RN">Rio Grande do Norte</SelectItem>
-                          <SelectItem value="RS">Rio Grande do Sul</SelectItem>
-                          <SelectItem value="RO">Rondônia</SelectItem>
-                          <SelectItem value="RR">Roraima</SelectItem>
-                          <SelectItem value="SC">Santa Catarina</SelectItem>
-                          <SelectItem value="SP">São Paulo</SelectItem>
-                          <SelectItem value="SE">Sergipe</SelectItem>
-                          <SelectItem value="TO">Tocantins</SelectItem>
+                          <SelectItem value="AC">AC</SelectItem>
+                          <SelectItem value="AL">AL</SelectItem>
+                          <SelectItem value="AP">AP</SelectItem>
+                          <SelectItem value="AM">AM</SelectItem>
+                          <SelectItem value="BA">BA</SelectItem>
+                          <SelectItem value="CE">CE</SelectItem>
+                          <SelectItem value="DF">DF</SelectItem>
+                          <SelectItem value="ES">ES</SelectItem>
+                          <SelectItem value="GO">GO</SelectItem>
+                          <SelectItem value="MA">MA</SelectItem>
+                          <SelectItem value="MT">MT</SelectItem>
+                          <SelectItem value="MS">MS</SelectItem>
+                          <SelectItem value="MG">MG</SelectItem>
+                          <SelectItem value="PA">PA</SelectItem>
+                          <SelectItem value="PB">PB</SelectItem>
+                          <SelectItem value="PR">PR</SelectItem>
+                          <SelectItem value="PE">PE</SelectItem>
+                          <SelectItem value="PI">PI</SelectItem>
+                          <SelectItem value="RJ">RJ</SelectItem>
+                          <SelectItem value="RN">RN</SelectItem>
+                          <SelectItem value="RS">RS</SelectItem>
+                          <SelectItem value="RO">RO</SelectItem>
+                          <SelectItem value="RR">RR</SelectItem>
+                          <SelectItem value="SC">SC</SelectItem>
+                          <SelectItem value="SP">SP</SelectItem>
+                          <SelectItem value="SE">SE</SelectItem>
+                          <SelectItem value="TO">TO</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -509,5 +509,3 @@ export default function NewServerPage() {
     </div>
   )
 }
-
-    
