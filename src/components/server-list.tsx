@@ -136,8 +136,8 @@ export function ServerList() {
                 {recentServers.map((server, index) => (
                   <div key={index} className="flex items-start gap-4 border-b pb-4 last:border-b-0">
                     <div className="flex flex-col items-center gap-2">
-                      <Avatar>
-                        <AvatarFallback>{server.initials}</AvatarFallback>
+                      <Avatar className="h-12 w-12">
+                        <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                       </Avatar>
                        <div className="flex flex-col items-center gap-1">
                         {server.status && (
@@ -189,8 +189,8 @@ export function ServerList() {
                     <TableRow key={index}>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                            <Avatar>
-                                <AvatarFallback>{server.initials}</AvatarFallback>
+                            <Avatar className="h-12 w-12">
+                                <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                             </Avatar>
                             <div>
                                 <p className="font-semibold">{server.name}</p>

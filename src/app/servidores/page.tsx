@@ -158,8 +158,8 @@ export default function ServerListPage() {
                     <Checkbox id={`server-${index}`} className="mt-1" />
                     <div className="flex flex-col items-center gap-2">
                       <Link href={`/servidores/${index}`}>
-                        <Avatar>
-                          <AvatarFallback>{server.initials}</AvatarFallback>
+                        <Avatar className="h-12 w-12">
+                          <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                         </Avatar>
                       </Link>
                        <div className="flex flex-col items-center gap-1">
@@ -221,8 +221,8 @@ export default function ServerListPage() {
                         <div className="flex items-center gap-3">
                           <Checkbox id={`server-desktop-${index}`} />
                           <Link href={`/servidores/${index}`} className="flex items-center gap-3">
-                              <Avatar>
-                                  <AvatarFallback>{server.initials}</AvatarFallback>
+                              <Avatar className="h-12 w-12">
+                                  <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                               </Avatar>
                               <div>
                                   <p className="font-semibold">{server.name}</p>
