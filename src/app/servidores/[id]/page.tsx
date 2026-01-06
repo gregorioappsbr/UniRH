@@ -5,9 +5,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ArrowLeft, Mail, Phone, Type, Building, Edit, Trash2, Star, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, Type, Building, Edit, Trash2, Star, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ServerProfilePage() {
@@ -31,6 +31,13 @@ export default function ServerProfilePage() {
     { icon: Briefcase, label: "Dados Profissionais", content: "Conteúdo de Dados Profissionais." },
     { icon: GraduationCap, label: "Formação", content: "Conteúdo de Formação." },
     { icon: Info, label: "Observações", content: "Conteúdo de Observações." },
+  ];
+
+  const faltas = [
+    {
+      date: '19 de fevereiro de 2024',
+      reason: 'Assuntos pessoais',
+    }
   ];
 
   return (
@@ -100,7 +107,7 @@ export default function ServerProfilePage() {
         </CardContent>
       </Card>
       
-      <Tabs defaultValue="ficha" className="w-full flex-1 flex flex-col">
+      <Tabs defaultValue="faltas" className="w-full flex-1 flex flex-col">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="ficha">Ficha</TabsTrigger>
           <TabsTrigger value="faltas">Faltas</TabsTrigger>
@@ -127,8 +134,35 @@ export default function ServerProfilePage() {
             <Button className="w-full">Salvar Alterações</Button>
           </div>
         </TabsContent>
-        <TabsContent value="faltas" className="mt-4">
-          <p className="text-center text-muted-foreground">Conteúdo de Faltas.</p>
+        <TabsContent value="faltas" className="mt-4 flex flex-col flex-1">
+           <Card className="bg-card">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-2">
+                <CalendarX className="h-6 w-6 text-primary" />
+                <CardTitle className="text-lg">Faltas</CardTitle>
+              </div>
+              <Button variant="outline" size="sm">
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Adicionar Falta
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {faltas.map((falta, index) => (
+                <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-background">
+                  <div>
+                    <p className="font-medium">{falta.date}</p>
+                    <p className="text-sm text-muted-foreground">{falta.reason}</p>
+                  </div>
+                  <Button variant="ghost" size="icon">
+                    <MoreHorizontal className="h-5 w-5" />
+                  </Button>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+          <div className="mt-auto pt-4">
+            <Button className="w-full">Salvar Alterações</Button>
+          </div>
         </TabsContent>
         <TabsContent value="licencas" className="mt-4">
           <p className="text-center text-muted-foreground">Conteúdo de Licenças.</p>
