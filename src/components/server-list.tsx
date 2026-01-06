@@ -52,19 +52,21 @@ export function ServerList() {
              <div className="space-y-4">
                 {servers.map((server, index) => (
                   <div key={index} className="flex items-start gap-4 border-b pb-4 last:border-b-0">
-                    <Avatar>
-                      <AvatarFallback>{server.initials}</AvatarFallback>
-                    </Avatar>
+                    <div className="flex flex-col items-center gap-2">
+                      <Avatar>
+                        <AvatarFallback>{server.initials}</AvatarFallback>
+                      </Avatar>
+                      {server.status && (
+                        <Badge variant="outline" className={cn("text-xs", server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400")}>
+                          {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
+                          {server.status}
+                        </Badge>
+                      )}
+                    </div>
                     <div className="flex-1">
                       <p className="font-semibold">{server.name}</p>
                       <p className="text-sm text-muted-foreground">{server.email}</p>
                       <div className="flex items-center gap-4 mt-2 text-xs">
-                        {server.status && (
-                          <Badge variant="outline" className={cn(server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400")}>
-                            {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
-                            {server.status}
-                          </Badge>
-                        )}
                         {server.rating && (
                           <div className="flex items-center text-muted-foreground">
                             <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
