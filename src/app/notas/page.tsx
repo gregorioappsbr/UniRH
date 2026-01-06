@@ -9,6 +9,7 @@ import { PlusCircle, Notebook, Share, Edit, Trash2, FileText, Copy, FileDown } f
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import type { jsPDF } from "jspdf";
+import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 
 const initialNotes = [
   {
@@ -109,6 +110,13 @@ export default function NotesPage() {
     });
   };
 
+  const handleShareWhatsApp = (note: Note) => {
+    const textToShare = `${note.title}\n\n${note.content}`;
+    const encodedText = encodeURIComponent(textToShare);
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   const handleExportPDF = async (note: Note) => {
     try {
       const { jsPDF } = await import('jspdf');
@@ -201,6 +209,10 @@ export default function NotesPage() {
                       <DropdownMenuItem onClick={() => handleShare(note)}>
                         <FileText className="mr-2 h-4 w-4" />
                         <span>Compartilhar como Texto</span>
+                      </DropdownMenuItem>
+                       <DropdownMenuItem onClick={() => handleShareWhatsApp(note)}>
+                        <WhatsAppIcon className="mr-2 h-4 w-4" />
+                        <span>Compartilhar no WhatsApp</span>
                       </DropdownMenuItem>
                        <DropdownMenuItem onClick={() => handleCopy(note)}>
                         <Copy className="mr-2 h-4 w-4" />
