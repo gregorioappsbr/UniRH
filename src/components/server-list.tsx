@@ -139,23 +139,25 @@ export function ServerList() {
                       <Avatar>
                         <AvatarFallback>{server.initials}</AvatarFallback>
                       </Avatar>
-                      {server.status && (
-                        <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
-                          {getStatusIcon(server.status)}
-                          {server.status}
-                        </Badge>
-                      )}
-                      {server.rating && (
-                        <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
-                          <Award className="w-3 h-3 mr-1 fill-current" />
-                          <span>Nota: {server.rating}</span>
-                        </div>
-                      )}
+                       <div className="flex flex-col items-center gap-1">
+                        {server.status && (
+                          <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
+                            {getStatusIcon(server.status)}
+                            {server.status}
+                          </Badge>
+                        )}
+                        {server.rating && (
+                          <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
+                            <Award className="w-3 h-3 mr-1 fill-current" />
+                            <span>Nota: {server.rating}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="flex-1 space-y-2">
                       <p className="font-semibold">{server.name}</p>
                       <p className="text-sm text-muted-foreground">{server.email}</p>
-                      {server.funcao && (
+                       {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           {getFuncaoIcon(server.funcao)}
                           <span>{server.funcao}</span>
@@ -227,7 +229,7 @@ export function ServerList() {
         )}
       </CardContent>
        <CardFooter className="pt-6">
-        <Button asChild variant="outline" className="w-full">
+        <Button asChild className="w-full bg-blue-500 hover:bg-blue-600 text-white">
           <Link href="/servidores">
             Ver todos
             <ChevronRight className="h-4 w-4 ml-2" />
@@ -237,5 +239,3 @@ export function ServerList() {
     </Card>
   );
 }
-
-    
