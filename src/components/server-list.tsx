@@ -1,3 +1,4 @@
+'use client';
 
 import {
   Card,
@@ -6,9 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Phone, Star, KeyRound, Award } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
+
 
 const servers = [
   {
@@ -30,6 +35,8 @@ const servers = [
 ];
 
 export function ServerList() {
+    const isMobile = useIsMobile();
+
   return (
     <Card className="bg-card">
       <CardHeader className="text-center">
@@ -38,38 +45,88 @@ export function ServerList() {
           Uma lista das últimas adições à sua equipe.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {servers.map((server, index) => (
-          <div key={index} className="flex items-start gap-4 border-b pb-4 last:border-b-0">
-            <Avatar>
-              <AvatarFallback>{server.initials}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1">
-              <p className="font-semibold">{server.name}</p>
-              <p className="text-sm text-muted-foreground">{server.email}</p>
-              <div className="flex items-center gap-4 mt-2 text-xs">
-                {server.status && (
-                  <Badge variant="outline" className={server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400"}>
-                    {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
-                    {server.status}
-                  </Badge>
-                )}
-                {server.rating && (
-                  <div className="flex items-center text-muted-foreground">
-                    <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
-                    <span>Nota: {server.rating}</span>
+      <CardContent>
+        {isMobile ? (
+             <div className="space-y-4">
+                {servers.map((server, index) => (
+                  <div key={index} className="flex items-start gap-4 border-b pb-4 last:border-b-0">
+                    <Avatar>
+                      <AvatarFallback>{server.initials}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <p className="font-semibold">{server.name}</p>
+                      <p className="text-sm text-muted-foreground">{server.email}</p>
+                      <div className="flex items-center gap-4 mt-2 text-xs">
+                        {server.status && (
+                          <Badge variant="outline" className={cn(server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400")}>
+                            {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
+                            {server.status}
+                          </Badge>
+                        )}
+                        {server.rating && (
+                          <div className="flex items-center text-muted-foreground">
+                            <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
+                            <span>Nota: {server.rating}</span>
+                          </div>
+                        )}
+                      </div>
+                      {server.phone && (
+                        <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+                          <Phone className="h-4 w-4" />
+                          <span>{server.phone}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
-              </div>
-              {server.phone && (
-                <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
-                  <Phone className="h-4 w-4" />
-                  <span>{server.phone}</span>
-                </div>
-              )}
+                ))}
             </div>
-          </div>
-        ))}
+        ) : (
+             <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Servidor</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Nota</TableHead>
+                    <TableHead>Contato</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {servers.map((server, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                            <Avatar>
+                                <AvatarFallback>{server.initials}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                                <p className="font-semibold">{server.name}</p>
+                                <p className="text-sm text-muted-foreground">{server.email}</p>
+                            </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                         <Badge variant="outline" className={cn(server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400")}>
+                            {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
+                            {server.status}
+                          </Badge>
+                      </TableCell>
+                      <TableCell>
+                         <div className="flex items-center text-muted-foreground">
+                            <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
+                            <span>{server.rating}</span>
+                          </div>
+                      </TableCell>
+                       <TableCell>
+                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Phone className="h-4 w-4" />
+                            <span>{server.phone}</span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+        )}
       </CardContent>
     </Card>
   );
