@@ -26,11 +26,11 @@ export default function NewServerPage() {
 
           <Tabs defaultValue="pessoais" className="w-full">
             <div className="border rounded-md">
-              <TabsList className="items-center justify-center rounded-md p-1 grid w-full grid-cols-2 md:grid-cols-4 text-foreground bg-muted">
-                <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground">Dados Pessoais</TabsTrigger>
-                <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground">Dados Profissionais</TabsTrigger>
-                <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground">Formação</TabsTrigger>
-                <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground">Observações</TabsTrigger>
+              <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap md:grid w-full md:grid-cols-4 text-foreground bg-muted">
+                <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Pessoais</TabsTrigger>
+                <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Profissionais</TabsTrigger>
+                <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Formação</TabsTrigger>
+                <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Observações</TabsTrigger>
               </TabsList>
             </div>
             <TabsContent value="pessoais" className="mt-8 md:mt-10">

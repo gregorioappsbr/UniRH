@@ -135,11 +135,11 @@ export default function ServerProfilePage() {
       
       <Tabs defaultValue="faltas" className="w-full flex-1 flex flex-col">
         <div className="border rounded-md">
-          <TabsList className="items-center justify-center rounded-md p-1 grid w-full grid-cols-2 md:grid-cols-4 text-foreground bg-muted">
-            <TabsTrigger value="ficha" className="data-[state=active]:text-primary-foreground">Ficha</TabsTrigger>
-            <TabsTrigger value="faltas" className="data-[state=active]:text-primary-foreground">Faltas</TabsTrigger>
-            <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground">Licenças</TabsTrigger>
-            <TabsTrigger value="ferias" className="data-[state=active]:text-primary-foreground">Férias</TabsTrigger>
+          <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap md:grid w-full md:grid-cols-4 text-foreground bg-muted">
+            <TabsTrigger value="ficha" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Ficha</TabsTrigger>
+            <TabsTrigger value="faltas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Faltas</TabsTrigger>
+            <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Licenças</TabsTrigger>
+            <TabsTrigger value="ferias" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Férias</TabsTrigger>
           </TabsList>
         </div>
         <TabsContent value="ficha" className="mt-8 flex-1 flex flex-col md:mt-10">
