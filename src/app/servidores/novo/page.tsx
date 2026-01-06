@@ -1,9 +1,11 @@
 'use client'
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
 import { X } from "lucide-react"
 import Link from "next/link"
 
@@ -305,40 +307,50 @@ export default function NewServerPage() {
           <div className="space-y-8">
             <div className="space-y-6">
               <h2 className="text-lg font-semibold">Formação Acadêmica</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="escolaridade">Escolaridade</Label>
-                  <Select>
-                    <SelectTrigger id="escolaridade">
-                      <SelectValue placeholder="Selecione o nível de..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="nao-alfabetizado">Não Alfabetizado</SelectItem>
-                      <SelectItem value="ensino-fundamental">Ensino Fundamental</SelectItem>
-                      <SelectItem value="ensino-medio">Ensino Médio</SelectItem>
-                      <SelectItem value="graduacao">Graduação</SelectItem>
-                      <SelectItem value="pos-graduacao">Pós-Graduação</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="curso-graduacao">Curso de Graduação</Label>
-                  <Input id="curso-graduacao" placeholder="Ex: Análise de Sistemas" />
-                </div>
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="instituicao">Instituição</Label>
-                  <Input id="instituicao" placeholder="Nome da universidade" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="ano-conclusao">Ano de Conclusão</Label>
-                  <Input id="ano-conclusao" placeholder="Ex: 2014" />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="escolaridade">Escolaridade</Label>
+                <Select>
+                  <SelectTrigger id="escolaridade">
+                    <SelectValue placeholder="Selecione o nível de..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="nao-alfabetizado">Não Alfabetizado</SelectItem>
+                    <SelectItem value="ensino-fundamental">Ensino Fundamental</SelectItem>
+                    <SelectItem value="ensino-medio">Ensino Médio</SelectItem>
+                    <SelectItem value="graduacao">Graduação</SelectItem>
+                    <SelectItem value="pos-graduacao">Pós-Graduação</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
+
+            <Card className="bg-card border border-border">
+              <CardHeader>
+                <CardTitle className="text-base">Graduação Base</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="curso-graduacao-base">Curso de Graduação</Label>
+                  <Input id="curso-graduacao-base" placeholder="Ex: Análise de Sistemas" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="instituicao-graduacao">Instituição de Graduação</Label>
+                  <Input id="instituicao-graduacao" placeholder="Nome da universidade" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ano-conclusao-graduacao">Ano de Conclusão da Graduação</Label>
+                  <Input id="ano-conclusao-graduacao" placeholder="Ex: 2014" />
+                </div>
+              </CardContent>
+            </Card>
+
           </div>
         </TabsContent>
-        <TabsContent value="observacoes">
-          <p>Observações aqui.</p>
+        <TabsContent value="observacoes" className="mt-6">
+           <div className="space-y-4">
+            <Label htmlFor="observacoes-text">Observações</Label>
+            <Textarea id="observacoes-text" placeholder="Adicione qualquer observação sobre o servidor." rows={8} />
+          </div>
         </TabsContent>
       </Tabs>
 
