@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Share2, KeyRound, Medal, Phone } from 'lucide-react';
+import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Phone } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -102,13 +102,13 @@ export default function ServerListPage() {
                   <div className="flex items-center gap-4 mt-2 text-xs">
                     {server.status && (
                        <Badge variant="outline" className={server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400"}>
-                        {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Medal className="w-3 h-3 mr-1" />}
+                        {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
                         {server.status}
                       </Badge>
                     )}
                     {server.rating && (
                       <div className={cn("flex items-center text-muted-foreground", getRatingClass(server.rating))}>
-                        <Medal className="w-3 h-3 mr-1 fill-current" />
+                        <Award className="w-3 h-3 mr-1 fill-current" />
                         <span>Nota: {server.rating}</span>
                       </div>
                     )}

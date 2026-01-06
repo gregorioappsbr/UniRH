@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Medal, KeyRound, Briefcase } from 'lucide-react';
+import { Phone, Award, KeyRound, Briefcase } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -65,13 +65,13 @@ export function ServerList() {
                       </Avatar>
                       {server.status && (
                         <Badge variant="outline" className={cn("text-xs", server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400")}>
-                          {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Medal className="w-3 h-3 mr-1" />}
+                          {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
                           {server.status}
                         </Badge>
                       )}
                       {server.rating && (
                         <div className={cn("flex items-center text-muted-foreground text-xs", getRatingClass(server.rating))}>
-                          <Medal className="w-3 h-3 mr-1 fill-current" />
+                          <Award className="w-3 h-3 mr-1 fill-current" />
                           <span>Nota: {server.rating}</span>
                         </div>
                       )}
@@ -116,13 +116,13 @@ export function ServerList() {
                       </TableCell>
                       <TableCell>
                          <Badge variant="outline" className={cn(server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400")}>
-                            {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Medal className="w-3 h-3 mr-1" />}
+                            {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
                             {server.status}
                           </Badge>
                       </TableCell>
                       <TableCell>
                          <div className={cn("flex items-center", getRatingClass(server.rating))}>
-                            <Medal className="w-3 h-3 mr-1 fill-current" />
+                            <Award className="w-3 h-3 mr-1 fill-current" />
                             <span>{server.rating}</span>
                           </div>
                       </TableCell>
