@@ -145,20 +145,6 @@ export default function NewServerPage() {
                         </div>
                     )}
                     <div className="space-y-2">
-                      <Label htmlFor="estado-civil">Estado Civil</Label>
-                       <Select>
-                        <SelectTrigger id="estado-civil">
-                          <SelectValue placeholder="Selecione" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="solteiro">Solteiro(a)</SelectItem>
-                          <SelectItem value="casado">Casado(a)</SelectItem>
-                          <SelectItem value="divorciado">Divorciado(a)</SelectItem>
-                          <SelectItem value="viuvo">Viúvo(a)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
                       <Label htmlFor="raca-cor">Raça/Cor</Label>
                        <Select>
                         <SelectTrigger id="raca-cor">
@@ -170,6 +156,20 @@ export default function NewServerPage() {
                           <SelectItem value="parda">Parda</SelectItem>
                           <SelectItem value="amarela">Amarela</SelectItem>
                           <SelectItem value="indigena">Indígena</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="estado-civil">Estado Civil</Label>
+                       <Select>
+                        <SelectTrigger id="estado-civil">
+                          <SelectValue placeholder="Selecione" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="solteiro">Solteiro(a)</SelectItem>
+                          <SelectItem value="casado">Casado(a)</SelectItem>
+                          <SelectItem value="divorciado">Divorciado(a)</SelectItem>
+                          <SelectItem value="viuvo">Viúvo(a)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
