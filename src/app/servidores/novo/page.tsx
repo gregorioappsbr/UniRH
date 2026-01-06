@@ -73,7 +73,7 @@ export default function NewServerPage() {
                       <Label htmlFor="orgao-emissor">Órgão Emissor</Label>
                       <Input id="orgao-emissor" placeholder="Ex: SSP/MS" />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 w-[90%] md:w-full">
                       <Label htmlFor="data-nascimento">Data de Nascimento</Label>
                       <Input id="data-nascimento" type="date" />
                     </div>
