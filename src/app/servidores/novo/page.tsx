@@ -15,7 +15,7 @@ import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
 export default function NewServerPage() {
     const [cpf, setCpf] = useState('');
     const [rg, setRg] = useState('');
-    const [cep, setCep]_useState('');
+    const [cep, setCep] = useState('');
     const [telefonePrincipal, setTelefonePrincipal] = useState('');
     const [telefoneSecundario, setTelefoneSecundario] = useState('');
     const [contatoEmergencia, setContatoEmergencia] = useState('');
