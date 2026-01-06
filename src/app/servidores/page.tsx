@@ -249,7 +249,7 @@ export default function ServerListPage() {
                           <span>{server.funcao}</span>
                         </div>
                       </TableCell>
-                       <TableCell className="text-right pr-8">
+                       <TableCell className="text-right pr-8 whitespace-nowrap">
                          <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary justify-end">
                             <WhatsAppIcon className="h-4 w-4" />
                             <span>{server.phone}</span>
