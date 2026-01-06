@@ -1,8 +1,6 @@
-
-
 'use client'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -10,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { X } from "lucide-react"
 import Link from "next/link"
-import React, { useState } from "react"
+import React from "react"
 import { useForm, Controller } from "react-hook-form";
 import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
 
@@ -35,7 +33,7 @@ export default function NewServerPage() {
     };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="p-4 h-screen flex flex-col">
+    <form onSubmit={handleSubmit(onSubmit)} className="p-4 h-full flex flex-col">
       <header className="relative flex items-center justify-center mb-4">
         <h1 className="text-3xl font-bold">Novo Servidor</h1>
         <Button variant="ghost" size="icon" asChild className="absolute right-0 top-1/2 -translate-y-1/2">
@@ -649,5 +647,3 @@ export default function NewServerPage() {
     </form>
   )
 }
-
-    
