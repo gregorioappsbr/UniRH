@@ -6,6 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Star, Phone } from 'lucide-react';
+import Link from 'next/link';
 
 const servers = [
   {
@@ -47,9 +48,11 @@ export default function ServerListPage() {
         </p>
       </header>
 
-      <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white">
-        <PlusCircle className="mr-2 h-4 w-4" />
-        Adicionar Novo Servidor
+      <Button asChild className="w-full bg-blue-500 hover:bg-blue-600 text-white">
+        <Link href="/servidores/novo">
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Adicionar Novo Servidor
+        </Link>
       </Button>
 
       <div className="grid grid-cols-2 gap-2">
