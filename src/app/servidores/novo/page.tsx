@@ -322,12 +322,16 @@ export default function NewServerPage() {
                   </Select>
                 </div>
                 <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="curso-graduacao">Curso de Graduação</Label>
+                  <Input id="curso-graduacao" placeholder="Ex: Análise de Sistemas" />
+                </div>
+                <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="instituicao">Instituição</Label>
-                  <Input id="instituicao" placeholder="Nome da instituição" />
+                  <Input id="instituicao" placeholder="Nome da universidade" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="ano-conclusao">Ano de Conclusão</Label>
-                  <Input id="ano-conclusao" placeholder="Ex: 2010" />
+                  <Input id="ano-conclusao" placeholder="Ex: 2014" />
                 </div>
               </div>
             </div>
