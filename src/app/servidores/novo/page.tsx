@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { X } from "lucide-react"
 import Link from "next/link"
 import React, { useState } from "react"
-import { maskCPF, maskRG, maskCEP, maskPhone } from "@/lib/masks"
+import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
 
 export default function NewServerPage() {
     const [cpf, setCpf] = useState('');
@@ -22,6 +22,7 @@ export default function NewServerPage() {
     const [possuiCNH, setPossuiCNH] = useState('nao');
     const [genero, setGenero] = useState('');
     const [isPCD, setIsPCD] = useState('nao');
+    const [dataNascimento, setDataNascimento] = useState('');
 
     const handleChange = (setter: React.Dispatch<React.SetStateAction<string>>, masker: (value: string) => string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setter(masker(event.target.value));
@@ -120,7 +121,7 @@ export default function NewServerPage() {
                     )}
                     <div className="space-y-2 w-[90%] md:w-full">
                       <Label htmlFor="data-nascimento">Data de Nascimento</Label>
-                      <Input id="data-nascimento" type="date" />
+                      <Input id="data-nascimento" type="text" placeholder="dd/mm/aaaa" value={dataNascimento} onChange={handleChange(setDataNascimento, maskDate)} maxLength={10} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="genero">Gênero</Label>
