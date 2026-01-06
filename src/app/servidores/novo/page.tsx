@@ -96,6 +96,22 @@ export default function NewServerPage() {
                     </SelectContent>
                   </Select>
                 </div>
+                 <div className="space-y-2">
+                  <Label htmlFor="naturalidade">Naturalidade</Label>
+                  <Input id="naturalidade" placeholder="Ex: Campo Grande/MS" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pcd">É PCD?</Label>
+                   <Select>
+                    <SelectTrigger id="pcd">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sim">Sim</SelectItem>
+                      <SelectItem value="nao">Não</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
 
@@ -116,13 +132,17 @@ export default function NewServerPage() {
              <div className="space-y-6">
               <h2 className="text-lg font-semibold">Contato</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div className="space-y-2">
-                  <Label htmlFor="email">E-mail</Label>
-                  <Input id="email" type="email" />
+                <div className="space-y-2">
+                  <Label htmlFor="telefone-principal">Telefone Principal</Label>
+                  <Input id="telefone-principal" type="tel" placeholder="(00) 00000-0000" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="celular">Celular</Label>
-                  <Input id="celular" type="tel" />
+                  <Label htmlFor="telefone-secundario">Telefone Secundário</Label>
+                  <Input id="telefone-secundario" type="tel" placeholder="(00) 00000-0000" />
+                </div>
+                 <div className="space-y-2 col-span-2">
+                  <Label htmlFor="email-pessoal">E-mail Pessoal</Label>
+                  <Input id="email-pessoal" type="email" placeholder="exemplo@email.com" />
                 </div>
               </div>
             </div>
@@ -264,5 +284,3 @@ export default function NewServerPage() {
     </div>
   )
 }
-
-    
