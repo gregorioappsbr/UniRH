@@ -27,6 +27,7 @@ export default function NewServerPage() {
     const [possuiDGA, setPossuiDGA] = useState('nao');
     const [tipoVinculo, setTipoVinculo] = useState('');
     const [turno, setTurno] = useState('');
+    const [escolaridade, setEscolaridade] = useState('');
 
     const handleChange = (setter: React.Dispatch<React.SetStateAction<string>>, masker: (value: string) => string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setter(masker(event.target.value));
@@ -448,7 +449,7 @@ export default function NewServerPage() {
                 <h2 className="text-lg font-semibold">Formação Acadêmica</h2>
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="escolaridade">Escolaridade</Label>
-                  <Select>
+                  <Select onValueChange={setEscolaridade}>
                     <SelectTrigger id="escolaridade">
                       <SelectValue placeholder="Selecione o nível de..." />
                     </SelectTrigger>
@@ -482,40 +483,42 @@ export default function NewServerPage() {
                   </div>
                 </CardContent>
               </Card>
-
-              <Card className="bg-card border border-border">
-                <CardHeader>
-                  <CardTitle className="text-base">Pós-Graduação</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="tipo-pos-graduacao">Tipo de Pós-Graduação</Label>
-                    <Select>
-                      <SelectTrigger id="tipo-pos-graduacao">
-                        <SelectValue placeholder="Selecione o tipo..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                         <SelectItem value="especializacao">Especialização</SelectItem>
-                         <SelectItem value="mba">MBA</SelectItem>
-                         <SelectItem value="mestrado">Mestrado</SelectItem>
-                         <SelectItem value="doutorado">Doutorado</SelectItem>
-                         <SelectItem value="pos-doutorado">Pós-Doutorado</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="curso-pos-graduacao">Curso de Pós-Graduação</Label>
-                    <Input id="curso-pos-graduacao" placeholder="Nome do curso" />
-                  </div>
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="instituicao-pos-graduacao">Instituição de Pós-Graduação</Label>                      <Input id="instituicao-pos-graduacao" placeholder="Nome da instituição" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="ano-conclusao-pos-graduacao">Ano de Conclusão da Pós-Graduação</Label>
-                    <Input id="ano-conclusao-pos-graduacao" placeholder="Ex: 2016" />
-                  </div>
-                </CardContent>
-              </Card>
+              
+              {escolaridade === 'pos-graduacao' && (
+                <Card className="bg-card border border-border">
+                  <CardHeader>
+                    <CardTitle className="text-base">Pós-Graduação</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="tipo-pos-graduacao">Tipo de Pós-Graduação</Label>
+                      <Select>
+                        <SelectTrigger id="tipo-pos-graduacao">
+                          <SelectValue placeholder="Selecione o tipo..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                           <SelectItem value="especializacao">Especialização</SelectItem>
+                           <SelectItem value="mba">MBA</SelectItem>
+                           <SelectItem value="mestrado">Mestrado</SelectItem>
+                           <SelectItem value="doutorado">Doutorado</SelectItem>
+                           <SelectItem value="pos-doutorado">Pós-Doutorado</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="curso-pos-graduacao">Curso de Pós-Graduação</Label>
+                      <Input id="curso-pos-graduacao" placeholder="Nome do curso" />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="instituicao-pos-graduacao">Instituição de Pós-Graduação</Label>                      <Input id="instituicao-pos-graduacao" placeholder="Nome da instituição" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="ano-conclusao-pos-graduacao">Ano de Conclusão da Pós-Graduação</Label>
+                      <Input id="ano-conclusao-pos-graduacao" placeholder="Ex: 2016" />
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
             </div>
           </TabsContent>
