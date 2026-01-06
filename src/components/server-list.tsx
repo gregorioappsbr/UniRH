@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog } from 'lucide-react';
+import { Phone, Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog, PenTool, GraduationCap } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -69,6 +69,10 @@ export function ServerList() {
           return <UserCog className="h-4 w-4" />;
         case 'Desenvolvedor Frontend':
           return <Code className="h-4 w-4" />;
+        case 'Designer UI/UX':
+          return <PenTool className="h-4 w-4" />;
+        case 'Estagiário':
+          return <GraduationCap className="h-4 w-4" />;
         default:
           return <Briefcase className="h-4 w-4" />;
       }
@@ -167,7 +171,7 @@ export function ServerList() {
                           <span>{server.funcao}</span>
                         </div>
                       </TableCell>
-                       <TableCell>
+                       <TableCell className="whitespace-nowrap">
                          <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary">
                             <Phone className="h-4 w-4" />
                             <span>{server.phone}</span>
