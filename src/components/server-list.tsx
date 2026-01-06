@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Star, KeyRound, Award } from 'lucide-react';
+import { Phone, Star, KeyRound, Award, Briefcase } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -23,6 +23,7 @@ const servers = [
     status: 'Ativo',
     rating: 9.5,
     phone: '(67) 99999-1234',
+    funcao: 'Gerente de Projetos',
   },
   {
     initials: 'BC',
@@ -31,6 +32,7 @@ const servers = [
     status: 'Ativo',
     rating: 8.0,
     phone: '(67) 99999-5678',
+    funcao: 'Desenvolvedor Frontend',
   },
 ];
 
@@ -87,6 +89,7 @@ export function ServerList() {
                     <TableHead>Servidor</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Nota</TableHead>
+                    <TableHead>Função</TableHead>
                     <TableHead>Contato</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -115,6 +118,12 @@ export function ServerList() {
                             <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
                             <span>{server.rating}</span>
                           </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Briefcase className="h-4 w-4" />
+                          <span>{server.funcao}</span>
+                        </div>
                       </TableCell>
                        <TableCell>
                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
