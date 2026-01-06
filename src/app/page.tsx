@@ -60,7 +60,6 @@ export default function Home() {
                 </div>
                 <div className="flex flex-col items-center">
                     <Users className="h-5 w-5 shrink-0 transition-transform duration-200" />
-                    <ChevronDown className="h-5 w-5 shrink-0 transition-transform duration-200" />
                 </div>
               </div>
             </AccordionTrigger>
