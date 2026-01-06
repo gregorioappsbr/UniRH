@@ -2,37 +2,34 @@
 import { Header } from '@/components/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ServerList } from '@/components/server-list';
-import { Users, User, ChevronDown } from 'lucide-react';
+import { Users, User, ChevronDown, ShieldCheck, ArrowRightLeft, FileText, Briefcase } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import Link from 'next/link';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
-
-const servers = [
+const vinculos = [
   {
-    id: '1',
-    initials: 'AMS',
-    name: 'Ana Maria da Silva e Souza',
+    nome: 'Efetivo',
+    quantidade: 2,
+    icon: ShieldCheck,
   },
   {
-    id: '2',
-    name: 'Bruno Costa',
-    initials: 'BC',
+    nome: 'Terceirizado',
+    quantidade: 1,
+    icon: Users,
   },
   {
-    id: '3',
-    name: 'Carla Dias',
-    initials: 'CD',
+    nome: 'Cedido',
+    quantidade: 0,
+    icon: ArrowRightLeft,
   },
   {
-    id: '4',
-    name: 'Lilian Tenório Carvalho',
-    initials: 'LTC',
+    nome: 'Contratado',
+    quantidade: 1,
+    icon: FileText,
   },
   {
-    id: '5',
-    name: 'Mirna Almeida',
-    initials: 'MA',
+    nome: 'Comissionado',
+    quantidade: 1,
+    icon: Briefcase,
   },
 ];
 
@@ -61,16 +58,15 @@ export default function Home() {
             <AccordionContent>
               <CardContent>
                  <p className="text-xs text-green-500 mb-4 ml-2">+2 este mês</p>
-                <div className="space-y-4">
-                  {servers.map((server) => (
-                    <Link href={`/servidores/${server.id}`} key={server.id}>
-                      <div className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 cursor-pointer">
-                        <Avatar>
-                          <AvatarFallback>{server.initials}</AvatarFallback>
-                        </Avatar>
-                        <div className="font-medium">{server.name}</div>
+                 <div className="space-y-4">
+                  {vinculos.map((vinculo) => (
+                    <div key={vinculo.nome} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50">
+                      <div className="flex items-center gap-4">
+                        <vinculo.icon className="h-5 w-5 text-primary" />
+                        <span className="font-medium">{vinculo.nome}</span>
                       </div>
-                    </Link>
+                      <span className="font-bold">{vinculo.quantidade}</span>
+                    </div>
                   ))}
                 </div>
               </CardContent>
