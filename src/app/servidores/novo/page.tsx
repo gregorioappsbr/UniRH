@@ -209,85 +209,43 @@ export default function NewServerPage() {
         <TabsContent value="profissionais" className="mt-6">
           <div className="space-y-8">
             <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Admissão</h2>
+              <h2 className="text-lg font-semibold">Informações do Cargo</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="matricula">Matrícula</Label>
-                  <Input id="matricula" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="data-admissao">Data de Admissão</Label>
-                  <Input id="data-admissao" type="date" />
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="tipo-vinculo">Tipo de Vínculo</Label>
+                  <Select>
+                    <SelectTrigger id="tipo-vinculo">
+                      <SelectValue placeholder="Selecione o tipo de vínculo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="vinculo1">Vínculo 1</SelectItem>
+                      <SelectItem value="vinculo2">Vínculo 2</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="cargo">Cargo</Label>
+                  <Input id="cargo" placeholder="Ex: Desenvolvedor(a) Frontend" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="funcao">Função</Label>
+                  <Input id="funcao" placeholder="Ex: Coordenador de Curso" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="data-inicio">Data de Início</Label>
+                  <Input id="data-inicio" type="date" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="possui-dga">Possui DGA?</Label>
                   <Select>
-                    <SelectTrigger id="cargo"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                    <SelectContent><SelectItem value="cargo1">Cargo 1</SelectItem></SelectContent>
+                    <SelectTrigger id="possui-dga">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sim">Sim</SelectItem>
+                      <SelectItem value="nao">Não</SelectItem>
+                    </SelectContent>
                   </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lotacao">Lotação</Label>
-                   <Select>
-                    <SelectTrigger id="lotacao"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                    <SelectContent><SelectItem value="lotacao1">Lotação 1</SelectItem></SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="vinculo">Vínculo</Label>
-                  <Select>
-                    <SelectTrigger id="vinculo"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                    <SelectContent><SelectItem value="vinculo1">Vínculo 1</SelectItem></SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="regime-trabalho">Regime de Trabalho</Label>
-                  <Select>
-                    <SelectTrigger id="regime-trabalho"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                    <SelectContent><SelectItem value="regime1">Regime 1</SelectItem></SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="jornada-trabalho">Jornada de Trabalho</Label>
-                  <Input id="jornada-trabalho" />
-                </div>
-              </div>
-            </div>
-            <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Remuneração</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="salario-base">Salário Base</Label>
-                  <Input id="salario-base" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="banco">Banco</Label>
-                  <Input id="banco" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="agencia">Agência</Label>
-                  <Input id="agencia" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="conta-corrente">Conta Corrente</Label>
-                  <Input id="conta-corrente" />
-                </div>
-              </div>
-            </div>
-             <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Outros</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="pis-pasep">Número PIS/PASEP</Label>
-                  <Input id="pis-pasep" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="ctps">Número da CTPS</Label>
-                  <Input id="ctps" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="serie-ctps">Série da CTPS</Label>
-                  <Input id="serie-ctps" />
                 </div>
               </div>
             </div>
