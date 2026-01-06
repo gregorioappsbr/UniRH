@@ -219,7 +219,7 @@ export default function NewServerPage() {
 
                  <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Contato</h2>
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="flex flex-col space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="telefone-principal">Telefone Principal</Label>
                       <Input id="telefone-principal" type="tel" placeholder="(00) 00000-0000" value={telefonePrincipal} onChange={handleChange(setTelefonePrincipal, maskPhone)} maxLength={15} />
@@ -237,12 +237,12 @@ export default function NewServerPage() {
 
                 <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Endereço</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex flex-col space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="cep">CEP</Label>
                       <Input id="cep" placeholder="00000-000" value={cep} onChange={handleChange(setCep, maskCEP)} maxLength={9} />
                     </div>
-                    <div className="space-y-2 col-span-2">
+                    <div className="space-y-2">
                       <Label htmlFor="logradouro">Logradouro</Label>
                       <Input id="logradouro" placeholder="Ex: Rua das Flores" />
                     </div>
@@ -250,7 +250,7 @@ export default function NewServerPage() {
                       <Label htmlFor="numero">Número</Label>
                       <Input id="numero" placeholder="Ex: 123" />
                     </div>
-                    <div className="space-y-2">
+                    <div className="spacey-2">
                       <Label htmlFor="complemento">Complemento</Label>
                       <Input id="complemento" placeholder="Ex: Apto 4B" />
                     </div>
@@ -455,8 +455,7 @@ export default function NewServerPage() {
                       <Input id="curso-pos-graduacao" placeholder="Nome do curso" />
                     </div>
                     <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="instituicao-pos-graduacao">Instituição de Pós-Graduação</Label>
-                      <Input id="instituicao-pos-graduacao" placeholder="Nome da instituição" />
+                      <Label htmlFor="instituicao-pos-graduacao">Instituição de Pós-Graduação</Label>                      <Input id="instituicao-pos-graduacao" placeholder="Nome da instituição" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="ano-conclusao-pos-graduacao">Ano de Conclusão da Pós-Graduação</Label>
