@@ -219,7 +219,7 @@ export default function NewServerPage() {
 
                  <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Contato</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="telefone-principal">Telefone Principal</Label>
                       <Input id="telefone-principal" type="tel" placeholder="(00) 00000-0000" value={telefonePrincipal} onChange={handleChange(setTelefonePrincipal, maskPhone)} maxLength={15} />
@@ -228,7 +228,7 @@ export default function NewServerPage() {
                       <Label htmlFor="telefone-secundario">Telefone Secundário</Label>
                       <Input id="telefone-secundario" type="tel" placeholder="(00) 00000-0000" value={telefoneSecundario} onChange={handleChange(setTelefoneSecundario, maskPhone)} maxLength={15} />
                     </div>
-                     <div className="space-y-2 col-span-2">
+                     <div className="space-y-2">
                       <Label htmlFor="email-pessoal">E-mail Pessoal</Label>
                       <Input id="email-pessoal" type="email" placeholder="exemplo@email.com" />
                     </div>
@@ -486,3 +486,5 @@ export default function NewServerPage() {
     </div>
   )
 }
+
+    
