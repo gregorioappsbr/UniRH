@@ -16,6 +16,7 @@ import { Label } from '@/components/ui/label';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { jsPDF } from "jspdf";
+import { useRouter } from 'next/navigation';
 
 const servers = [
   {
@@ -316,6 +317,7 @@ const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comi
 
 export default function ServerListPage() {
   const isMobile = useIsMobile();
+  const router = useRouter();
   const [selectedServers, setSelectedServers] = React.useState<Record<string, boolean>>({});
   const { toast } = useToast();
   
@@ -349,7 +351,7 @@ export default function ServerListPage() {
 
   const handleVinculoFilterChange = (vinculo: string) => {
     setVinculoFilters(prev => 
-      prev.includes(vinculo) ? prev.filter(v => v !== vinculo) : [...prev, vinculo]
+      prev.includes(vinculo) ? prev.filter(v => v !== vinculo) : [...prev, v]
     );
   };
 
@@ -882,7 +884,19 @@ const handleExportPDF = async () => {
               </div>
               <div className="space-y-4 p-4">
                 {filteredServers.map((server) => (
-                  <div key={server.emailInstitucional} className="flex items-start gap-4 pb-4 border-b last:border-b-0">
+                  <Link
+                    key={server.emailInstitucional}
+                    href={`/servidores/${server.emailInstitucional.split('@')[0]}`}
+                    className="flex items-start gap-4 pb-4 border-b last:border-b-0 cursor-pointer"
+                    onClick={(e) => {
+                      if (
+                        (e.target as HTMLElement).closest('input[type="checkbox"]') ||
+                        (e.target as HTMLElement).closest('a')
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
+                  >
                     <Checkbox
                       id={`server-${server.emailInstitucional}`}
                       checked={selectedServers[server.emailInstitucional] || false}
@@ -890,11 +904,9 @@ const handleExportPDF = async () => {
                       className="mt-1"
                     />
                     <div className="flex flex-col items-center gap-2">
-                      <Link href={`/servidores/${server.emailInstitucional.split('@')[0]}`}>
-                        <Avatar className="h-12 w-12">
-                          <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
-                        </Avatar>
-                      </Link>
+                      <Avatar className="h-12 w-12">
+                        <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
+                      </Avatar>
                        <div className="flex flex-col items-center gap-1">
                         {server.status && (
                           <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
@@ -911,9 +923,7 @@ const handleExportPDF = async () => {
                       </div>
                     </div>
                     <div className="flex-1 space-y-2">
-                      <Link href={`/servidores/${server.emailInstitucional.split('@')[0]}`}>
-                        <p className="font-semibold">{server.nomeCompleto}</p>
-                      </Link>
+                      <p className="font-semibold">{server.nomeCompleto}</p>
                       <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
                        {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -928,7 +938,7 @@ const handleExportPDF = async () => {
                         </a>
                       )}
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </>
@@ -954,7 +964,19 @@ const handleExportPDF = async () => {
                 </TableHeader>
                 <TableBody>
                   {filteredServers.map((server) => (
-                    <TableRow key={server.emailInstitucional}>
+                    <TableRow 
+                      key={server.emailInstitucional} 
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                         if (
+                          (e.target as HTMLElement).closest('input[type="checkbox"]') ||
+                          (e.target as HTMLElement).closest('a')
+                        ) {
+                          return;
+                        }
+                        router.push(`/servidores/${server.emailInstitucional.split('@')[0]}`);
+                      }}
+                    >
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Checkbox
@@ -962,7 +984,7 @@ const handleExportPDF = async () => {
                             checked={selectedServers[server.emailInstitucional] || false}
                             onCheckedChange={(checked) => handleSelectServer(server.emailInstitucional, checked as boolean)}
                           />
-                          <Link href={`/servidores/${server.emailInstitucional.split('@')[0]}`} className="flex items-center gap-3">
+                          <div className="flex items-center gap-3">
                               <Avatar className="h-12 w-12">
                                   <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                               </Avatar>
@@ -970,7 +992,7 @@ const handleExportPDF = async () => {
                                   <p className="font-semibold">{server.nomeCompleto}</p>
                                   <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
                               </div>
-                          </Link>
+                          </div>
                         </div>
                       </TableCell>
                       <TableCell>

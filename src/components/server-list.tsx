@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { Button } from './ui/button';
+import { useRouter } from 'next/navigation';
 
 
 const servers = [
@@ -70,6 +71,7 @@ const servers = [
 
 export function ServerList() {
     const isMobile = useIsMobile();
+    const router = useRouter();
     const recentServers = servers.slice(0, 5);
 
     const getRatingClass = (rating: number) => {
@@ -125,7 +127,16 @@ export function ServerList() {
         {isMobile ? (
              <div className="space-y-4">
                 {recentServers.map((server, index) => (
-                  <div key={index} className="flex items-start gap-4 border-b pb-4 last:border-b-0">
+                  <Link
+                    key={index}
+                    href={`/servidores/${server.email.split('@')[0]}`}
+                    className="flex items-start gap-4 border-b pb-4 last:border-b-0 cursor-pointer"
+                    onClick={(e) => {
+                      if ((e.target as HTMLElement).closest('a')) {
+                        e.preventDefault();
+                      }
+                    }}
+                  >
                     <div className="flex flex-col items-center gap-2">
                       <Avatar className="h-12 w-12">
                         <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
@@ -161,7 +172,7 @@ export function ServerList() {
                         </a>
                       )}
                     </div>
-                  </div>
+                  </Link>
                 ))}
             </div>
         ) : (
@@ -177,7 +188,16 @@ export function ServerList() {
                 </TableHeader>
                 <TableBody>
                   {recentServers.map((server, index) => (
-                    <TableRow key={index}>
+                    <TableRow
+                      key={index}
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        if ((e.target as HTMLElement).closest('a')) {
+                          return;
+                        }
+                        router.push(`/servidores/${server.email.split('@')[0]}`);
+                      }}
+                    >
                       <TableCell>
                         <div className="flex items-center gap-3">
                             <Avatar className="h-12 w-12">
