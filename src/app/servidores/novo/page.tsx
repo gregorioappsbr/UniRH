@@ -1,4 +1,5 @@
 
+
 'use client'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,31 +11,31 @@ import { Textarea } from "@/components/ui/textarea"
 import { X } from "lucide-react"
 import Link from "next/link"
 import React, { useState } from "react"
+import { useForm, Controller } from "react-hook-form";
 import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
 
 export default function NewServerPage() {
-    const [cpf, setCpf] = useState('');
-    const [rg, setRg] = useState('');
-    const [cep, setCep] = useState('');
-    const [telefonePrincipal, setTelefonePrincipal] = useState('');
-    const [telefoneSecundario, setTelefoneSecundario] = useState('');
-    const [contatoEmergencia, setContatoEmergencia] = useState('');
-    const [possuiCNH, setPossuiCNH] = useState('nao');
-    const [genero, setGenero] = useState('');
-    const [isPCD, setIsPCD] = useState('nao');
-    const [dataNascimento, setDataNascimento] = useState('');
-    const [dataInicio, setDataInicio] = useState('');
-    const [possuiDGA, setPossuiDGA] = useState('nao');
-    const [tipoVinculo, setTipoVinculo] = useState('');
-    const [turno, setTurno] = useState('');
-    const [escolaridade, setEscolaridade] = useState('');
+    const { register, handleSubmit, watch, control } = useForm();
+    
+    const possuiCNH = watch('possuiCNH', 'nao');
+    const genero = watch('genero', '');
+    const isPCD = watch('isPCD', 'nao');
+    const tipoVinculo = watch('tipoVinculo', '');
+    const turno = watch('turno', '');
+    const escolaridade = watch('escolaridade', '');
 
-    const handleChange = (setter: React.Dispatch<React.SetStateAction<string>>, masker: (value: string) => string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setter(masker(event.target.value));
+    const onSubmit = (data: any) => {
+        // Here you would typically send the data to your backend
+        console.log(data);
+        alert('Servidor adicionado com sucesso! (Verifique o console para ver os dados)');
+    };
+
+    const applyMask = (masker: (value: string) => string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.target.value = masker(e.target.value);
     };
 
   return (
-    <div className="p-4 h-screen flex flex-col">
+    <form onSubmit={handleSubmit(onSubmit)} className="p-4 h-screen flex flex-col">
       <header className="relative flex items-center justify-center mb-4">
         <h1 className="text-3xl font-bold">Novo Servidor</h1>
         <Button variant="ghost" size="icon" asChild className="absolute right-0 top-1/2 -translate-y-1/2">
@@ -44,8 +45,8 @@ export default function NewServerPage() {
         </Button>
       </header>
 
-      <Tabs defaultValue="pessoais" className="w-full flex flex-col flex-1 overflow-y-auto pb-24">
-          <div className="border rounded-md sticky top-0 bg-background z-10">
+      <Tabs defaultValue="pessoais" className="w-full flex-1 flex flex-col overflow-hidden">
+          <div className="border rounded-t-lg sticky top-0 bg-background z-10">
             <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
                 <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Pessoais</TabsTrigger>
                 <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Profissionais</TabsTrigger>
@@ -53,7 +54,7 @@ export default function NewServerPage() {
                 <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Observações</TabsTrigger>
             </TabsList>
         </div>
-        <div className="border border-t-0 rounded-b-lg p-6 flex-1">
+        <div className="border border-t-0 rounded-b-lg p-6 flex-1 overflow-y-auto pb-24">
           <TabsContent value="pessoais" className="mt-0">
             <div className="space-y-8">
               <div className="space-y-6">
@@ -61,148 +62,186 @@ export default function NewServerPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="nome-completo">Nome Completo</Label>
-                    <Input id="nome-completo" placeholder="Ex: João da Silva" />
+                    <Input id="nome-completo" placeholder="Ex: João da Silva" {...register("nomeCompleto")} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="nome-social">Nome Social</Label>
-                    <Input id="nome-social" placeholder="Ex: João" />
+                    <Input id="nome-social" placeholder="Ex: João" {...register("nomeSocial")} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="cpf">CPF</Label>
-                    <Input id="cpf" placeholder="000.000.000-00" value={cpf} onChange={handleChange(setCpf, maskCPF)} maxLength={14} />
+                    <Input id="cpf" placeholder="000.000.000-00" {...register("cpf")} onChange={applyMask(maskCPF)} maxLength={14} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="rg">RG</Label>
-                    <Input id="rg" placeholder="00.000.000-0" value={rg} onChange={handleChange(setRg, maskRG)} maxLength={12} />
+                    <Input id="rg" placeholder="00.000.000-0" {...register("rg")} onChange={applyMask(maskRG)} maxLength={12} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="orgao-emissor">Órgão Emissor</Label>
-                    <Input id="orgao-emissor" placeholder="Ex: SSP/MS" />
+                    <Input id="orgao-emissor" placeholder="Ex: SSP/MS" {...register("orgaoEmissor")} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="possui-cnh">Possui CNH?</Label>
-                    <Select onValueChange={setPossuiCNH} defaultValue="nao">
-                      <SelectTrigger id="possui-cnh">
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="sim">Sim</SelectItem>
-                        <SelectItem value="nao">Não</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Controller
+                        name="possuiCNH"
+                        control={control}
+                        defaultValue="nao"
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                                <SelectTrigger id="possui-cnh">
+                                    <SelectValue placeholder="Selecione..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="sim">Sim</SelectItem>
+                                    <SelectItem value="nao">Não</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        )}
+                    />
                   </div>
                   {possuiCNH === 'sim' && (
                     <>
                       <div className="space-y-2">
                         <Label htmlFor="cnh-numero">Número do Registro CNH</Label>
-                        <Input id="cnh-numero" placeholder="00000000000" />
+                        <Input id="cnh-numero" placeholder="00000000000" {...register("cnhNumero")} />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="cnh-categoria">Categoria CNH</Label>
-                        <Select>
-                          <SelectTrigger id="cnh-categoria">
-                            <SelectValue placeholder="Selecione..." />
-                          </SelectTrigger>
-                          <SelectContent>
-                              <SelectItem value="ACC">ACC</SelectItem>
-                              <SelectItem value="A">A</SelectItem>
-                              <SelectItem value="A1">A1</SelectItem>
-                              <SelectItem value="B">B</SelectItem>
-                              <SelectItem value="B1">B1</SelectItem>
-                              <SelectItem value="C">C</SelectItem>
-                              <SelectItem value="C1">C1</SelectItem>
-                              <SelectItem value="D">D</SelectItem>
-                              <SelectItem value="D1">D1</SelectItem>
-                              <SelectItem value="BE">BE</SelectItem>
-                              <SelectItem value="CE">CE</SelectItem>
-                              <SelectItem value="C1E">C1E</SelectItem>
-                              <SelectItem value="DE">DE</SelectItem>
-                              <SelectItem value="D1E">D1E</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Controller
+                            name="cnhCategoria"
+                            control={control}
+                            render={({ field }) => (
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                  <SelectTrigger id="cnh-categoria">
+                                    <SelectValue placeholder="Selecione..." />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                      <SelectItem value="ACC">ACC</SelectItem>
+                                      <SelectItem value="A">A</SelectItem>
+                                      <SelectItem value="A1">A1</SelectItem>
+                                      <SelectItem value="B">B</SelectItem>
+                                      <SelectItem value="B1">B1</SelectItem>
+                                      <SelectItem value="C">C</SelectItem>
+                                      <SelectItem value="C1">C1</SelectItem>
+                                      <SelectItem value="D">D</SelectItem>
+                                      <SelectItem value="D1">D1</SelectItem>
+                                      <SelectItem value="BE">BE</SelectItem>
+                                      <SelectItem value="CE">CE</SelectItem>
+                                      <SelectItem value="C1E">C1E</SelectItem>
+                                      <SelectItem value="DE">DE</SelectItem>
+                                      <SelectItem value="D1E">D1E</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                            )}
+                        />
                       </div>
                     </>
                   )}
                   <div className="space-y-2 w-[90%] md:w-full">
                     <Label htmlFor="data-nascimento">Data de Nascimento</Label>
-                    <Input id="data-nascimento" type="text" placeholder="dd/mm/aaaa" value={dataNascimento} onChange={handleChange(setDataNascimento, maskDate)} maxLength={10} />
+                    <Input id="data-nascimento" type="text" placeholder="dd/mm/aaaa" {...register("dataNascimento")} onChange={applyMask(maskDate)} maxLength={10} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="genero">Gênero</Label>
-                    <Select onValueChange={setGenero}>
-                      <SelectTrigger id="genero">
-                        <SelectValue placeholder="Selecione" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="masculino">Masculino</SelectItem>
-                        <SelectItem value="feminino">Feminino</SelectItem>
-                        <SelectItem value="nao-binario">Não-binário</SelectItem>
-                        <SelectItem value="nao-informar">Prefiro não informar</SelectItem>
-                        <SelectItem value="outro">Outro</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Controller
+                        name="genero"
+                        control={control}
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="genero">
+                                <SelectValue placeholder="Selecione" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="masculino">Masculino</SelectItem>
+                                <SelectItem value="feminino">Feminino</SelectItem>
+                                <SelectItem value="nao-binario">Não-binário</SelectItem>
+                                <SelectItem value="nao-informar">Prefiro não informar</SelectItem>
+                                <SelectItem value="outro">Outro</SelectItem>
+                              </SelectContent>
+                            </Select>
+                        )}
+                    />
                   </div>
                   {genero === 'outro' && (
                       <div className="space-y-2">
                           <Label htmlFor="outro-genero">Qual?</Label>
-                          <Input id="outro-genero" placeholder="Descreva seu gênero" />
+                          <Input id="outro-genero" placeholder="Descreva seu gênero" {...register("outroGenero")} />
                       </div>
                   )}
                   <div className="space-y-2">
                     <Label htmlFor="raca-cor">Raça/Cor</Label>
-                     <Select>
-                      <SelectTrigger id="raca-cor">
-                        <SelectValue placeholder="Selecione" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="branca">Branca</SelectItem>
-                        <SelectItem value="preta">Preta</SelectItem>
-                        <SelectItem value="parda">Parda</SelectItem>
-                        <SelectItem value="amarela">Amarela</SelectItem>
-                        <SelectItem value="indigena">Indígena</SelectItem>
-                      </SelectContent>
-                    </Select>
+                     <Controller
+                        name="racaCor"
+                        control={control}
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="raca-cor">
+                                <SelectValue placeholder="Selecione" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="branca">Branca</SelectItem>
+                                <SelectItem value="preta">Preta</SelectItem>
+                                <SelectItem value="parda">Parda</SelectItem>
+                                <SelectItem value="amarela">Amarela</SelectItem>
+                                <SelectItem value="indigena">Indígena</SelectItem>
+                              </SelectContent>
+                            </Select>
+                        )}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="estado-civil">Estado Civil</Label>
-                     <Select>
-                      <SelectTrigger id="estado-civil">
-                        <SelectValue placeholder="Selecione" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="solteiro">Solteiro(a)</SelectItem>
-                        <SelectItem value="casado">Casado(a)</SelectItem>
-                        <SelectItem value="separado">Separado(a)</SelectItem>
-                        <SelectItem value="divorciado">Divorciado(a)</SelectItem>
-                        <SelectItem value="viuvo">Viúvo(a)</SelectItem>
-                        <SelectItem value="uniao-estavel">União Estável</SelectItem>
-                      </SelectContent>
-                    </Select>
+                     <Controller
+                        name="estadoCivil"
+                        control={control}
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="estado-civil">
+                                <SelectValue placeholder="Selecione" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="solteiro">Solteiro(a)</SelectItem>
+                                <SelectItem value="casado">Casado(a)</SelectItem>
+                                <SelectItem value="separado">Separado(a)</SelectItem>
+                                <SelectItem value="divorciado">Divorciado(a)</SelectItem>
+                                <SelectItem value="viuvo">Viúvo(a)</SelectItem>
+                                <SelectItem value="uniao-estavel">União Estável</SelectItem>
+                              </SelectContent>
+                            </Select>
+                        )}
+                     />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="nacionalidade">Nacionalidade</Label>
-                    <Input id="nacionalidade" placeholder="Ex: Brasileiro(a)" />
+                    <Input id="nacionalidade" placeholder="Ex: Brasileiro(a)" {...register("nacionalidade")} />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="naturalidade">Naturalidade</Label>
-                    <Input id="naturalidade" placeholder="Ex: Campo Grande/MS" />
+                    <Input id="naturalidade" placeholder="Ex: Campo Grande/MS" {...register("naturalidade")} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="pcd">É PCD?</Label>
-                     <Select onValueChange={setIsPCD} defaultValue="nao">
-                      <SelectTrigger id="pcd">
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="sim">Sim</SelectItem>
-                        <SelectItem value="nao">Não</SelectItem>
-                      </SelectContent>
-                    </Select>
+                     <Controller
+                        name="isPCD"
+                        control={control}
+                        defaultValue="nao"
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="pcd">
+                                <SelectValue placeholder="Selecione..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="sim">Sim</SelectItem>
+                                <SelectItem value="nao">Não</SelectItem>
+                              </SelectContent>
+                            </Select>
+                        )}
+                    />
                   </div>
                   {isPCD === 'sim' && (
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="pcd-descricao">Descrição</Label>
-                      <Textarea id="pcd-descricao" placeholder="Descreva a deficiência..." />
+                      <Textarea id="pcd-descricao" placeholder="Descreva a deficiência..." {...register("pcdDescricao")} />
                     </div>
                   )}
                 </div>
@@ -213,11 +252,11 @@ export default function NewServerPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                    <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="nome-mae">Nome da Mãe</Label>
-                    <Input id="nome-mae" placeholder="Ex: Maria da Silva" />
+                    <Input id="nome-mae" placeholder="Ex: Maria da Silva" {...register("nomeMae")} />
                   </div>
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="nome-pai">Nome do Pai</Label>
-                    <Input id="nome-pai" placeholder="Ex: José da Silva" />
+                    <Input id="nome-pai" placeholder="Ex: José da Silva" {...register("nomePai")} />
                   </div>
                 </div>
               </div>
@@ -227,15 +266,15 @@ export default function NewServerPage() {
                 <div className="flex flex-col space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="telefone-principal">Telefone Principal</Label>
-                    <Input id="telefone-principal" type="tel" placeholder="(00) 00000-0000" value={telefonePrincipal} onChange={handleChange(setTelefonePrincipal, maskPhone)} maxLength={15} />
+                    <Input id="telefone-principal" type="tel" placeholder="(00) 00000-0000" {...register("telefonePrincipal")} onChange={applyMask(maskPhone)} maxLength={15} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="telefone-secundario">Telefone Secundário</Label>
-                    <Input id="telefone-secundario" type="tel" placeholder="(00) 00000-0000" value={telefoneSecundario} onChange={handleChange(setTelefoneSecundario, maskPhone)} maxLength={15} />
+                    <Input id="telefone-secundario" type="tel" placeholder="(00) 00000-0000" {...register("telefoneSecundario")} onChange={applyMask(maskPhone)} maxLength={15} />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="email-pessoal">E-mail Pessoal</Label>
-                    <Input id="email-pessoal" type="email" placeholder="exemplo@email.com" />
+                    <Input id="email-pessoal" type="email" placeholder="exemplo@email.com" {...register("emailPessoal")} />
                   </div>
                 </div>
               </div>
@@ -245,64 +284,70 @@ export default function NewServerPage() {
                 <div className="flex flex-col space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="cep">CEP</Label>
-                    <Input id="cep" placeholder="00000-000" value={cep} onChange={handleChange(setCep, maskCEP)} maxLength={9} />
+                    <Input id="cep" placeholder="00000-000" {...register("cep")} onChange={applyMask(maskCEP)} maxLength={9} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="logradouro">Logradouro</Label>
-                    <Input id="logradouro" placeholder="Ex: Rua das Flores" />
+                    <Input id="logradouro" placeholder="Ex: Rua das Flores" {...register("logradouro")} />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="numero">Número</Label>
-                    <Input id="numero" placeholder="Ex: 123" />
+                    <Input id="numero" placeholder="Ex: 123" {...register("numero")} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="complemento">Complemento</Label>
-                    <Input id="complemento" placeholder="Ex: Apto 4B" />
+                    <Input id="complemento" placeholder="Ex: Apto 4B" {...register("complemento")} />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="bairro">Bairro</Label>
-                    <Input id="bairro" placeholder="Ex: Centro" />
+                    <Input id="bairro" placeholder="Ex: Centro" {...register("bairro")} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="cidade">Cidade</Label>
-                    <Input id="cidade" placeholder="Ex: Campo Grande"/>
+                    <Input id="cidade" placeholder="Ex: Campo Grande" {...register("cidade")} />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="uf">UF</Label>
-                    <Select>
-                      <SelectTrigger id="uf">
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="AC">AC</SelectItem>
-                        <SelectItem value="AL">AL</SelectItem>
-                        <SelectItem value="AP">AP</SelectItem>
-                        <SelectItem value="AM">AM</SelectItem>
-                        <SelectItem value="BA">BA</SelectItem>
-                        <SelectItem value="CE">CE</SelectItem>
-                        <SelectItem value="DF">DF</SelectItem>
-                        <SelectItem value="ES">ES</SelectItem>
-                        <SelectItem value="GO">GO</SelectItem>
-                        <SelectItem value="MA">MA</SelectItem>
-                        <SelectItem value="MT">MT</SelectItem>
-                        <SelectItem value="MS">MS</SelectItem>
-                        <SelectItem value="MG">MG</SelectItem>
-                        <SelectItem value="PA">PA</SelectItem>
-                        <SelectItem value="PB">PB</SelectItem>
-                        <SelectItem value="PR">PR</SelectItem>
-                        <SelectItem value="PE">PE</SelectItem>
-                        <SelectItem value="PI">PI</SelectItem>
-                        <SelectItem value="RJ">RJ</SelectItem>
-                        <SelectItem value="RN">RN</SelectItem>
-                        <SelectItem value="RS">RS</SelectItem>
-                        <SelectItem value="RO">RO</SelectItem>
-                        <SelectItem value="RR">RR</SelectItem>
-                        <SelectItem value="SC">SC</SelectItem>
-                        <SelectItem value="SP">SP</SelectItem>
-                        <SelectItem value="SE">SE</SelectItem>
-                        <SelectItem value="TO">TO</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Controller
+                        name="uf"
+                        control={control}
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="uf">
+                                <SelectValue placeholder="Selecione..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="AC">AC</SelectItem>
+                                <SelectItem value="AL">AL</SelectItem>
+                                <SelectItem value="AP">AP</SelectItem>
+                                <SelectItem value="AM">AM</SelectItem>
+                                <SelectItem value="BA">BA</SelectItem>
+                                <SelectItem value="CE">CE</SelectItem>
+                                <SelectItem value="DF">DF</SelectItem>
+                                <SelectItem value="ES">ES</SelectItem>
+                                <SelectItem value="GO">GO</SelectItem>
+                                <SelectItem value="MA">MA</SelectItem>
+                                <SelectItem value="MT">MT</SelectItem>
+                                <SelectItem value="MS">MS</SelectItem>
+                                <SelectItem value="MG">MG</SelectItem>
+                                <SelectItem value="PA">PA</SelectItem>
+                                <SelectItem value="PB">PB</SelectItem>
+                                <SelectItem value="PR">PR</SelectItem>
+                                <SelectItem value="PE">PE</SelectItem>
+                                <SelectItem value="PI">PI</SelectItem>
+                                <SelectItem value="RJ">RJ</SelectItem>
+                                <SelectItem value="RN">RN</SelectItem>
+                                <SelectItem value="RS">RS</SelectItem>
+                                <SelectItem value="RO">RO</SelectItem>
+                                <SelectItem value="RR">RR</SelectItem>
+                                <SelectItem value="SC">SC</SelectItem>
+                                <SelectItem value="SP">SP</SelectItem>
+                                <SelectItem value="SE">SE</SelectItem>
+                                <SelectItem value="TO">TO</SelectItem>
+                              </SelectContent>
+                            </Select>
+                        )}
+                    />
                   </div>
                 </div>
               </div>
@@ -312,11 +357,11 @@ export default function NewServerPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="contato-emergencia-nome">Nome</Label>
-                    <Input id="contato-emergencia-nome" placeholder="Ex: Maria da Silva" />
+                    <Input id="contato-emergencia-nome" placeholder="Ex: Maria da Silva" {...register("contatoEmergenciaNome")} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="contato-emergencia-telefone">Telefone</Label>
-                    <Input id="contato-emergencia-telefone" type="tel" placeholder="(00) 00000-0000" value={contatoEmergencia} onChange={handleChange(setContatoEmergencia, maskPhone)} maxLength={15} />
+                    <Input id="contato-emergencia-telefone" type="tel" placeholder="(00) 00000-0000" {...register("contatoEmergenciaTelefone")} onChange={applyMask(maskPhone)} maxLength={15} />
                   </div>
                 </div>
               </div>
@@ -330,114 +375,145 @@ export default function NewServerPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="tipo-vinculo">Tipo de Vínculo</Label>
-                    <Select onValueChange={setTipoVinculo}>
-                      <SelectTrigger id="tipo-vinculo">
-                        <SelectValue placeholder="Selecione o tipo de vínculo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="efetivo">Efetivo</SelectItem>
-                        <SelectItem value="terceirizado">Terceirizado</SelectItem>
-                        <SelectItem value="cedido">Cedido</SelectItem>
-                        <SelectItem value="contratado">Contratado</SelectItem>
-                        <SelectItem value="comissionado">Comissionado</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Controller
+                        name="tipoVinculo"
+                        control={control}
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="tipo-vinculo">
+                                <SelectValue placeholder="Selecione o tipo de vínculo" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="efetivo">Efetivo</SelectItem>
+                                <SelectItem value="terceirizado">Terceirizado</SelectItem>
+                                <SelectItem value="cedido">Cedido</SelectItem>
+                                <SelectItem value="contratado">Contratado</SelectItem>
+                                <SelectItem value="comissionado">Comissionado</SelectItem>
+                              </SelectContent>
+                            </Select>
+                        )}
+                    />
                   </div>
                   {tipoVinculo === 'efetivo' && (
                       <div className="space-y-2 md:col-span-2">
                           <Label htmlFor="matricula">Matrícula</Label>
-                          <Input id="matricula" placeholder="Digite a matrícula"/>
+                          <Input id="matricula" placeholder="Digite a matrícula" {...register("matricula")} />
                       </div>
                   )}
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="cargo">Cargo</Label>
-                    <Input id="cargo" placeholder="Ex: Desenvolvedor(a) Frontend" />
+                    <Input id="cargo" placeholder="Ex: Desenvolvedor(a) Frontend" {...register("cargo")} />
                   </div>
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="funcao">Função</Label>
-                    <Input id="funcao" placeholder="Ex: Coordenador de Curso" />
+                    <Input id="funcao" placeholder="Ex: Coordenador de Curso" {...register("funcao")} />
                   </div>
                   <div className="space-y-2 w-[90%] md:w-full">
                     <Label htmlFor="data-inicio">Data de Início</Label>
-                    <Input id="data-inicio" type="text" placeholder="dd/mm/aaaa" value={dataInicio} onChange={handleChange(setDataInicio, maskDate)} maxLength={10} />
+                    <Input id="data-inicio" type="text" placeholder="dd/mm/aaaa" {...register("dataInicio")} onChange={applyMask(maskDate)} maxLength={10} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="possui-dga">Possui DGA?</Label>
-                    <Select onValueChange={setPossuiDGA} defaultValue="nao">
-                      <SelectTrigger id="possui-dga">
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="sim">Sim</SelectItem>
-                        <SelectItem value="nao">Não</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Controller
+                        name="possuiDGA"
+                        control={control}
+                        defaultValue="nao"
+                        render={({ field }) => (
+                           <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="possui-dga">
+                                <SelectValue placeholder="Selecione..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="sim">Sim</SelectItem>
+                                <SelectItem value="nao">Não</SelectItem>
+                              </SelectContent>
+                            </Select>
+                        )}
+                    />
                   </div>
-                  {possuiDGA === 'sim' && (
+                  {watch('possuiDGA') === 'sim' && (
                       <div className="space-y-2 md:col-span-2">
                           <Label htmlFor="dga-descricao">Descrição</Label>
-                          <Textarea id="dga-descricao" placeholder="Descreva o DGA..."/>
+                          <Textarea id="dga-descricao" placeholder="Descreva o DGA..." {...register("dgaDescricao")}/>
                       </div>
                   )}
                    <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="setor-lotacao">Setor / Lotação</Label>
-                    <Input id="setor-lotacao" placeholder="Ex: Tecnologia da Informação" />
+                    <Input id="setor-lotacao" placeholder="Ex: Tecnologia da Informação" {...register("setorLotacao")} />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="ramal">Ramal</Label>
-                    <Input id="ramal" placeholder="Ex: 1234" />
+                    <Input id="ramal" placeholder="Ex: 1234" {...register("ramal")} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="jornada">Jornada</Label>
-                    <Select>
-                      <SelectTrigger id="jornada">
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="20h">20h</SelectItem>
-                        <SelectItem value="30h">30h</SelectItem>
-                        <SelectItem value="40h">40h</SelectItem>
-                        <SelectItem value="dedicacao-exclusiva">Dedicação Exclusiva</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Controller
+                        name="jornada"
+                        control={control}
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="jornada">
+                                <SelectValue placeholder="Selecione..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="20h">20h</SelectItem>
+                                <SelectItem value="30h">30h</SelectItem>
+                                <SelectItem value="40h">40h</SelectItem>
+                                <SelectItem value="dedicacao-exclusiva">Dedicação Exclusiva</SelectItem>
+                              </SelectContent>
+                            </Select>
+                        )}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="turno">Turno</Label>
-                    <Select onValueChange={setTurno}>
-                      <SelectTrigger id="turno">
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="matutino">Matutino</SelectItem>
-                        <SelectItem value="vespertino">Vespertino</SelectItem>
-                         <SelectItem value="noturno">Noturno</SelectItem>
-                         <SelectItem value="integral">Integral</SelectItem>
-                         <SelectItem value="outro">Outro</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Controller
+                        name="turno"
+                        control={control}
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="turno">
+                                <SelectValue placeholder="Selecione..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="matutino">Matutino</SelectItem>
+                                <SelectItem value="vespertino">Vespertino</SelectItem>
+                                 <SelectItem value="noturno">Noturno</SelectItem>
+                                 <SelectItem value="integral">Integral</SelectItem>
+                                 <SelectItem value="outro">Outro</SelectItem>
+                              </SelectContent>
+                            </Select>
+                        )}
+                    />
                   </div>
                   {turno === 'outro' && (
                       <div className="space-y-2 md:col-span-2">
                           <Label htmlFor="outro-turno">Qual?</Label>
-                          <Textarea id="outro-turno" placeholder="Descreva o turno..."/>
+                          <Textarea id="outro-turno" placeholder="Descreva o turno..." {...register("outroTurno")} />
                       </div>
                   )}
                    <div className="space-y-2">
                     <Label htmlFor="status">Status</Label>
-                    <Select>
-                      <SelectTrigger id="status">
-                        <SelectValue placeholder="Selecione o status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ativo">Ativo</SelectItem>
-                         <SelectItem value="licenca">Licença</SelectItem>
-                         <SelectItem value="inativo">Inativo</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Controller
+                        name="status"
+                        control={control}
+                        render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="status">
+                                <SelectValue placeholder="Selecione o status" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="ativo">Ativo</SelectItem>
+                                 <SelectItem value="licenca">Licença</SelectItem>
+                                 <SelectItem value="inativo">Inativo</SelectItem>
+                              </SelectContent>
+                            </Select>
+                        )}
+                    />
                   </div>
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="email-institucional">E-mail Institucional</Label>
-                    <Input id="email-institucional" type="email" placeholder="nome@workwise.com" />
+                    <Input id="email-institucional" type="email" placeholder="nome@workwise.com" {...register("emailInstitucional")} />
                   </div>
                 </div>
               </div>
@@ -449,18 +525,24 @@ export default function NewServerPage() {
                 <h2 className="text-lg font-semibold">Formação Acadêmica</h2>
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="escolaridade">Escolaridade</Label>
-                  <Select onValueChange={setEscolaridade}>
-                    <SelectTrigger id="escolaridade">
-                      <SelectValue placeholder="Selecione o nível de..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="nao-alfabetizado">Não Alfabetizado</SelectItem>
-                      <SelectItem value="ensino-fundamental">Ensino Fundamental</SelectItem>
-                      <SelectItem value="ensino-medio">Ensino Médio</SelectItem>
-                      <SelectItem value="graduacao">Graduação</SelectItem>
-                      <SelectItem value="pos-graduacao">Pós-Graduação</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                      name="escolaridade"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="escolaridade">
+                                <SelectValue placeholder="Selecione o nível de..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="nao-alfabetizado">Não Alfabetizado</SelectItem>
+                                <SelectItem value="ensino-fundamental">Ensino Fundamental</SelectItem>
+                                <SelectItem value="ensino-medio">Ensino Médio</SelectItem>
+                                <SelectItem value="graduacao">Graduação</SelectItem>
+                                <SelectItem value="pos-graduacao">Pós-Graduação</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    )}
+                  />
                 </div>
               </div>
 
@@ -474,11 +556,11 @@ export default function NewServerPage() {
                   <CardContent className="space-y-4">
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="instituicao-ensino">Instituição de Ensino</Label>
-                      <Input id="instituicao-ensino" placeholder="Nome da escola" />
+                      <Input id="instituicao-ensino" placeholder="Nome da escola" {...register("instituicaoEnsinoBasico")} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="ano-conclusao-ensino">Ano de Conclusão</Label>
-                      <Input id="ano-conclusao-ensino" placeholder="Ex: 2010" />
+                      <Input id="ano-conclusao-ensino" placeholder="Ex: 2010" {...register("anoConclusaoEnsinoBasico")} />
                     </div>
                   </CardContent>
                 </Card>
@@ -492,15 +574,15 @@ export default function NewServerPage() {
                   <CardContent className="space-y-4">
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="curso-graduacao-base">Curso de Graduação</Label>
-                      <Input id="curso-graduacao-base" placeholder="Ex: Análise de Sistemas" />
+                      <Input id="curso-graduacao-base" placeholder="Ex: Análise de Sistemas" {...register("cursoGraduacao")} />
                     </div>
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="instituicao-graduacao">Instituição de Graduação</Label>
-                      <Input id="instituicao-graduacao" placeholder="Nome da universidade" />
+                      <Input id="instituicao-graduacao" placeholder="Nome da universidade" {...register("instituicaoGraduacao")} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="ano-conclusao-graduacao">Ano de Conclusão da Graduação</Label>
-                      <Input id="ano-conclusao-graduacao" placeholder="Ex: 2014" />
+                      <Input id="ano-conclusao-graduacao" placeholder="Ex: 2014" {...register("anoConclusaoGraduacao")} />
                     </div>
                   </CardContent>
                 </Card>
@@ -514,29 +596,35 @@ export default function NewServerPage() {
                   <CardContent className="space-y-4">
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="tipo-pos-graduacao">Tipo de Pós-Graduação</Label>
-                      <Select>
-                        <SelectTrigger id="tipo-pos-graduacao">
-                          <SelectValue placeholder="Selecione o tipo..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                           <SelectItem value="especializacao">Especialização</SelectItem>
-                           <SelectItem value="mba">MBA</SelectItem>
-                           <SelectItem value="mestrado">Mestrado</SelectItem>
-                           <SelectItem value="doutorado">Doutorado</SelectItem>
-                           <SelectItem value="pos-doutorado">Pós-Doutorado</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Controller
+                          name="tipoPosGraduacao"
+                          control={control}
+                          render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                                <SelectTrigger id="tipo-pos-graduacao">
+                                    <SelectValue placeholder="Selecione o tipo..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                   <SelectItem value="especializacao">Especialização</SelectItem>
+                                   <SelectItem value="mba">MBA</SelectItem>
+                                   <SelectItem value="mestrado">Mestrado</SelectItem>
+                                   <SelectItem value="doutorado">Doutorado</SelectItem>
+                                   <SelectItem value="pos-doutorado">Pós-Doutorado</SelectItem>
+                                </SelectContent>
+                            </Select>
+                          )}
+                      />
                     </div>
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="curso-pos-graduacao">Curso de Pós-Graduação</Label>
-                      <Input id="curso-pos-graduacao" placeholder="Nome do curso" />
+                      <Input id="curso-pos-graduacao" placeholder="Nome do curso" {...register("cursoPosGraduacao")} />
                     </div>
                     <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="instituicao-pos-graduacao">Instituição de Pós-Graduação</Label>                      <Input id="instituicao-pos-graduacao" placeholder="Nome da instituição" />
+                      <Label htmlFor="instituicao-pos-graduacao">Instituição de Pós-Graduação</Label>                      <Input id="instituicao-pos-graduacao" placeholder="Nome da instituição" {...register("instituicaoPosGraduacao")} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="ano-conclusao-pos-graduacao">Ano de Conclusão da Pós-Graduação</Label>
-                      <Input id="ano-conclusao-pos-graduacao" placeholder="Ex: 2016" />
+                      <Input id="ano-conclusao-pos-graduacao" placeholder="Ex: 2016" {...register("anoConclusaoPosGraduacao")} />
                     </div>
                   </CardContent>
                 </Card>
@@ -549,16 +637,16 @@ export default function NewServerPage() {
               <h2 className="text-lg font-semibold">Observações Gerais</h2>
               <div className="space-y-2">
                   <Label htmlFor="observacoes-text">Observações</Label>
-                  <Textarea id="observacoes-text" placeholder="Adicione qualquer observação relevante aqui..." rows={8} />
+                  <Textarea id="observacoes-text" placeholder="Adicione qualquer observação relevante aqui..." rows={8} {...register("observacoes")} />
               </div>
             </div>
             <div className="mt-auto pt-4">
-                <Button className="w-full">Adicionar Servidor</Button>
+                <Button type="submit" className="w-full">Adicionar Servidor</Button>
             </div>
           </TabsContent>
         </div>
       </Tabs>
-    </div>
+    </form>
   )
 }
 
