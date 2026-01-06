@@ -5,8 +5,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from '@/components/ui/button';
 import { PlusCircle, Notebook, Share, Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
-const notes = [
+const initialNotes = [
   {
     title: 'Reunião de Alinhamento',
     updatedAt: '31/12/2022 às 20:00',
@@ -25,6 +26,12 @@ const notes = [
 ];
 
 export default function NotesPage() {
+  const [notes, setNotes] = useState(initialNotes);
+
+  const handleDeleteNote = (indexToDelete: number) => {
+    setNotes(notes.filter((_, index) => index !== indexToDelete));
+  };
+
   return (
     <div className="p-4 space-y-4">
       <header className="space-y-2 text-center">
@@ -76,7 +83,7 @@ export default function NotesPage() {
                           Essa ação não pode ser desfeita. Isso excluirá permanentemente sua nota.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
-                      <AlertDialogAction>Confirmar</AlertDialogAction>
+                      <AlertDialogAction onClick={() => handleDeleteNote(index)}>Confirmar</AlertDialogAction>
                       <AlertDialogCancel>Cancelar</AlertDialogCancel>
                     </AlertDialogContent>
                   </AlertDialog>
