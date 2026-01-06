@@ -1,3 +1,4 @@
+
 'use client'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -24,13 +25,15 @@ export default function NewServerPage() {
           </header>
 
           <Tabs defaultValue="pessoais" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-muted md:grid-cols-4 text-foreground">
-              <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground">Dados Pessoais</TabsTrigger>
-              <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground">Dados Profissionais</TabsTrigger>
-              <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground">Formação</TabsTrigger>
-              <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground">Observações</TabsTrigger>
-            </TabsList>
-            <TabsContent value="pessoais" className="mt-8">
+            <div className="border rounded-md">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 text-foreground bg-muted">
+                <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground">Dados Pessoais</TabsTrigger>
+                <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground">Dados Profissionais</TabsTrigger>
+                <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground">Formação</TabsTrigger>
+                <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground">Observações</TabsTrigger>
+              </TabsList>
+            </div>
+            <TabsContent value="pessoais" className="mt-8 md:mt-10">
               <div className="space-y-8">
                 <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Identificação</h2>
@@ -210,7 +213,7 @@ export default function NewServerPage() {
 
               </div>
             </TabsContent>
-            <TabsContent value="profissionais" className="mt-8">
+            <TabsContent value="profissionais" className="mt-8 md:mt-10">
               <div className="space-y-8">
                 <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Informações do Cargo</h2>
@@ -305,7 +308,7 @@ export default function NewServerPage() {
                 </div>
               </div>
             </TabsContent>
-            <TabsContent value="formacao" className="mt-8">
+            <TabsContent value="formacao" className="mt-8 md:mt-10">
               <div className="space-y-8">
                 <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Formação Acadêmica</h2>
@@ -383,7 +386,7 @@ export default function NewServerPage() {
 
               </div>
             </TabsContent>
-            <TabsContent value="observacoes" className="mt-8">
+            <TabsContent value="observacoes" className="mt-8 md:mt-10">
                <div className="space-y-6">
                 <h2 className="text-lg font-semibold">Observações Gerais</h2>
                 <div className="space-y-2">
