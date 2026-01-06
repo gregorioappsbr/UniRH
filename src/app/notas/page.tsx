@@ -5,7 +5,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from '@/components/ui/button';
 import { PlusCircle, Notebook, Share, Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const initialNotes = [
   {
@@ -25,11 +25,30 @@ const initialNotes = [
   },
 ];
 
+type Note = {
+  title: string;
+  content: string;
+  updatedAt: string;
+};
+
+
 export default function NotesPage() {
-  const [notes, setNotes] = useState(initialNotes);
+  const [notes, setNotes] = useState<Note[]>([]);
+
+  useEffect(() => {
+    const storedNotes = localStorage.getItem('notes');
+    if (storedNotes) {
+      setNotes(JSON.parse(storedNotes));
+    } else {
+      setNotes(initialNotes);
+      localStorage.setItem('notes', JSON.stringify(initialNotes));
+    }
+  }, []);
 
   const handleDeleteNote = (indexToDelete: number) => {
-    setNotes(notes.filter((_, index) => index !== indexToDelete));
+    const newNotes = notes.filter((_, index) => index !== indexToDelete);
+    setNotes(newNotes);
+    localStorage.setItem('notes', JSON.stringify(newNotes));
   };
 
   return (
@@ -68,7 +87,7 @@ export default function NotesPage() {
                     <Share className="h-5 w-5 text-green-500" />
                   </Button>
                   <Button variant="ghost" size="icon" asChild>
-                    <Link href={{ pathname: '/notas/novo', query: { title: note.title, content: note.content } }}>
+                    <Link href={{ pathname: '/notas/novo', query: { title: note.title, content: note.content, originalTitle: note.title } }}>
                       <Edit className="h-5 w-5 text-blue-500" />
                     </Link>
                   </Button>

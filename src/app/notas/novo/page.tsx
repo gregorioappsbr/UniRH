@@ -4,23 +4,33 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 import { X, Save } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+type Note = {
+  title: string;
+  content: string;
+  updatedAt: string;
+};
+
 export default function NovaNotaPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { toast } = useToast();
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-
+  const [originalTitle, setOriginalTitle] = useState<string | null>(null);
 
   useEffect(() => {
     const noteTitle = searchParams.get('title');
     const noteContent = searchParams.get('content');
+    const initialOriginalTitle = searchParams.get('originalTitle');
+
     if (noteTitle) {
       setTitle(noteTitle);
       setIsEditing(true);
@@ -28,12 +38,41 @@ export default function NovaNotaPage() {
     if (noteContent) {
       setContent(noteContent);
     }
+    if (initialOriginalTitle) {
+      setOriginalTitle(initialOriginalTitle);
+    }
   }, [searchParams]);
 
   const handleSave = () => {
-    // Lógica para salvar a nota
-    // Por enquanto, vamos apenas navegar de volta para a página de notas
-    router.push('/notas');
+    const storedNotes = localStorage.getItem('notes');
+    let notes: Note[] = storedNotes ? JSON.parse(storedNotes) : [];
+    const now = new Date();
+    const updatedAt = `${now.toLocaleDateString()} às ${now.toLocaleTimeString()}`;
+
+    if (isEditing && originalTitle) {
+      // Find the note by its original title and update it
+      const noteIndex = notes.findIndex(note => note.title === originalTitle);
+      if (noteIndex !== -1) {
+        notes[noteIndex] = { title, content, updatedAt };
+      }
+    } else {
+      // Add a new note
+      const newNote = { title, content, updatedAt };
+      notes.push(newNote);
+    }
+
+    localStorage.setItem('notes', JSON.stringify(notes));
+    toast({
+        title: "Nota salva!",
+        description: "Sua nota foi salva com sucesso.",
+    });
+
+    if (!isEditing) {
+        router.push('/notas');
+    } else {
+        // Update originalTitle in case the title itself was changed
+        setOriginalTitle(title);
+    }
   };
 
   return (
