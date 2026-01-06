@@ -19,6 +19,7 @@ export default function NewServerPage() {
     const [telefonePrincipal, setTelefonePrincipal] = useState('');
     const [telefoneSecundario, setTelefoneSecundario] = useState('');
     const [contatoEmergencia, setContatoEmergencia] = useState('');
+    const [possuiCNH, setPossuiCNH] = useState('nao');
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, masker: (value: string) => string, setter: React.Dispatch<React.SetStateAction<string>>) => {
@@ -73,6 +74,50 @@ export default function NewServerPage() {
                       <Label htmlFor="orgao-emissor">Órgão Emissor</Label>
                       <Input id="orgao-emissor" placeholder="Ex: SSP/MS" />
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="possui-cnh">Possui CNH?</Label>
+                      <Select onValueChange={setPossuiCNH} defaultValue="nao">
+                        <SelectTrigger id="possui-cnh">
+                          <SelectValue placeholder="Selecione..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="sim">Sim</SelectItem>
+                          <SelectItem value="nao">Não</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {possuiCNH === 'sim' && (
+                      <>
+                        <div className="space-y-2">
+                          <Label htmlFor="cnh-numero">Número do Registro CNH</Label>
+                          <Input id="cnh-numero" placeholder="00000000000" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="cnh-categoria">Categoria CNH</Label>
+                          <Select>
+                            <SelectTrigger id="cnh-categoria">
+                              <SelectValue placeholder="Selecione..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="ACC">ACC</SelectItem>
+                                <SelectItem value="A">A</SelectItem>
+                                <SelectItem value="A1">A1</SelectItem>
+                                <SelectItem value="B">B</SelectItem>
+                                <SelectItem value="B1">B1</SelectItem>
+                                <SelectItem value="C">C</SelectItem>
+                                <SelectItem value="C1">C1</SelectItem>
+                                <SelectItem value="D">D</SelectItem>
+                                <SelectItem value="D1">D1</SelectItem>
+                                <SelectItem value="BE">BE</SelectItem>
+                                <SelectItem value="CE">CE</SelectItem>
+                                <SelectItem value="C1E">C1E</SelectItem>
+                                <SelectItem value="DE">DE</SelectItem>
+                                <SelectItem value="D1E">D1E</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </>
+                    )}
                     <div className="space-y-2 w-[90%] md:w-full">
                       <Label htmlFor="data-nascimento">Data de Nascimento</Label>
                       <Input id="data-nascimento" type="date" />
@@ -419,4 +464,5 @@ export default function NewServerPage() {
       </Card>
     </div>
   )
-}
+
+    
