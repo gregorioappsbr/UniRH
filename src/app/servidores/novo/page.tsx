@@ -23,8 +23,8 @@ export default function NewServerPage() {
     const [genero, setGenero] = useState('');
     const [isPCD, setIsPCD] = useState('nao');
 
-    const handleChange = (value: string, masker: (value: string) => string, setter: React.Dispatch<React.SetStateAction<string>>) => {
-        setter(masker(value));
+    const handleChange = (setter: React.Dispatch<React.SetStateAction<string>>, masker: (value: string) => string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        setter(masker(event.target.value));
     };
 
   return (
@@ -64,11 +64,11 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="cpf">CPF</Label>
-                      <Input id="cpf" placeholder="000.000.000-00" value={cpf} onChange={(e) => handleChange(e.target.value, maskCPF, setCpf)} maxLength={14} />
+                      <Input id="cpf" placeholder="000.000.000-00" value={cpf} onChange={handleChange(setCpf, maskCPF)} maxLength={14} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="rg">RG</Label>
-                      <Input id="rg" placeholder="00.000.000-0" value={rg} onChange={(e) => handleChange(e.target.value, maskRG, setRg)} maxLength={12} />
+                      <Input id="rg" placeholder="00.000.000-0" value={rg} onChange={handleChange(setRg, maskRG)} maxLength={12} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="orgao-emissor">Órgão Emissor</Label>
@@ -208,11 +208,11 @@ export default function NewServerPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                      <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="nome-mae">Nome da Mãe</Label>
-                      <Input id="nome-mae" />
+                      <Input id="nome-mae" placeholder="Ex: Maria da Silva" />
                     </div>
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="nome-pai">Nome do Pai</Label>
-                      <Input id="nome-pai" />
+                      <Input id="nome-pai" placeholder="Ex: José da Silva" />
                     </div>
                   </div>
                 </div>
@@ -222,11 +222,11 @@ export default function NewServerPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="telefone-principal">Telefone Principal</Label>
-                      <Input id="telefone-principal" type="tel" placeholder="(00) 00000-0000" value={telefonePrincipal} onChange={(e) => handleChange(e.target.value, maskPhone, setTelefonePrincipal)} maxLength={15} />
+                      <Input id="telefone-principal" type="tel" placeholder="(00) 00000-0000" value={telefonePrincipal} onChange={handleChange(setTelefonePrincipal, maskPhone)} maxLength={15} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="telefone-secundario">Telefone Secundário</Label>
-                      <Input id="telefone-secundario" type="tel" placeholder="(00) 00000-0000" value={telefoneSecundario} onChange={(e) => handleChange(e.target.value, maskPhone, setTelefoneSecundario)} maxLength={15} />
+                      <Input id="telefone-secundario" type="tel" placeholder="(00) 00000-0000" value={telefoneSecundario} onChange={handleChange(setTelefoneSecundario, maskPhone)} maxLength={15} />
                     </div>
                      <div className="space-y-2 col-span-2">
                       <Label htmlFor="email-pessoal">E-mail Pessoal</Label>
@@ -240,7 +240,7 @@ export default function NewServerPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="cep">CEP</Label>
-                      <Input id="cep" placeholder="00000-000" value={cep} onChange={(e) => handleChange(e.target.value, maskCEP, setCep)} maxLength={9} />
+                      <Input id="cep" placeholder="00000-000" value={cep} onChange={handleChange(setCep, maskCEP)} maxLength={9} />
                     </div>
                     <div className="space-y-2 col-span-2">
                       <Label htmlFor="logradouro">Logradouro</Label>
@@ -287,7 +287,7 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="contato-emergencia-telefone">Telefone</Label>
-                      <Input id="contato-emergencia-telefone" type="tel" placeholder="(00) 00000-0000" value={contatoEmergencia} onChange={(e) => handleChange(e.target.value, maskPhone, setContatoEmergencia)} maxLength={15} />
+                      <Input id="contato-emergencia-telefone" type="tel" placeholder="(00) 00000-0000" value={contatoEmergencia} onChange={handleChange(setContatoEmergencia, maskPhone)} maxLength={15} />
                     </div>
                   </div>
                 </div>
@@ -486,5 +486,3 @@ export default function NewServerPage() {
     </div>
   )
 }
-
-    
