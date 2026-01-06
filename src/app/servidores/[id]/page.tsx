@@ -12,28 +12,79 @@ import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+// Define a type for the server data
+type Server = {
+    initials: string;
+    nomeCompleto: string;
+    cargo: string;
+    status: string;
+    rating: number;
+    emailInstitucional: string;
+    telefonePrincipal: string;
+    vinculo: string;
+    setor: string;
+    nomeSocial?: string;
+    cpf?: string;
+    rg?: string;
+    orgaoEmissor?: string;
+    dataNascimento?: string;
+    genero?: string;
+    corRaca?: string;
+    estadoCivil?: string;
+    nacionalidade?: string;
+    naturalidade?: string;
+    isPCD?: string;
+    pcdDescricao?: string;
+    nomeMae?: string;
+    nomePai?: string;
+    telefoneSecundario?: string;
+    emailPessoal?: string;
+    contatoEmergenciaNome?: string;
+    contatoEmergenciaTelefone?: string;
+    cep?: string;
+    logradouro?: string;
+    numero?: string;
+    complemento?: string;
+    bairro?: string;
+    cidade?: string;
+    uf?: string;
+    funcao?: string;
+    dataInicio?: string;
+    jornada?: string;
+    turno?: string;
+    observacoes?: string;
+};
+
 
 export default function ServerProfilePage() {
-  const server = {
-    initials: 'LTC',
-    name: 'Lilian Tenório Carvalho',
-    role: 'ATNM',
-    status: 'Ativo',
-    rating: 3.2,
-    email: 'litencarv@uems.br',
-    phone: '(67) 98167-2870',
-    type: 'Efetivo',
-    department: 'Secretaria da Gerência',
-  };
+    const params = useParams();
+    const { id } = params;
+    const [server, setServer] = useState<Server | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (id) {
+            const storedServers = localStorage.getItem('servers');
+            if (storedServers) {
+                const servers = JSON.parse(storedServers);
+                const foundServer = servers.find((s: any) => s.emailInstitucional.split('@')[0] === id);
+                setServer(foundServer);
+            }
+        }
+        setLoading(false);
+    }, [id]);
 
   const fichaItems = [
-    { icon: User, label: "Dados Pessoais", content: "Conteúdo de Dados Pessoais." },
-    { icon: WhatsAppIcon, label: "Contato", content: "Conteúdo de Contato." },
-    { icon: Heart, label: "Contato de Emergência", content: "Conteúdo de Contato de Emergência." },
-    { icon: Home, label: "Endereço", content: "Conteúdo de Endereço." },
-    { icon: Briefcase, label: "Dados Profissionais", content: "Conteúdo de Dados Profissionais." },
+    { icon: User, label: "Dados Pessoais", content: server ? `Nome Social: ${server.nomeSocial || ''}\nCPF: ${server.cpf || ''}\nRG: ${server.rg || ''}\nÓrgão Emissor: ${server.orgaoEmissor || ''}\nData de Nascimento: ${server.dataNascimento || ''}\nGênero: ${server.genero || ''}\nCor/Raça: ${server.corRaca || ''}\nEstado Civil: ${server.estadoCivil || ''}\nNacionalidade: ${server.nacionalidade || ''}\nNaturalidade: ${server.naturalidade || ''}\nPCD: ${server.isPCD === 'sim' ? `Sim - ${server.pcdDescricao}` : 'Não'}` : "" },
+    { icon: WhatsAppIcon, label: "Contato", content: server ? `Telefone Principal: ${server.telefonePrincipal || ''}\nTelefone Secundário: ${server.telefoneSecundario || ''}\nEmail Pessoal: ${server.emailPessoal || ''}`: "" },
+    { icon: Heart, label: "Contato de Emergência", content: server ? `Nome: ${server.contatoEmergenciaNome || ''}\nTelefone: ${server.contatoEmergenciaTelefone || ''}` : "" },
+    { icon: Home, label: "Endereço", content: server ? `CEP: ${server.cep || ''}\nLogradouro: ${server.logradouro || ''}, Nº ${server.numero || ''}\nComplemento: ${server.complemento || ''}\nBairro: ${server.bairro || ''}\nCidade/UF: ${server.cidade || ''}/${server.uf || ''}`: "" },
+    { icon: Briefcase, label: "Dados Profissionais", content: server ? `Função: ${server.funcao || ''}\nData de Início: ${server.dataInicio || ''}\nJornada: ${server.jornada || ''}\nTurno: ${server.turno || ''}` : "" },
     { icon: GraduationCap, label: "Formação", content: "Conteúdo de Formação." },
-    { icon: Info, label: "Observações", content: "Conteúdo de Observações." },
+    { icon: Info, label: "Observações", content: server ? server.observacoes || 'Nenhuma observação.' : "" },
   ];
 
   const faltas = [
@@ -62,8 +113,17 @@ export default function ServerProfilePage() {
   }
 
   const formatWhatsAppLink = (phone: string) => {
+    if (!phone) return '';
     const justNumbers = phone.replace(/\D/g, '');
     return `https://wa.me/55${justNumbers}`;
+  }
+
+  if (loading) {
+    return <div className="p-4 text-center">Carregando...</div>;
+  }
+
+  if (!server) {
+    return <div className="p-4 text-center">Servidor não encontrado.</div>;
   }
 
   return (
@@ -86,8 +146,8 @@ export default function ServerProfilePage() {
               </AvatarFallback>
             </Avatar>
             <div>
-              <h2 className="text-2xl font-bold">{server.name}</h2>
-              <p className="text-muted-foreground">{server.role}</p>
+              <h2 className="text-2xl font-bold">{server.nomeCompleto}</h2>
+              <p className="text-muted-foreground">{server.cargo}</p>
             </div>
             <div className="flex gap-2">
               <Badge className={cn(getStatusClass(server.status))}>
@@ -104,19 +164,19 @@ export default function ServerProfilePage() {
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <Mail className="h-5 w-5 text-muted-foreground" />
-              <span className="text-sm">{server.email}</span>
+              <span className="text-sm">{server.emailInstitucional}</span>
             </div>
-            <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base text-foreground hover:text-primary">
+            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base text-foreground hover:text-primary">
               <WhatsAppIcon className="h-5 w-5 text-muted-foreground" />
-              <span className="text-base">{server.phone}</span>
+              <span className="text-base">{server.telefonePrincipal}</span>
             </a>
             <div className="flex items-center gap-4">
               <Type className="h-5 w-5 text-muted-foreground" />
-              <span className="text-sm">{server.type}</span>
+              <span className="text-sm">{server.vinculo}</span>
             </div>
             <div className="flex items-center gap-4">
               <Building className="h-5 w-5 text-muted-foreground" />
-              <span className="text-sm">{server.department}</span>
+              <span className="text-sm">{server.setor}</span>
             </div>
           </div>
 
@@ -133,7 +193,7 @@ export default function ServerProfilePage() {
         </CardContent>
       </Card>
       
-      <Tabs defaultValue="faltas" className="w-full flex-1 flex flex-col">
+      <Tabs defaultValue="ficha" className="w-full flex-1 flex flex-col">
         <div className="border rounded-md">
           <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
             <TabsTrigger value="ficha" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Ficha</TabsTrigger>
@@ -153,7 +213,7 @@ export default function ServerProfilePage() {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="p-4 pt-0">
-                  <p className="text-muted-foreground">{item.content}</p>
+                  <p className="text-muted-foreground whitespace-pre-wrap">{item.content}</p>
                 </AccordionContent>
               </AccordionItem>
             ))}
@@ -202,3 +262,5 @@ export default function ServerProfilePage() {
     </div>
   );
 }
+
+    

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -18,7 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { jsPDF } from "jspdf";
 import { useRouter } from 'next/navigation';
 
-const servers = [
+const initialServers = [
   {
     "nomeCompleto": "Ana Maria da Silva e Souza",
     "nomeSocial": "Ana",
@@ -309,7 +309,6 @@ const servers = [
   }
 ];
 
-servers.sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
 
 const statusOptions = ['Ativo', 'Inativo', 'Licença'];
 const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comissionado'];
@@ -318,11 +317,29 @@ const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comi
 export default function ServerListPage() {
   const isMobile = useIsMobile();
   const router = useRouter();
-  const [selectedServers, setSelectedServers] = React.useState<Record<string, boolean>>({});
   const { toast } = useToast();
-  
-  const [statusFilters, setStatusFilters] = React.useState<string[]>([]);
-  const [vinculoFilters, setVinculoFilters] = React.useState<string[]>([]);
+
+  const [servers, setServers] = useState<any[]>([]);
+  const [selectedServers, setSelectedServers] = useState<Record<string, boolean>>({});
+  const [statusFilters, setStatusFilters] = useState<string[]>([]);
+  const [vinculoFilters, setVinculoFilters] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const storedServers = localStorage.getItem('servers');
+      if (storedServers) {
+        setServers(JSON.parse(storedServers));
+      } else {
+        localStorage.setItem('servers', JSON.stringify(initialServers));
+        setServers(initialServers);
+      }
+    } catch (error) {
+      console.error("Failed to access localStorage:", error);
+      setServers(initialServers);
+    }
+  }, []);
+
+  servers.sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
 
   const selectionCount = Object.values(selectedServers).filter(Boolean).length;
 
@@ -897,8 +914,11 @@ const handleExportPDF = async () => {
                      <div 
                       className="flex-1"
                       onClick={(e) => {
+                        const target = e.target as HTMLElement;
                         if (
-                          (e.target as HTMLElement).closest('a')
+                          target.closest('a') ||
+                          target.closest('input[type="checkbox"]') ||
+                          (target.parentElement && target.parentElement.id.includes(`server-${server.emailInstitucional}`))
                         ) {
                           return;
                         }
@@ -1032,3 +1052,5 @@ const handleExportPDF = async () => {
     </div>
   );
 }
+
+    

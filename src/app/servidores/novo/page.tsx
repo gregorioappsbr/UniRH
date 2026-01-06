@@ -6,26 +6,42 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
+import { useToast } from "@/hooks/use-toast"
 import { X } from "lucide-react"
 import Link from "next/link"
 import React from "react"
 import { useForm, Controller } from "react-hook-form";
 import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
+import { useRouter } from "next/navigation"
 
 export default function NewServerPage() {
     const { register, handleSubmit, watch, control } = useForm();
+    const router = useRouter();
+    const { toast } = useToast();
     
     const possuiCNH = watch('possuiCNH', 'nao');
     const genero = watch('genero', '');
     const isPCD = watch('isPCD', 'nao');
-    const tipoVinculo = watch('tipoVinculo', '');
+    const tipoVinculo = watch('vinculo', '');
     const turno = watch('turno', '');
     const escolaridade = watch('escolaridade', '');
 
     const onSubmit = (data: any) => {
-        // Here you would typically send the data to your backend
-        console.log(data);
-        alert('Servidor adicionado com sucesso! (Verifique o console para ver os dados)');
+        const storedServers = localStorage.getItem('servers');
+        let servers = storedServers ? JSON.parse(storedServers) : [];
+        
+        const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
+        const newServer = { ...data, initials, rating: Math.floor(Math.random() * 5) + 5 }; // Add initials and a random rating
+
+        servers.push(newServer);
+        localStorage.setItem('servers', JSON.stringify(servers));
+        
+        toast({
+            title: "Servidor adicionado!",
+            description: "O novo servidor foi adicionado com sucesso.",
+        });
+
+        router.push('/servidores');
     };
 
     const applyMask = (masker: (value: string) => string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -375,17 +391,17 @@ export default function NewServerPage() {
                                 <SelectValue placeholder="Selecione o tipo de vínculo" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="efetivo">Efetivo</SelectItem>
-                                <SelectItem value="terceirizado">Terceirizado</SelectItem>
-                                <SelectItem value="cedido">Cedido</SelectItem>
-                                <SelectItem value="contratado">Contratado</SelectItem>
-                                <SelectItem value="comissionado">Comissionado</SelectItem>
+                                <SelectItem value="Efetivo">Efetivo</SelectItem>
+                                <SelectItem value="Terceirizado">Terceirizado</SelectItem>
+                                <SelectItem value="Cedido">Cedido</SelectItem>
+                                <SelectItem value="Contratado">Contratado</SelectItem>
+                                <SelectItem value="Comissionado">Comissionado</SelectItem>
                               </SelectContent>
                             </Select>
                         )}
                     />
                   </div>
-                  {tipoVinculo === 'efetivo' && (
+                  {tipoVinculo === 'Efetivo' && (
                       <div className="space-y-2 md:col-span-2">
                           <Label htmlFor="matricula">Matrícula</Label>
                           <Input id="matricula" placeholder="Digite a matrícula" {...register("matricula")} />
@@ -494,9 +510,9 @@ export default function NewServerPage() {
                                 <SelectValue placeholder="Selecione o status" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="ativo">Ativo</SelectItem>
-                                 <SelectItem value="licenca">Licença</SelectItem>
-                                 <SelectItem value="inativo">Inativo</SelectItem>
+                                <SelectItem value="Ativo">Ativo</SelectItem>
+                                 <SelectItem value="Licença">Licença</SelectItem>
+                                 <SelectItem value="Inativo">Inativo</SelectItem>
                               </SelectContent>
                             </Select>
                         )}
@@ -640,3 +656,5 @@ export default function NewServerPage() {
     </form>
   )
 }
+
+    
