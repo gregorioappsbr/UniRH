@@ -5,32 +5,38 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ServerList } from '@/components/server-list';
 import { Users, User, ChevronDown, ShieldCheck, ArrowRightLeft, FileText, Briefcase } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import Link from 'next/link';
 
 const vinculos = [
   {
     nome: 'Efetivo',
     quantidade: 2,
     icon: ShieldCheck,
+    href: '/servidores?vinculo=efetivo',
   },
   {
     nome: 'Terceirizado',
     quantidade: 1,
     icon: Users,
+    href: '/servidores?vinculo=terceirizado',
   },
   {
     nome: 'Cedido',
     quantidade: 0,
     icon: ArrowRightLeft,
+    href: '/servidores?vinculo=cedido',
   },
   {
     nome: 'Contratado',
     quantidade: 1,
     icon: FileText,
+    href: '/servidores?vinculo=contratado',
   },
   {
     nome: 'Comissionado',
     quantidade: 1,
     icon: Briefcase,
+    href: '/servidores?vinculo=comissionado',
   },
 ];
 
@@ -52,7 +58,10 @@ export default function Home() {
                     <div className="text-4xl font-bold">5</div>
                   </div>
                 </div>
-                <Users className="h-5 w-5 shrink-0 transition-transform duration-200" />
+                <div className="flex flex-col items-center">
+                    <Users className="h-5 w-5 shrink-0 transition-transform duration-200" />
+                    <ChevronDown className="h-5 w-5 shrink-0 transition-transform duration-200" />
+                </div>
               </div>
             </AccordionTrigger>
             <AccordionContent>
@@ -61,13 +70,13 @@ export default function Home() {
                  <p className="text-sm text-muted-foreground mb-4">Detalhes por vínculo:</p>
                  <div className="space-y-4">
                   {vinculos.map((vinculo) => (
-                    <div key={vinculo.nome} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50">
+                    <Link href={vinculo.href} key={vinculo.nome} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 cursor-pointer">
                       <div className="flex items-center gap-4">
                         <vinculo.icon className="h-5 w-5 text-primary" />
                         <span className="font-medium">{vinculo.nome}</span>
                       </div>
                       <span className="font-bold">{vinculo.quantidade}</span>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </CardContent>
