@@ -25,10 +25,10 @@ export default function NewServerPage() {
 
           <Tabs defaultValue="pessoais" className="w-full">
             <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 text-foreground">
-              <TabsTrigger value="pessoais">Dados Pessoais</TabsTrigger>
-              <TabsTrigger value="profissionais">Dados Profissionais</TabsTrigger>
-              <TabsTrigger value="formacao">Formação</TabsTrigger>
-              <TabsTrigger value="observacoes">Observações</TabsTrigger>
+              <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground">Dados Pessoais</TabsTrigger>
+              <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground">Dados Profissionais</TabsTrigger>
+              <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground">Formação</TabsTrigger>
+              <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground">Observações</TabsTrigger>
             </TabsList>
             <TabsContent value="pessoais" className="mt-6">
               <div className="space-y-8">
