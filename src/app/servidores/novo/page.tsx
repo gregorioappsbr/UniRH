@@ -20,6 +20,7 @@ export default function NewServerPage() {
     const [telefoneSecundario, setTelefoneSecundario] = useState('');
     const [contatoEmergencia, setContatoEmergencia] = useState('');
     const [possuiCNH, setPossuiCNH] = useState('nao');
+    const [genero, setGenero] = useState('');
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, masker: (value: string) => string, setter: React.Dispatch<React.SetStateAction<string>>) => {
@@ -123,17 +124,26 @@ export default function NewServerPage() {
                       <Input id="data-nascimento" type="date" />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="sexo">Sexo</Label>
-                      <Select>
-                        <SelectTrigger id="sexo">
+                      <Label htmlFor="genero">Gênero</Label>
+                      <Select onValueChange={setGenero}>
+                        <SelectTrigger id="genero">
                           <SelectValue placeholder="Selecione" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="masculino">Masculino</SelectItem>
                           <SelectItem value="feminino">Feminino</SelectItem>
+                          <SelectItem value="nao-binario">Não-binário</SelectItem>
+                          <SelectItem value="nao-informar">Prefiro não informar</SelectItem>
+                          <SelectItem value="outro">Outro</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
+                    {genero === 'outro' && (
+                        <div className="space-y-2">
+                            <Label htmlFor="outro-genero">Qual?</Label>
+                            <Input id="outro-genero" placeholder="Descreva seu gênero" />
+                        </div>
+                    )}
                     <div className="space-y-2">
                       <Label htmlFor="estado-civil">Estado Civil</Label>
                        <Select>
@@ -464,5 +474,7 @@ export default function NewServerPage() {
       </Card>
     </div>
   )
+
+    
 
     
