@@ -194,7 +194,7 @@ export default function ServerProfilePage() {
       </Card>
       
       <Tabs defaultValue="ficha" className="w-full flex-1 flex flex-col">
-        <div className="border dark:border-white/20 rounded-md">
+        <div className="border dark:border-white/40 rounded-md">
           <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
             <TabsTrigger value="ficha" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Ficha</TabsTrigger>
             <TabsTrigger value="faltas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Faltas</TabsTrigger>
@@ -205,7 +205,7 @@ export default function ServerProfilePage() {
         <TabsContent value="ficha" className="mt-8 flex-1 flex flex-col md:mt-10">
           <Accordion type="single" collapsible className="w-full space-y-2">
             {fichaItems.map((item, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="bg-card border-border dark:border-white/20 border rounded-lg">
+              <AccordionItem key={index} value={`item-${index}`} className="bg-card border-border dark:border-white/40 border rounded-lg">
                 <AccordionTrigger className="p-4 hover:no-underline">
                   <div className="flex items-center gap-3">
                     <item.icon className="h-5 w-5 text-primary" />
