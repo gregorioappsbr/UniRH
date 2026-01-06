@@ -24,6 +24,7 @@ export default function NewServerPage() {
     const [isPCD, setIsPCD] = useState('nao');
     const [dataNascimento, setDataNascimento] = useState('');
     const [dataInicio, setDataInicio] = useState('');
+    const [possuiDGA, setPossuiDGA] = useState('nao');
 
     const handleChange = (setter: React.Dispatch<React.SetStateAction<string>>, masker: (value: string) => string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setter(masker(event.target.value));
@@ -354,7 +355,7 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="possui-dga">Possui DGA?</Label>
-                      <Select>
+                      <Select onValueChange={setPossuiDGA} defaultValue="nao">
                         <SelectTrigger id="possui-dga">
                           <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
@@ -364,6 +365,12 @@ export default function NewServerPage() {
                         </SelectContent>
                       </Select>
                     </div>
+                    {possuiDGA === 'sim' && (
+                        <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor="dga-descricao">Descrição</Label>
+                            <Textarea id="dga-descricao" placeholder="Descreva o DGA..."/>
+                        </div>
+                    )}
                      <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="setor-lotacao">Setor / Lotação</Label>
                       <Input id="setor-lotacao" placeholder="Ex: Tecnologia da Informação" />
@@ -510,3 +517,5 @@ export default function NewServerPage() {
     </div>
   )
 }
+
+    
