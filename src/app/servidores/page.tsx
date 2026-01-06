@@ -10,6 +10,8 @@ import { Users, PlusCircle, Filter, Share2, KeyRound, Award, MinusCircle, AlertC
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const servers = [
   {
@@ -69,6 +71,7 @@ const servers = [
 ];
 
 export default function ServerListPage() {
+  const isMobile = useIsMobile();
 
   const getRatingClass = (rating: number) => {
     if (rating >= 8) return 'text-green-400';
@@ -141,59 +144,119 @@ export default function ServerListPage() {
 
       <Card>
         <CardContent className="p-0">
-          <div className="flex items-center p-4 border-b">
-            <Checkbox id="select-all" />
-            <label htmlFor="select-all" className="ml-4 font-medium text-sm">
-              Nome
-            </label>
-          </div>
-          <div className="space-y-4 p-4">
-            {servers.map((server, index) => (
-              <div key={index} className="flex items-start gap-4 pb-4 border-b last:border-b-0">
-                <Checkbox id={`server-${index}`} className="mt-1" />
-                <Avatar>
-                  <AvatarFallback>{server.initials}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 space-y-1">
-                  <p className="font-semibold">{server.name}</p>
-                  <p className="text-sm text-muted-foreground">{server.email}</p>
-                  
-                  {server.funcao && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      {getFuncaoIcon(server.funcao)}
-                      <span>{server.funcao}</span>
-                    </div>
-                  )}
-
-                  {server.phone && (
-                    <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
-                      <WhatsAppIcon className="h-4 w-4" />
-                      <span>{server.phone}</span>
-                    </a>
-                  )}
-
-                  <div className="flex items-center gap-4 mt-2 text-xs">
-                    {server.status && (
-                       <Badge variant="outline" className={cn(getStatusClass(server.status))}>
-                        {getStatusIcon(server.status)}
-                        {server.status}
-                      </Badge>
-                    )}
-                    {server.rating && (
-                      <div className={cn("flex items-center text-muted-foreground", getRatingClass(server.rating))}>
-                        <Award className="w-3 h-3 mr-1 fill-current" />
-                        <span>Nota: {server.rating}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
+          {isMobile ? (
+            <>
+              <div className="flex items-center p-4 border-b">
+                <Checkbox id="select-all" />
+                <label htmlFor="select-all" className="ml-4 font-medium text-sm">
+                  Nome
+                </label>
               </div>
-            ))}
-          </div>
+              <div className="space-y-4 p-4">
+                {servers.map((server, index) => (
+                  <div key={index} className="flex items-start gap-4 pb-4 border-b last:border-b-0">
+                    <Checkbox id={`server-${index}`} className="mt-1" />
+                    <div className="flex flex-col items-center gap-2">
+                      <Avatar>
+                        <AvatarFallback>{server.initials}</AvatarFallback>
+                      </Avatar>
+                       <div className="flex flex-col items-center gap-1">
+                        {server.status && (
+                          <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
+                            {getStatusIcon(server.status)}
+                            {server.status}
+                          </Badge>
+                        )}
+                        {server.rating && (
+                          <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
+                            <Award className="w-3 h-3 mr-1 fill-current" />
+                            <span>Nota: {server.rating}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <p className="font-semibold">{server.name}</p>
+                      <p className="text-sm text-muted-foreground">{server.email}</p>
+                       {server.funcao && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          {getFuncaoIcon(server.funcao)}
+                          <span>{server.funcao}</span>
+                        </div>
+                      )}
+                      {server.phone && (
+                        <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
+                          <WhatsAppIcon className="h-4 w-4" />
+                          <span>{server.phone}</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+             <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[50px]">
+                      <Checkbox id="select-all-desktop" />
+                    </TableHead>
+                    <TableHead>Servidor</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Nota</TableHead>
+                    <TableHead>Função</TableHead>
+                    <TableHead>Telefone</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {servers.map((server, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <Checkbox id={`server-desktop-${index}`} />
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                            <Avatar>
+                                <AvatarFallback>{server.initials}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                                <p className="font-semibold">{server.name}</p>
+                                <p className="text-sm text-muted-foreground">{server.email}</p>
+                            </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                         <Badge variant="outline" className={cn(getStatusClass(server.status))}>
+                            {getStatusIcon(server.status)}
+                            {server.status}
+                          </Badge>
+                      </TableCell>
+                      <TableCell>
+                         <div className={cn("flex items-center", getRatingClass(server.rating))}>
+                            <Award className="w-3 h-3 mr-1 fill-current" />
+                            <span>{server.rating}</span>
+                          </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                           {getFuncaoIcon(server.funcao)}
+                          <span>{server.funcao}</span>
+                        </div>
+                      </TableCell>
+                       <TableCell className="whitespace-nowrap">
+                         <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary">
+                            <WhatsAppIcon className="h-4 w-4" />
+                            <span>{server.phone}</span>
+                        </a>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+          )}
         </CardContent>
       </Card>
     </div>
   );
 }
-
-    
