@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2 } from 'lucide-react';
+import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -13,6 +13,9 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger, SheetFooter, SheetClose } from '@/components/ui/sheet';
 import { Label } from '@/components/ui/label';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/hooks/use-toast';
+import type { jsPDF } from "jspdf";
 
 const servers = [
   {
@@ -86,6 +89,7 @@ const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comi
 export default function ServerListPage() {
   const isMobile = useIsMobile();
   const [selectedServers, setSelectedServers] = React.useState<Record<string, boolean>>({});
+  const { toast } = useToast();
   
   const [statusFilters, setStatusFilters] = React.useState<string[]>([]);
   const [vinculoFilters, setVinculoFilters] = React.useState<string[]>([]);
@@ -177,6 +181,144 @@ export default function ServerListPage() {
     }
   };
 
+  const getSelectedServersDetails = () => {
+    return servers
+      .filter(server => selectedServers[server.email])
+      .map(server => `
+*FICHA DO SERVIDOR*
+------------------------------------
+*Nome:* ${server.name}
+*Email:* ${server.email}
+*Telefone:* ${server.phone}
+*Função:* ${server.funcao}
+*Vínculo:* ${server.vinculo}
+*Status:* ${server.status}
+*Nota:* ${server.rating}
+------------------------------------
+      `.trim())
+      .join('\n\n');
+  };
+
+  const handleShare = async () => {
+    const textToShare = getSelectedServersDetails();
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Ficha de Servidor(es)',
+          text: textToShare,
+        });
+      } catch (error) {
+        if (error instanceof DOMException && (error.name === 'AbortError' || error.name === 'NotAllowedError')) {
+          // User cancelled the share sheet, do nothing.
+        } else {
+          console.error('Erro ao compartilhar', error);
+          handleCopy();
+           toast({
+            variant: 'destructive',
+            title: 'Compartilhamento não disponível',
+            description: 'O conteúdo foi copiado para a área de transferência.',
+          });
+        }
+      }
+    } else {
+      handleCopy();
+      toast({
+        title: 'Copiado!',
+        description: 'Seu navegador não suporta compartilhamento. O conteúdo foi copiado para a área de transferência.',
+      });
+    }
+  };
+
+  const handleCopy = () => {
+    const textToCopy = getSelectedServersDetails();
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      toast({
+        title: 'Copiado!',
+        description: 'Os dados do(s) servidor(es) foram copiados.',
+      });
+    }).catch(err => {
+      console.error('Erro ao copiar', err);
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao copiar',
+        description: 'Não foi possível copiar os dados.',
+      });
+    });
+  };
+
+  const handleShareWhatsApp = () => {
+    const textToShare = getSelectedServersDetails();
+    const encodedText = encodeURIComponent(textToShare);
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleExportPDF = async () => {
+    const selected = servers.filter(server => selectedServers[server.email]);
+    if (selected.length === 0) return;
+
+    try {
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF();
+      let y = 15;
+
+      const addPageIfNeeded = (spaceNeeded: number) => {
+        if (y + spaceNeeded > doc.internal.pageSize.height - 20) {
+          doc.addPage();
+          y = 15;
+        }
+      };
+
+      selected.forEach((server, index) => {
+        if (index > 0) {
+          doc.line(15, y, 195, y);
+          y += 10;
+        }
+        
+        addPageIfNeeded(70);
+
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text("FICHA DO SERVIDOR", doc.internal.pageSize.width / 2, y, { align: 'center' });
+        y += 10;
+
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        
+        const details = [
+          { label: 'Nome:', value: server.name },
+          { label: 'Email:', value: server.email },
+          { label: 'Telefone:', value: server.phone },
+          { label: 'Função:', value: server.funcao },
+          { label: 'Vínculo:', value: server.vinculo },
+          { label: 'Status:', value: server.status },
+          { label: 'Nota:', value: String(server.rating) },
+        ];
+
+        details.forEach(detail => {
+          doc.setFont('helvetica', 'bold');
+          doc.text(detail.label, 15, y);
+          doc.setFont('helvetica', 'normal');
+          doc.text(detail.value, 45, y);
+          y += 7;
+        });
+
+        y += 5; // Espaço extra após cada servidor
+      });
+      
+      doc.save(selected.length > 1 ? `servidores.pdf` : `${selected[0].name.replace(/\s/g, '_')}.pdf`);
+
+    } catch (error) {
+      console.error('Erro ao exportar PDF', error);
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao exportar',
+        description: 'Não foi possível exportar como PDF.',
+      });
+    }
+  };
+
+
   return (
     <div className="p-4 space-y-4">
       <header className="space-y-2 text-center">
@@ -260,13 +402,36 @@ export default function ServerListPage() {
         </>
       ) : (
         <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline" className="text-foreground">
-                <Share className="mr-2 h-4 w-4"/>
-                Compartilhar
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="text-foreground w-full">
+                  <Share className="mr-2 h-4 w-4"/>
+                  Compartilhar ({selectionCount})
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={handleShare}>
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>Compartilhar como Texto</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleShareWhatsApp}>
+                  <WhatsAppIcon className="mr-2 h-4 w-4" />
+                  <span>Compartilhar no WhatsApp</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleCopy}>
+                  <Copy className="mr-2 h-4 w-4" />
+                  <span>Copiar Texto</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportPDF}>
+                  <FileDown className="mr-2 h-4 w-4" />
+                  <span>Exportar como PDF</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Button variant="destructive">
                 <Trash2 className="mr-2 h-4 w-4"/>
-                Excluir
+                Excluir ({selectionCount})
             </Button>
         </div>
       )}
