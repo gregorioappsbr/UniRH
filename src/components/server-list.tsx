@@ -62,18 +62,16 @@ export function ServerList() {
                           {server.status}
                         </Badge>
                       )}
+                      {server.rating && (
+                        <div className="flex items-center text-muted-foreground text-xs">
+                          <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
+                          <span>Nota: {server.rating}</span>
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1">
                       <p className="font-semibold">{server.name}</p>
                       <p className="text-sm text-muted-foreground">{server.email}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs">
-                        {server.rating && (
-                          <div className="flex items-center text-muted-foreground">
-                            <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
-                            <span>Nota: {server.rating}</span>
-                          </div>
-                        )}
-                      </div>
                       {server.phone && (
                         <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
                           <Phone className="h-4 w-4" />
