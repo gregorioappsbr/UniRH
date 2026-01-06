@@ -59,6 +59,11 @@ export default function ServerProfilePage() {
     return <MinusCircle className="h-3 w-3 mr-1" />;
   }
 
+  const formatWhatsAppLink = (phone: string) => {
+    const justNumbers = phone.replace(/\D/g, '');
+    return `https://wa.me/55${justNumbers}`;
+  }
+
   return (
     <div className="p-4 space-y-4 flex flex-col flex-1 h-full">
       <header className="flex items-center gap-4">
@@ -99,10 +104,10 @@ export default function ServerProfilePage() {
               <Mail className="h-5 w-5 text-muted-foreground" />
               <span className="text-sm">{server.email}</span>
             </div>
-            <div className="flex items-center gap-4">
+            <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base text-foreground hover:text-primary">
               <Phone className="h-5 w-5 text-muted-foreground" />
-              <span className="text-sm">{server.phone}</span>
-            </div>
+              <span className="text-base">{server.phone}</span>
+            </a>
             <div className="flex items-center gap-4">
               <Type className="h-5 w-5 text-muted-foreground" />
               <span className="text-sm">{server.type}</span>

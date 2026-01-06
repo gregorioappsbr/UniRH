@@ -13,6 +13,7 @@ import { Phone, Award, KeyRound, Briefcase, MinusCircle, AlertCircle } from 'luc
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 
 const servers = [
@@ -46,15 +47,20 @@ export function ServerList() {
     };
 
     const getStatusClass = (status: string) => {
-      if (status === 'Ativo') return 'text-green-400 border-green-400';
-      if (status === 'Licença') return 'text-yellow-400 border-yellow-400';
-      return 'text-red-400 border-red-400';
+      if (status === 'Ativo') return 'bg-green-500/20 text-green-400 border-green-500/50';
+      if (status === 'Licença') return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
+      return 'bg-red-500/20 text-red-400 border-red-500/50';
     };
 
     const getStatusIcon = (status: string) => {
       if (status === 'Ativo') return <KeyRound className="w-3 h-3 mr-1" />;
       if (status === 'Licença') return <AlertCircle className="w-3 h-3 mr-1" />;
       return <MinusCircle className="w-3 h-3 mr-1" />;
+    }
+
+    const formatWhatsAppLink = (phone: string) => {
+      const justNumbers = phone.replace(/\D/g, '');
+      return `https://wa.me/55${justNumbers}`;
     }
 
 
@@ -98,10 +104,10 @@ export function ServerList() {
                         </div>
                       )}
                       {server.phone && (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary">
                           <Phone className="h-4 w-4" />
                           <span>{server.phone}</span>
-                        </div>
+                        </a>
                       )}
                     </div>
                   </div>
@@ -151,10 +157,10 @@ export function ServerList() {
                         </div>
                       </TableCell>
                        <TableCell>
-                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                         <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary">
                             <Phone className="h-4 w-4" />
                             <span>{server.phone}</span>
-                        </div>
+                        </a>
                       </TableCell>
                     </TableRow>
                   ))}

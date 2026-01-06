@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Phone, MinusCircle, AlertCircle } from 'lucide-react';
+import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Phone, MinusCircle, AlertCircle, Briefcase } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -17,6 +17,7 @@ const servers = [
     status: 'Ativo',
     rating: 9.5,
     phone: '(67) 99999-1234',
+    funcao: 'Gerente de Projetos',
   },
   {
     initials: 'BC',
@@ -25,6 +26,7 @@ const servers = [
     status: 'Ativo',
     rating: 8.0,
     phone: '(67) 99999-5678',
+    funcao: 'Desenvolvedor Frontend',
   },
   {
     initials: 'CD',
@@ -33,6 +35,7 @@ const servers = [
     status: 'Licença',
     rating: 7.2,
     phone: '(67) 99999-4321',
+    funcao: 'Designer UI/UX',
   },
     {
     initials: 'JD',
@@ -41,6 +44,7 @@ const servers = [
     status: 'Inativo',
     rating: 3.5,
     phone: '(67) 98888-4321',
+    funcao: 'Estagiário',
   },
 ];
 
@@ -53,15 +57,20 @@ export default function ServerListPage() {
   };
 
   const getStatusClass = (status: string) => {
-    if (status === 'Ativo') return 'text-green-400 border-green-400';
-    if (status === 'Licença') return 'text-yellow-400 border-yellow-400';
-    return 'text-red-400 border-red-400';
+    if (status === 'Ativo') return 'bg-green-500/20 text-green-400 border-green-500/50';
+    if (status === 'Licença') return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
+    return 'bg-red-500/20 text-red-400 border-red-500/50';
   };
 
   const getStatusIcon = (status: string) => {
     if (status === 'Ativo') return <KeyRound className="w-3 h-3 mr-1" />;
     if (status === 'Licença') return <AlertCircle className="w-3 h-3 mr-1" />;
     return <MinusCircle className="w-3 h-3 mr-1" />;
+  }
+  
+  const formatWhatsAppLink = (phone: string) => {
+    const justNumbers = phone.replace(/\D/g, '');
+    return `https://wa.me/55${justNumbers}`;
   }
 
   return (
@@ -111,6 +120,21 @@ export default function ServerListPage() {
                 <div className="flex-1 space-y-1">
                   <p className="font-semibold">{server.name}</p>
                   <p className="text-sm text-muted-foreground">{server.email}</p>
+                  
+                  {server.funcao && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Briefcase className="h-4 w-4" />
+                      <span>{server.funcao}</span>
+                    </div>
+                  )}
+
+                  {server.phone && (
+                    <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
+                      <Phone className="h-4 w-4" />
+                      <span>{server.phone}</span>
+                    </a>
+                  )}
+
                   <div className="flex items-center gap-4 mt-2 text-xs">
                     {server.status && (
                        <Badge variant="outline" className={cn(getStatusClass(server.status))}>
@@ -125,12 +149,6 @@ export default function ServerListPage() {
                       </div>
                     )}
                   </div>
-                   {server.phone && (
-                    <div className="flex items-center gap-2 pt-1 text-sm text-muted-foreground">
-                      <Phone className="h-4 w-4" />
-                      <span>{server.phone}</span>
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
