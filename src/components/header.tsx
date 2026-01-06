@@ -1,11 +1,11 @@
-import { FileText } from 'lucide-react';
+import { ScrollText } from 'lucide-react';
 
 export function Header() {
   return (
     <header className="flex items-center justify-center py-4">
-      <div className="flex items-center gap-2">
-        <FileText className="h-8 w-8 text-primary" />
-        <h1 className="text-2xl font-bold text-foreground">UniRH</h1>
+      <div className="flex items-center gap-3">
+        <ScrollText className="h-9 w-9 text-primary" />
+        <h1 className="text-3xl font-bold text-foreground">UniRH</h1>
       </div>
     </header>
   );
