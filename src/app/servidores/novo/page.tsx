@@ -50,7 +50,7 @@ export default function NewServerPage() {
                 <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
                     <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Pessoais</TabsTrigger>
                     <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Profissionais</TabsTrigger>
-                    <TabsTrigger value="formacao" className="data_-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Formação</TabsTrigger>
+                    <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Formação</TabsTrigger>
                     <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Observações</TabsTrigger>
                 </TabsList>
             </div>
@@ -521,18 +521,18 @@ export default function NewServerPage() {
 
                 </div>
               </TabsContent>
-              <TabsContent value="observacoes" className="mt-8 md:mt-10">
-                 <div className="space-y-6">
+              <TabsContent value="observacoes" className="mt-8 md:mt-10 flex flex-col flex-1">
+                 <div className="space-y-6 flex-1">
                   <h2 className="text-lg font-semibold">Observações Gerais</h2>
                   <div className="space-y-2">
                       <Label htmlFor="observacoes-text">Observações</Label>
                       <Textarea id="observacoes-text" placeholder="Adicione qualquer observação relevante aqui..." rows={8} />
                   </div>
                 </div>
+                <div className="mt-auto pt-4">
+                    <Button className="w-full">Adicionar Servidor</Button>
+                </div>
               </TabsContent>
-            </div>
-            <div className="mt-auto pt-4">
-              <Button className="w-full">Adicionar Servidor</Button>
             </div>
           </Tabs>
         </CardContent>
