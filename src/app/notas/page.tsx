@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { PlusCircle, Notebook, Share, Edit, Trash2, FileText, Copy, FileDown } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { jsPDF } from "jspdf";
+import type { jsPDF } from "jspdf";
 
 const initialNotes = [
   {
@@ -102,8 +102,9 @@ export default function NotesPage() {
     });
   };
 
-  const handleExportPDF = (note: Note) => {
+  const handleExportPDF = async (note: Note) => {
     try {
+      const { jsPDF } = await import('jspdf');
       const doc = new jsPDF();
       doc.setFontSize(16);
       doc.text(note.title, 10, 10);
