@@ -1,6 +1,7 @@
 'use client';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
 import { PlusCircle, Notebook, Share, Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
@@ -62,9 +63,23 @@ export default function NotesPage() {
                   <Button variant="ghost" size="icon">
                     <Edit className="h-5 w-5 text-blue-500" />
                   </Button>
-                  <Button variant="ghost" size="icon">
-                    <Trash2 className="h-5 w-5 text-red-500" />
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Trash2 className="h-5 w-5 text-red-500" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Essa ação não pode ser desfeita. Isso excluirá permanentemente sua nota.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogAction>Confirmar</AlertDialogAction>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
             </AccordionContent>
