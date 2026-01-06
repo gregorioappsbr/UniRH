@@ -167,9 +167,9 @@ export default function NewServerPage() {
                       </div>
                   )}
                   <div className="space-y-2">
-                    <Label htmlFor="raca-cor">Raça/Cor</Label>
+                    <Label htmlFor="raca-cor">Cor/Raça</Label>
                      <Controller
-                        name="racaCor"
+                        name="corRaca"
                         control={control}
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
@@ -274,6 +274,14 @@ export default function NewServerPage() {
                     <Label htmlFor="email-pessoal">E-mail Pessoal</Label>
                     <Input id="email-pessoal" type="email" placeholder="exemplo@email.com" {...register("emailPessoal")} />
                   </div>
+                   <div className="space-y-2">
+                    <Label htmlFor="contato-emergencia-nome">Contato de Emergência (Nome)</Label>
+                    <Input id="contato-emergencia-nome" placeholder="Ex: Maria da Silva" {...register("contatoEmergenciaNome")} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contato-emergencia-telefone">Contato de Emergência (Telefone)</Label>
+                    <Input id="contato-emergencia-telefone" type="tel" placeholder="(00) 00000-0000" {...register("contatoEmergenciaTelefone")} onChange={applyMask(maskPhone)} maxLength={15} />
+                  </div>
                 </div>
               </div>
 
@@ -349,21 +357,6 @@ export default function NewServerPage() {
                   </div>
                 </div>
               </div>
-
-              <div className="space-y-6">
-                <h2 className="text-lg font-semibold">Contato de Emergência</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="contato-emergencia-nome">Nome</Label>
-                    <Input id="contato-emergencia-nome" placeholder="Ex: Maria da Silva" {...register("contatoEmergenciaNome")} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="contato-emergencia-telefone">Telefone</Label>
-                    <Input id="contato-emergencia-telefone" type="tel" placeholder="(00) 00000-0000" {...register("contatoEmergenciaTelefone")} onChange={applyMask(maskPhone)} maxLength={15} />
-                  </div>
-                </div>
-              </div>
-
             </div>
           </TabsContent>
           <TabsContent value="profissionais" className="mt-0">
@@ -374,7 +367,7 @@ export default function NewServerPage() {
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="tipo-vinculo">Tipo de Vínculo</Label>
                     <Controller
-                        name="tipoVinculo"
+                        name="vinculo"
                         control={control}
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
@@ -431,13 +424,13 @@ export default function NewServerPage() {
                   </div>
                   {watch('possuiDGA') === 'sim' && (
                       <div className="space-y-2 md:col-span-2">
-                          <Label htmlFor="dga-descricao">Descrição</Label>
-                          <Textarea id="dga-descricao" placeholder="Descreva o DGA..." {...register("dgaDescricao")}/>
+                          <Label htmlFor="dga-descricao">Especificação DGA</Label>
+                          <Textarea id="dga-descricao" placeholder="Descreva o DGA..." {...register("especificacaoDGA")}/>
                       </div>
                   )}
                    <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="setor-lotacao">Setor / Lotação</Label>
-                    <Input id="setor-lotacao" placeholder="Ex: Tecnologia da Informação" {...register("setorLotacao")} />
+                    <Input id="setor-lotacao" placeholder="Ex: Tecnologia da Informação" {...register("setor")} />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="ramal">Ramal</Label>
@@ -580,7 +573,7 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="ano-conclusao-graduacao">Ano de Conclusão da Graduação</Label>
-                      <Input id="ano-conclusao-graduacao" placeholder="Ex: 2014" {...register("anoConclusaoGraduacao")} />
+                      <Input id="ano-conclusao-graduacao" placeholder="Ex: 2014" {...register("anoConclusaoGrad")} />
                     </div>
                   </CardContent>
                 </Card>
@@ -622,7 +615,7 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="ano-conclusao-pos-graduacao">Ano de Conclusão da Pós-Graduação</Label>
-                      <Input id="ano-conclusao-pos-graduacao" placeholder="Ex: 2016" {...register("anoConclusaoPosGraduacao")} />
+                      <Input id="ano-conclusao-pos-graduacao" placeholder="Ex: 2016" {...register("anoConclusaoPosGrad")} />
                     </div>
                   </CardContent>
                 </Card>

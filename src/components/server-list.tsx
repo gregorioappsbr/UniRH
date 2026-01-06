@@ -66,15 +66,6 @@ const servers = [
     phone: '(67) 98167-2870',
     funcao: 'ATNM',
   },
-   {
-    initials: 'FG',
-    name: 'Fernando Gomes',
-    email: 'fernando.gomes@exemplo.com',
-    status: 'Ativo',
-    rating: 8.8,
-    phone: '(67) 98888-1111',
-    funcao: 'Desenvolvedor Backend',
-  },
 ];
 
 export function ServerList() {

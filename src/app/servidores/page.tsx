@@ -19,68 +19,296 @@ import type { jsPDF } from "jspdf";
 
 const servers = [
   {
-    initials: 'AMS',
-    name: 'Ana Maria da Silva e Souza',
-    email: 'ana.silva@exemplo.com',
-    status: 'Ativo',
-    rating: 9.5,
-    phone: '(67) 99999-1234',
-    funcao: 'Gerente de Projetos',
-    vinculo: 'Efetivo',
+    "nomeCompleto": "Ana Maria da Silva e Souza",
+    "nomeSocial": "Ana",
+    "cpf": "111.222.333-44",
+    "rg": "11.222.333-4 (SSP/SP)",
+    "dataNascimento": "10/08/1985",
+    "genero": "Feminino",
+    "corRaca": "Parda",
+    "estadoCivil": "Casada",
+    "nacionalidade": "Brasileira",
+    "naturalidade": "São Paulo/SP",
+    "pcd": "Não",
+    "telefonePrincipal": "(67) 99999-1234",
+    "telefoneSecundario": "(67) 98888-1234",
+    "emailPessoal": "ana.pessoal@email.com",
+    "contatoEmergenciaNome": "Carlos Souza",
+    "contatoEmergenciaTelefone": "(67) 97777-1234",
+    "cep": "79002-071",
+    "logradouro": "Rua 14 de Julho, 1000",
+    "complemento": "Apto 101",
+    "bairro": "Centro",
+    "cidade": "Campo Grande",
+    "uf": "MS",
+    "vinculo": "Efetivo",
+    "matricula": "11966200",
+    "cargo": "Gerente de Projetos",
+    "funcao": "Gerente de Projetos",
+    "dataInicio": "20/05/2010",
+    "possuiDGA": "Não",
+    "especificacaoDGA": "",
+    "setor": "Diretoria",
+    "ramal": "7651",
+    "jornada": "40h",
+    "turno": "Integral",
+    "status": "Ativo",
+    "emailInstitucional": "ana.silva@exemplo.com",
+    "escolaridade": "Pós-Graduação",
+    "cursoGraduacao": "Administração",
+    "instituicaoGraduacao": "UFMS",
+    "anoConclusaoGrad": "2008",
+    "tipoPosGraduacao": "MBA",
+    "cursoPosGraduacao": "Gestão de Projetos",
+    "instituicaoPosGrad": "FGV",
+    "anoConclusaoPosGrad": "2012",
+    "observacoes": "Excelente líder de equipe.",
+    "initials": "AMS",
+    "rating": 9.5
   },
   {
-    initials: 'BC',
-    name: 'Bruno Costa',
-    email: 'bruno.costa@exemplo.com',
-    status: 'Ativo',
-    rating: 8.0,
-    phone: '(67) 99999-5678',
-    funcao: 'Desenvolvedor Frontend',
-    vinculo: 'Contratado',
+    "nomeCompleto": "Bruno Costa",
+    "nomeSocial": "Bruno",
+    "cpf": "222.333.444-55",
+    "rg": "22.333.444-5 (SSP/RJ)",
+    "dataNascimento": "15/03/1990",
+    "genero": "Masculino",
+    "corRaca": "Branca",
+    "estadoCivil": "Solteiro",
+    "nacionalidade": "Brasileira",
+    "naturalidade": "Rio de Janeiro/RJ",
+    "pcd": "Não",
+    "telefonePrincipal": "(67) 99999-5678",
+    "telefoneSecundario": "",
+    "emailPessoal": "bruno.pessoal@email.com",
+    "contatoEmergenciaNome": "Fernanda Costa",
+    "contatoEmergenciaTelefone": "(67) 97777-5678",
+    "cep": "79002-072",
+    "logradouro": "Rua Afonso Pena, 2000",
+    "complemento": "",
+    "bairro": "Centro",
+    "cidade": "Campo Grande",
+    "uf": "MS",
+    "vinculo": "Contratado",
+    "matricula": "",
+    "cargo": "Desenvolvedor Frontend",
+    "funcao": "Desenvolvedor Frontend",
+    "dataInicio": "01/02/2022",
+    "possuiDGA": "Não",
+    "especificacaoDGA": "",
+    "setor": "Tecnologia da Informação",
+    "ramal": "7652",
+    "jornada": "40h",
+    "turno": "Integral",
+    "status": "Ativo",
+    "emailInstitucional": "bruno.costa@exemplo.com",
+    "escolaridade": "Graduação",
+    "cursoGraduacao": "Ciência da Computação",
+    "instituicaoGraduacao": "UFRJ",
+    "anoConclusaoGrad": "2015",
+    "tipoPosGraduacao": "",
+    "cursoPosGraduacao": "",
+    "instituicaoPosGrad": "",
+    "anoConclusaoPosGrad": "",
+    "observacoes": "Desenvolvedor talentoso.",
+    "initials": "BC",
+    "rating": 8.0
   },
   {
-    initials: 'CD',
-    name: 'Carla Dias',
-    email: 'carla.dias@exemplo.com',
-    status: 'Licença',
-    rating: 7.2,
-    phone: '(67) 99999-4321',
-    funcao: 'Designer UI/UX',
-    vinculo: 'Terceirizado',
-  },
-    {
-    initials: 'JD',
-    name: 'João Dias',
-    email: 'joao.dias@exemplo.com',
-    status: 'Inativo',
-    rating: 3.5,
-    phone: '(67) 98888-4321',
-    funcao: 'Estagiário',
-    vinculo: 'Contratado',
+    "nomeCompleto": "Carla Dias",
+    "nomeSocial": "Carla",
+    "cpf": "333.444.555-66",
+    "rg": "33.444.555-6 (SSP/BA)",
+    "dataNascimento": "25/11/1992",
+    "genero": "Feminino",
+    "corRaca": "Preta",
+    "estadoCivil": "Solteira",
+    "nacionalidade": "Brasileira",
+    "naturalidade": "Salvador/BA",
+    "pcd": "Não",
+    "telefonePrincipal": "(67) 99999-4321",
+    "telefoneSecundario": "",
+    "emailPessoal": "carla.pessoal@email.com",
+    "contatoEmergenciaNome": "Pedro Dias",
+    "contatoEmergenciaTelefone": "(67) 97777-4321",
+    "cep": "79002-073",
+    "logradouro": "Rua Barão do Rio Branco, 3000",
+    "complemento": "",
+    "bairro": "Centro",
+    "cidade": "Campo Grande",
+    "uf": "MS",
+    "vinculo": "Terceirizado",
+    "matricula": "",
+    "cargo": "Designer UI/UX",
+    "funcao": "Designer UI/UX",
+    "dataInicio": "10/09/2021",
+    "possuiDGA": "Não",
+    "especificacaoDGA": "",
+    "setor": "Marketing",
+    "ramal": "7653",
+    "jornada": "30h",
+    "turno": "Vespertino",
+    "status": "Licença",
+    "emailInstitucional": "carla.dias@exemplo.com",
+    "escolaridade": "Graduação",
+    "cursoGraduacao": "Design Gráfico",
+    "instituicaoGraduacao": "UFBA",
+    "anoConclusaoGrad": "2016",
+    "tipoPosGraduacao": "",
+    "cursoPosGraduacao": "",
+    "instituicaoPosGrad": "",
+    "anoConclusaoPosGrad": "",
+    "observacoes": "",
+    "initials": "CD",
+    "rating": 7.2
   },
   {
-    initials: 'LTC',
-    name: 'Lilian Tenório Carvalho',
-    email: 'litencarv@uems.br',
-    status: 'Ativo',
-    rating: 3.2,
-    phone: '(67) 98167-2870',
-    funcao: 'ATNM',
-    vinculo: 'Efetivo',
+    "nomeCompleto": "João Dias",
+    "nomeSocial": "João",
+    "cpf": "444.555.666-77",
+    "rg": "44.555.666-7 (SSP/MS)",
+    "dataNascimento": "01/01/2002",
+    "genero": "Masculino",
+    "corRaca": "Branca",
+    "estadoCivil": "Solteiro",
+    "nacionalidade": "Brasileira",
+    "naturalidade": "Dourados/MS",
+    "pcd": "Não",
+    "telefonePrincipal": "(67) 98888-4321",
+    "telefoneSecundario": "",
+    "emailPessoal": "joao.pessoal@email.com",
+    "contatoEmergenciaNome": "Maria Dias",
+    "contatoEmergenciaTelefone": "(67) 96666-4321",
+    "cep": "79800-000",
+    "logradouro": "Avenida Marcelino Pires, 4000",
+    "complemento": "",
+    "bairro": "Centro",
+    "cidade": "Dourados",
+    "uf": "MS",
+    "vinculo": "Contratado",
+    "matricula": "",
+    "cargo": "Estagiário",
+    "funcao": "Estagiário",
+    "dataInicio": "15/02/2023",
+    "possuiDGA": "Não",
+    "especificacaoDGA": "",
+    "setor": "Tecnologia da Informação",
+    "ramal": "7654",
+    "jornada": "20h",
+    "turno": "Matutino",
+    "status": "Inativo",
+    "emailInstitucional": "joao.dias@exemplo.com",
+    "escolaridade": "Graduação",
+    "cursoGraduacao": "Sistemas de Informação (Cursando)",
+    "instituicaoGraduacao": "UEMS",
+    "anoConclusaoGrad": "",
+    "tipoPosGraduacao": "",
+    "cursoPosGraduacao": "",
+    "instituicaoPosGrad": "",
+    "anoConclusaoPosGrad": "",
+    "observacoes": "Contrato finalizado.",
+    "initials": "JD",
+    "rating": 3.5
   },
-   {
-    initials: 'FG',
-    name: 'Fernando Gomes',
-    email: 'fernando.gomes@exemplo.com',
-    status: 'Ativo',
-    rating: 8.8,
-    phone: '(67) 98888-1111',
-    funcao: 'Desenvolvedor Backend',
-    vinculo: 'Comissionado',
+  {
+    "nomeCompleto": "Lilian Tenório Carvalho",
+    "nomeSocial": "Lilian",
+    "cpf": "875.950.871-04",
+    "rg": "00.102.907-6 (SSP/MS)",
+    "dataNascimento": "05/05/1979",
+    "genero": "Feminino",
+    "corRaca": "Branco",
+    "estadoCivil": "União Estável",
+    "nacionalidade": "Brasileira",
+    "naturalidade": "Cassilandia MS",
+    "pcd": "Não",
+    "telefonePrincipal": "(67) 98167-2870",
+    "telefoneSecundario": "(67) 99850-4484",
+    "emailPessoal": "litencarv@icloud.com",
+    "contatoEmergenciaNome": "Lucas Nascimento",
+    "contatoEmergenciaTelefone": "(67) 99886-3817",
+    "cep": "79541-066",
+    "logradouro": "R. Joaquim Bernardes de Freitas, 128",
+    "complemento": "casa",
+    "bairro": "Jardim Minas Gerais",
+    "cidade": "Cassilândia",
+    "uf": "MS",
+    "vinculo": "Efetivo",
+    "matricula": "119662021",
+    "cargo": "ATNM",
+    "funcao": "Assistente administrativo",
+    "dataInicio": "15/09/2004",
+    "possuiDGA": "Sim",
+    "especificacaoDGA": "DGA -S/Gestor Administrativo",
+    "setor": "Secretaria da Gerência",
+    "ramal": "7650",
+    "jornada": "40h",
+    "turno": "Integral",
+    "status": "Ativo",
+    "emailInstitucional": "litencarv@uems.br",
+    "escolaridade": "Pós-Graduação",
+    "cursoGraduacao": "Letras-Hab. Português/Inglês",
+    "instituicaoGraduacao": "UEMS",
+    "anoConclusaoGrad": "2002",
+    "tipoPosGraduacao": "Especialização",
+    "cursoPosGraduacao": "Didática Geral",
+    "instituicaoPosGrad": "FIC",
+    "anoConclusaoPosGrad": "2017",
+    "observacoes": "Boa funcionária",
+    "initials": "LTC",
+    "rating": 3.2
   },
+  {
+    "nomeCompleto": "Fernando Gomes",
+    "nomeSocial": "Fernando",
+    "cpf": "555.666.777-88",
+    "rg": "55.666.777-8 (SSP/PR)",
+    "dataNascimento": "12/04/1988",
+    "genero": "Masculino",
+    "corRaca": "Branca",
+    "estadoCivil": "Casado",
+    "nacionalidade": "Brasileira",
+    "naturalidade": "Curitiba/PR",
+    "pcd": "Não",
+    "telefonePrincipal": "(67) 98888-1111",
+    "telefoneSecundario": "",
+    "emailPessoal": "fernando.pessoal@email.com",
+    "contatoEmergenciaNome": "Juliana Gomes",
+    "contatoEmergenciaTelefone": "(67) 95555-1111",
+    "cep": "79002-074",
+    "logradouro": "Rua Dom Aquino, 5000",
+    "complemento": "Apto 502",
+    "bairro": "Centro",
+    "cidade": "Campo Grande",
+    "uf": "MS",
+    "vinculo": "Comissionado",
+    "matricula": "",
+    "cargo": "Desenvolvedor Backend",
+    "funcao": "Desenvolvedor Backend",
+    "dataInicio": "01/07/2020",
+    "possuiDGA": "Sim",
+    "especificacaoDGA": "Chefe de Divisão de Tecnologia",
+    "setor": "Tecnologia da Informação",
+    "ramal": "7655",
+    "jornada": "40h",
+    "turno": "Integral",
+    "status": "Ativo",
+    "emailInstitucional": "fernando.gomes@exemplo.com",
+    "escolaridade": "Pós-Graduação",
+    "cursoGraduacao": "Engenharia de Software",
+    "instituicaoGraduacao": "UTFPR",
+    "anoConclusaoGrad": "2011",
+    "tipoPosGraduacao": "Mestrado",
+    "cursoPosGraduacao": "Ciência da Computação",
+    "instituicaoPosGrad": "UNICAMP",
+    "anoConclusaoPosGrad": "2014",
+    "observacoes": "Especialista em microsserviços.",
+    "initials": "FG",
+    "rating": 8.8
+  }
 ];
 
-servers.sort((a, b) => a.name.localeCompare(b.name));
+servers.sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
 
 const statusOptions = ['Ativo', 'Inativo', 'Licença'];
 const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comissionado'];
@@ -100,7 +328,7 @@ export default function ServerListPage() {
     const newSelectedServers: Record<string, boolean> = {};
     if (checked) {
       filteredServers.forEach(server => {
-        newSelectedServers[server.email] = true;
+        newSelectedServers[server.emailInstitucional] = true;
       });
     }
     setSelectedServers(newSelectedServers);
@@ -137,8 +365,7 @@ export default function ServerListPage() {
   });
 
 
-  const allSelected = filteredServers.length > 0 && Object.keys(selectedServers).length === filteredServers.length && Object.values(selectedServers).every(v => v);
-  const someSelected = Object.keys(selectedServers).length > 0 && !allSelected;
+  const allSelected = filteredServers.length > 0 && selectionCount === filteredServers.length;
 
 
   const getRatingClass = (rating: number) => {
@@ -181,26 +408,30 @@ export default function ServerListPage() {
     }
   };
 
-  const getSelectedServersDetails = () => {
-    return servers
-      .filter(server => selectedServers[server.email])
-      .map(server => `
+  const getSelectedServersDetails = (server: (typeof servers)[0]) => {
+      return `
 *FICHA DO SERVIDOR*
 ------------------------------------
-*Nome:* ${server.name}
-*Email:* ${server.email}
-*Telefone:* ${server.phone}
+*Nome:* ${server.nomeCompleto}
+*Email:* ${server.emailInstitucional}
+*Telefone:* ${server.telefonePrincipal}
 *Função:* ${server.funcao}
 *Vínculo:* ${server.vinculo}
 *Status:* ${server.status}
 *Nota:* ${server.rating}
 ------------------------------------
-      `.trim())
-      .join('\n\n');
+      `.trim();
   };
 
+  const getAllSelectedServersDetails = () => {
+    return servers
+      .filter(server => selectedServers[server.emailInstitucional])
+      .map(server => getSelectedServersDetails(server))
+      .join('\n\n');
+  }
+
   const handleShare = async () => {
-    const textToShare = getSelectedServersDetails();
+    const textToShare = getAllSelectedServersDetails();
     if (navigator.share) {
       try {
         await navigator.share({
@@ -230,7 +461,7 @@ export default function ServerListPage() {
   };
 
   const handleCopy = () => {
-    const textToCopy = getSelectedServersDetails();
+    const textToCopy = getAllSelectedServersDetails();
     navigator.clipboard.writeText(textToCopy).then(() => {
       toast({
         title: 'Copiado!',
@@ -247,71 +478,156 @@ export default function ServerListPage() {
   };
 
   const handleShareWhatsApp = () => {
-    const textToShare = getSelectedServersDetails();
+    const textToShare = getAllSelectedServersDetails();
     const encodedText = encodeURIComponent(textToShare);
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
     window.open(whatsappUrl, '_blank');
   };
 
-  const handleExportPDF = async () => {
-    const selected = servers.filter(server => selectedServers[server.email]);
+const handleExportPDF = async () => {
+    const selected = servers.filter(server => selectedServers[server.emailInstitucional]);
     if (selected.length === 0) return;
 
     try {
-      const { jsPDF } = await import('jspdf');
-      const doc = new jsPDF();
-      let y = 15;
+      const { default: jsPDF } = await import('jspdf');
 
-      const addPageIfNeeded = (spaceNeeded: number) => {
-        if (y + spaceNeeded > doc.internal.pageSize.height - 20) {
-          doc.addPage();
-          y = 15;
-        }
+      const doc = new jsPDF();
+      const pageHeight = doc.internal.pageSize.height;
+      const pageWidth = doc.internal.pageSize.width;
+      const margin = 15;
+      const cellMargin = 2;
+      const col1X = margin;
+      const col2X = margin + 50;
+
+      const drawSectionHeader = (y: number, title: string) => {
+        doc.setFillColor(26, 115, 232); // Blue color from image
+        doc.rect(margin, y - 4, pageWidth - (margin * 2), 8, 'F');
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(255, 255, 255);
+        doc.text(title, margin + cellMargin, y);
+        return y + 10;
       };
+
+      const drawRow = (y: number, label: string, value: string) => {
+        if (value) {
+            doc.setFillColor(248, 249, 250); // Light gray for row background
+            doc.rect(margin, y - 5, pageWidth - (margin * 2), 7, 'F');
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(50, 50, 50);
+            doc.text(label, col1X + cellMargin, y);
+            doc.setFont('helvetica', 'normal');
+            doc.text(value, col2X + cellMargin, y);
+            return y + 7;
+        }
+        return y;
+      };
+      
+      const checkAndAddPage = (y: number, spaceNeeded: number) => {
+        if (y + spaceNeeded > pageHeight - margin) {
+          doc.addPage();
+          return margin;
+        }
+        return y;
+      };
+
 
       selected.forEach((server, index) => {
         if (index > 0) {
-          doc.line(15, y, 195, y);
-          y += 10;
+          doc.addPage();
         }
-        
-        addPageIfNeeded(70);
 
+        let y = margin + 5;
+
+        // --- Título Principal ---
         doc.setFontSize(16);
         doc.setFont('helvetica', 'bold');
-        doc.text("FICHA DO SERVIDOR", doc.internal.pageSize.width / 2, y, { align: 'center' });
-        y += 10;
+        doc.setTextColor(0,0,0);
+        doc.text(`Ficha Completa - ${server.nomeCompleto}`, pageWidth / 2, y, { align: 'center' });
+        y += 15;
 
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'normal');
+        // --- DADOS PESSOAIS ---
+        y = checkAndAddPage(y, 65);
+        y = drawSectionHeader(y, 'DADOS PESSOAIS');
+        y = drawRow(y, 'Nome Completo', server.nomeCompleto);
+        y = drawRow(y, 'Nome Social', server.nomeSocial);
+        y = drawRow(y, 'CPF', server.cpf);
+        y = drawRow(y, 'RG', server.rg);
+        y = drawRow(y, 'Data de Nascimento', server.dataNascimento);
+        y = drawRow(y, 'Gênero', server.genero);
+        y = drawRow(y, 'Cor/Raça', server.corRaca);
+        y = drawRow(y, 'Estado Civil', server.estadoCivil);
+        y = drawRow(y, 'Nacionalidade', server.nacionalidade);
+        y = drawRow(y, 'Naturalidade', server.naturalidade);
+        y = drawRow(y, 'PCD', server.pcd);
+        y += 5;
+
+        // --- CONTATO ---
+        y = checkAndAddPage(y, 35);
+        y = drawSectionHeader(y, 'CONTATO');
+        y = drawRow(y, 'Telefone Principal', server.telefonePrincipal);
+        y = drawRow(y, 'Telefone Secundário', server.telefoneSecundario);
+        y = drawRow(y, 'E-mail Pessoal', server.emailPessoal);
+        y = drawRow(y, 'Contato de Emergência', `${server.contatoEmergenciaNome} - ${server.contatoEmergenciaTelefone}`);
+        y += 5;
         
-        const details = [
-          { label: 'Nome:', value: server.name },
-          { label: 'Email:', value: server.email },
-          { label: 'Telefone:', value: server.phone },
-          { label: 'Função:', value: server.funcao },
-          { label: 'Vínculo:', value: server.vinculo },
-          { label: 'Status:', value: server.status },
-          { label: 'Nota:', value: String(server.rating) },
-        ];
+        // --- ENDEREÇO ---
+        y = checkAndAddPage(y, 45);
+        y = drawSectionHeader(y, 'ENDEREÇO');
+        y = drawRow(y, 'CEP', server.cep);
+        y = drawRow(y, 'Logradouro', server.logradouro);
+        y = drawRow(y, 'Complemento', server.complemento);
+        y = drawRow(y, 'Bairro', server.bairro);
+        y = drawRow(y, 'Cidade/Estado', `${server.cidade}/${server.uf}`);
+        y += 5;
 
-        details.forEach(detail => {
-          doc.setFont('helvetica', 'bold');
-          doc.text(detail.label, 15, y);
-          doc.setFont('helvetica', 'normal');
-          doc.text(detail.value, 45, y);
-          y += 7;
-        });
+        // --- DADOS PROFISSIONAIS ---
+        y = checkAndAddPage(y, 90);
+        y = drawSectionHeader(y, 'DADOS PROFISSIONAIS');
+        y = drawRow(y, 'Vínculo', server.vinculo);
+        y = drawRow(y, 'Matrícula', server.matricula);
+        y = drawRow(y, 'Cargo', server.cargo);
+        y = drawRow(y, 'Função', server.funcao);
+        y = drawRow(y, 'Data de Início', server.dataInicio);
+        y = drawRow(y, 'Possui DGA?', server.possuiDGA);
+        y = drawRow(y, 'Especificação DGA', server.especificacaoDGA);
+        y = drawRow(y, 'Setor', server.setor);
+        y = drawRow(y, 'Ramal', server.ramal);
+        y = drawRow(y, 'Jornada', server.jornada);
+        y = drawRow(y, 'Turno', server.turno);
+        y = drawRow(y, 'Status', server.status);
+        y = drawRow(y, 'E-mail Institucional', server.emailInstitucional);
+        y += 5;
 
-        y += 5; // Espaço extra após cada servidor
+        // --- FORMAÇÃO ---
+        y = checkAndAddPage(y, 70);
+        y = drawSectionHeader(y, 'FORMAÇÃO');
+        y = drawRow(y, 'Escolaridade', server.escolaridade);
+        y = drawRow(y, 'Curso de Graduação', server.cursoGraduacao);
+        y = drawRow(y, 'Instituição da Graduação', server.instituicaoGraduacao);
+        y = drawRow(y, 'Ano de Conclusão (Grad.)', server.anoConclusaoGrad);
+        if (server.escolaridade === 'Pós-Graduação') {
+          y = drawRow(y, 'Tipo de Pós-Graduação', server.tipoPosGraduacao);
+          y = drawRow(y, 'Curso de Pós-Graduação', server.cursoPosGraduacao);
+          y = drawRow(y, 'Instituição da Pós-Grad.', server.instituicaoPosGrad);
+          y = drawRow(y, 'Ano de Conclusão (Pós-Grad.)', server.anoConclusaoPosGrad);
+        }
+        y += 5;
+
+        // --- OBSERVAÇÕES ---
+        y = checkAndAddPage(y, 20);
+        y = drawSectionHeader(y, 'OBSERVAÇÕES');
+        y = drawRow(y, 'Observações', server.observacoes);
+
       });
-      
-      doc.save(selected.length > 1 ? `servidores.pdf` : `${selected[0].name.replace(/\s/g, '_')}.pdf`);
+
+      doc.save(selected.length > 1 ? `servidores.pdf` : `${selected[0].nomeCompleto.replace(/\s/g, '_')}.pdf`);
 
     } catch (error) {
       console.error('Erro ao exportar PDF', error);
       toast({
-        variant: 'destructive',
+        variant: "destructive",
         title: 'Erro ao exportar',
         description: 'Não foi possível exportar como PDF.',
       });
@@ -454,15 +770,15 @@ export default function ServerListPage() {
               </div>
               <div className="space-y-4 p-4">
                 {filteredServers.map((server) => (
-                  <div key={server.email} className="flex items-start gap-4 pb-4 border-b last:border-b-0">
+                  <div key={server.emailInstitucional} className="flex items-start gap-4 pb-4 border-b last:border-b-0">
                     <Checkbox
-                      id={`server-${server.email}`}
-                      checked={selectedServers[server.email] || false}
-                      onCheckedChange={(checked) => handleSelectServer(server.email, checked as boolean)}
+                      id={`server-${server.emailInstitucional}`}
+                      checked={selectedServers[server.emailInstitucional] || false}
+                      onCheckedChange={(checked) => handleSelectServer(server.emailInstitucional, checked as boolean)}
                       className="mt-1"
                     />
                     <div className="flex flex-col items-center gap-2">
-                      <Link href={`/servidores/${server.email.split('@')[0]}`}>
+                      <Link href={`/servidores/${server.emailInstitucional.split('@')[0]}`}>
                         <Avatar className="h-12 w-12">
                           <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                         </Avatar>
@@ -483,20 +799,20 @@ export default function ServerListPage() {
                       </div>
                     </div>
                     <div className="flex-1 space-y-2">
-                      <Link href={`/servidores/${server.email.split('@')[0]}`}>
-                        <p className="font-semibold">{server.name}</p>
+                      <Link href={`/servidores/${server.emailInstitucional.split('@')[0]}`}>
+                        <p className="font-semibold">{server.nomeCompleto}</p>
                       </Link>
-                      <p className="text-sm text-muted-foreground">{server.email}</p>
+                      <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
                        {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           {getFuncaoIcon(server.funcao)}
                           <span>{server.funcao}</span>
                         </div>
                       )}
-                      {server.phone && (
-                        <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
+                      {server.telefonePrincipal && (
+                        <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
                           <WhatsAppIcon className="h-4 w-4" />
-                          <span>{server.phone}</span>
+                          <span>{server.telefonePrincipal}</span>
                         </a>
                       )}
                     </div>
@@ -526,21 +842,21 @@ export default function ServerListPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredServers.map((server) => (
-                    <TableRow key={server.email}>
+                    <TableRow key={server.emailInstitucional}>
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Checkbox
-                            id={`server-desktop-${server.email}`}
-                            checked={selectedServers[server.email] || false}
-                            onCheckedChange={(checked) => handleSelectServer(server.email, checked as boolean)}
+                            id={`server-desktop-${server.emailInstitucional}`}
+                            checked={selectedServers[server.emailInstitucional] || false}
+                            onCheckedChange={(checked) => handleSelectServer(server.emailInstitucional, checked as boolean)}
                           />
-                          <Link href={`/servidores/${server.email.split('@')[0]}`} className="flex items-center gap-3">
+                          <Link href={`/servidores/${server.emailInstitucional.split('@')[0]}`} className="flex items-center gap-3">
                               <Avatar className="h-12 w-12">
                                   <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                               </Avatar>
                               <div>
-                                  <p className="font-semibold">{server.name}</p>
-                                  <p className="text-sm text-muted-foreground break-all">{server.email}</p>
+                                  <p className="font-semibold">{server.nomeCompleto}</p>
+                                  <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
                               </div>
                           </Link>
                         </div>
@@ -564,9 +880,9 @@ export default function ServerListPage() {
                         </div>
                       </TableCell>
                        <TableCell className="text-right pr-8 whitespace-nowrap">
-                         <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary justify-end">
+                         <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary justify-end">
                             <WhatsAppIcon className="h-4 w-4" />
-                            <span>{server.phone}</span>
+                            <span>{server.telefonePrincipal}</span>
                         </a>
                       </TableCell>
                     </TableRow>
