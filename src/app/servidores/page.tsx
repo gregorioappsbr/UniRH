@@ -1,6 +1,6 @@
 
 'use client';
-
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -72,6 +72,28 @@ const servers = [
 
 export default function ServerListPage() {
   const isMobile = useIsMobile();
+  const [selectedServers, setSelectedServers] = React.useState<Record<string, boolean>>({});
+
+  const handleSelectAll = (checked: boolean) => {
+    const newSelectedServers: Record<string, boolean> = {};
+    if (checked) {
+      servers.forEach(server => {
+        newSelectedServers[server.email] = true;
+      });
+    }
+    setSelectedServers(newSelectedServers);
+  };
+
+  const handleSelectServer = (email: string, checked: boolean) => {
+    setSelectedServers(prev => ({
+      ...prev,
+      [email]: checked,
+    }));
+  };
+
+  const allSelected = servers.length > 0 && Object.keys(selectedServers).length === servers.length && Object.values(selectedServers).every(v => v);
+  const someSelected = Object.keys(selectedServers).length > 0 && !allSelected;
+
 
   const getRatingClass = (rating: number) => {
     if (rating >= 8) return 'text-green-400';
@@ -147,17 +169,27 @@ export default function ServerListPage() {
           {isMobile ? (
             <>
               <div className="flex items-center p-4 border-b">
-                <Checkbox id="select-all" />
+                <Checkbox
+                  id="select-all"
+                  checked={allSelected}
+                  onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
+                  aria-label="Selecionar todos"
+                />
                 <label htmlFor="select-all" className="ml-4 font-medium text-sm">
                   Nome
                 </label>
               </div>
               <div className="space-y-4 p-4">
-                {servers.map((server, index) => (
-                  <div key={index} className="flex items-start gap-4 pb-4 border-b last:border-b-0">
-                    <Checkbox id={`server-${index}`} className="mt-1" />
+                {servers.map((server) => (
+                  <div key={server.email} className="flex items-start gap-4 pb-4 border-b last:border-b-0">
+                    <Checkbox
+                      id={`server-${server.email}`}
+                      checked={selectedServers[server.email] || false}
+                      onCheckedChange={(checked) => handleSelectServer(server.email, checked as boolean)}
+                      className="mt-1"
+                    />
                     <div className="flex flex-col items-center gap-2">
-                      <Link href={`/servidores/${index}`}>
+                      <Link href={`/servidores/${server.email}`}>
                         <Avatar className="h-12 w-12">
                           <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                         </Avatar>
@@ -178,7 +210,7 @@ export default function ServerListPage() {
                       </div>
                     </div>
                     <div className="flex-1 space-y-2">
-                      <Link href={`/servidores/${index}`}>
+                      <Link href={`/servidores/${server.email}`}>
                         <p className="font-semibold">{server.name}</p>
                       </Link>
                       <p className="text-sm text-muted-foreground">{server.email}</p>
@@ -205,7 +237,12 @@ export default function ServerListPage() {
                   <TableRow>
                     <TableHead className="w-[350px]">
                       <div className="flex items-center gap-4">
-                        <Checkbox id="select-all-desktop" />
+                        <Checkbox
+                          id="select-all-desktop"
+                          checked={allSelected}
+                          onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
+                          aria-label="Selecionar todos"
+                        />
                         <span>Servidor</span>
                       </div>
                     </TableHead>
@@ -215,12 +252,16 @@ export default function ServerListPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {servers.map((server, index) => (
-                    <TableRow key={index}>
+                  {servers.map((server) => (
+                    <TableRow key={server.email}>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <Checkbox id={`server-desktop-${index}`} />
-                          <Link href={`/servidores/${index}`} className="flex items-center gap-3">
+                          <Checkbox
+                            id={`server-desktop-${server.email}`}
+                            checked={selectedServers[server.email] || false}
+                            onCheckedChange={(checked) => handleSelectServer(server.email, checked as boolean)}
+                          />
+                          <Link href={`/servidores/${server.email}`} className="flex items-center gap-3">
                               <Avatar className="h-12 w-12">
                                   <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                               </Avatar>
@@ -237,9 +278,9 @@ export default function ServerListPage() {
                               {getStatusIcon(server.status)}
                               {server.status}
                           </Badge>
-                          <div className={cn("flex items-center", getRatingClass(server.rating))}>
+                           <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
                               <Award className="w-3 h-3 mr-1 fill-current" />
-                              <span>{server.rating}</span>
+                              <span>Nota: {server.rating}</span>
                           </div>
                         </div>
                       </TableCell>
