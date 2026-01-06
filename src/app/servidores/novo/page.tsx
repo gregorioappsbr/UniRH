@@ -1,6 +1,6 @@
 'use client'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -24,7 +24,7 @@ export default function NewServerPage() {
           </header>
 
           <Tabs defaultValue="pessoais" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 text-foreground">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 text-foreground bg-muted">
               <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground">Dados Pessoais</TabsTrigger>
               <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground">Dados Profissionais</TabsTrigger>
               <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground">Formação</TabsTrigger>
