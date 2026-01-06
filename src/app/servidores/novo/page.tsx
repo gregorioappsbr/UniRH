@@ -301,8 +301,29 @@ export default function NewServerPage() {
             </div>
           </div>
         </TabsContent>
-        <TabsContent value="formacao">
-          <p>Formação aqui.</p>
+        <TabsContent value="formacao" className="mt-6">
+          <div className="space-y-8">
+            <div className="space-y-6">
+              <h2 className="text-lg font-semibold">Formação Acadêmica</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="escolaridade">Escolaridade</Label>
+                  <Select>
+                    <SelectTrigger id="escolaridade">
+                      <SelectValue placeholder="Selecione o nível de..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="nao-alfabetizado">Não Alfabetizado</SelectItem>
+                      <SelectItem value="ensino-fundamental">Ensino Fundamental</SelectItem>
+                      <SelectItem value="ensino-medio">Ensino Médio</SelectItem>
+                      <SelectItem value="graduacao">Graduação</SelectItem>
+                      <SelectItem value="pos-graduacao">Pós-Graduação</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          </div>
         </TabsContent>
         <TabsContent value="observacoes">
           <p>Observações aqui.</p>
