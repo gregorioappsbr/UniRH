@@ -203,32 +203,34 @@ export default function ServerListPage() {
              <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[50px]">
-                      <Checkbox id="select-all-desktop" />
+                    <TableHead className="w-[350px]">
+                      <div className="flex items-center gap-4">
+                        <Checkbox id="select-all-desktop" />
+                        <span>Servidor</span>
+                      </div>
                     </TableHead>
-                    <TableHead>Servidor</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Nota</TableHead>
                     <TableHead>Função</TableHead>
-                    <TableHead className="pr-8">Telefone</TableHead>
+                    <TableHead className="text-right pr-8">Telefone</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {servers.map((server, index) => (
                     <TableRow key={index}>
                       <TableCell>
-                        <Checkbox id={`server-desktop-${index}`} />
-                      </TableCell>
-                      <TableCell>
-                        <Link href={`/servidores/${index}`} className="flex items-center gap-3">
-                            <Avatar>
-                                <AvatarFallback>{server.initials}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <p className="font-semibold">{server.name}</p>
-                                <p className="text-sm text-muted-foreground break-all">{server.email}</p>
-                            </div>
-                        </Link>
+                        <div className="flex items-center gap-3">
+                          <Checkbox id={`server-desktop-${index}`} />
+                          <Link href={`/servidores/${index}`} className="flex items-center gap-3">
+                              <Avatar>
+                                  <AvatarFallback>{server.initials}</AvatarFallback>
+                              </Avatar>
+                              <div>
+                                  <p className="font-semibold">{server.name}</p>
+                                  <p className="text-sm text-muted-foreground break-all">{server.email}</p>
+                              </div>
+                          </Link>
+                        </div>
                       </TableCell>
                       <TableCell>
                          <Badge variant="outline" className={cn(getStatusClass(server.status))}>
@@ -248,8 +250,8 @@ export default function ServerListPage() {
                           <span>{server.funcao}</span>
                         </div>
                       </TableCell>
-                       <TableCell className="pr-8">
-                         <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary">
+                       <TableCell className="text-right pr-8">
+                         <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary justify-end">
                             <WhatsAppIcon className="h-4 w-4" />
                             <span>{server.phone}</span>
                         </a>
