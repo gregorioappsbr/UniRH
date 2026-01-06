@@ -2,14 +2,14 @@
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Notebook } from 'lucide-react';
+import { PlusCircle, Notebook, Share, Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
 const notes = [
   {
     title: 'Reunião de Alinhamento',
     updatedAt: '31/12/2022 às 20:00',
-    content: 'Discutir os próximos passos do projeto e alinhar as expectativas da equipe.',
+    content: 'Discutir as metas do próximo trimestre com a equipe de desenvolvimento.',
   },
   {
     title: 'Ideias para o Novo Projeto',
@@ -53,7 +53,20 @@ export default function NotesPage() {
               </div>
             </AccordionTrigger>
             <AccordionContent className="p-4 pt-0">
-              {note.content}
+               <div className="space-y-4">
+                <p>{note.content}</p>
+                <div className="flex justify-end space-x-2">
+                  <Button variant="ghost" size="icon">
+                    <Share className="h-5 w-5 text-green-500" />
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Edit className="h-5 w-5 text-blue-500" />
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Trash2 className="h-5 w-5 text-red-500" />
+                  </Button>
+                </div>
+              </div>
             </AccordionContent>
           </AccordionItem>
         ))}
