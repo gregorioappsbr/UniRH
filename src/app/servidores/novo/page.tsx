@@ -34,7 +34,7 @@ export default function NewServerPage() {
       <Card className="bg-card text-card-foreground border-border">
         <CardContent className="p-4 space-y-4">
           <header className="relative flex items-center justify-center">
-            <h1 className="text-2xl font-bold">Novo Servidor</h1>
+            <h1 className="text-3xl font-bold">Novo Servidor</h1>
             <Button variant="ghost" size="icon" asChild className="absolute right-0 top-1/2 -translate-y-1/2">
               <Link href="/servidores">
                 <X className="h-5 w-5" />
@@ -505,10 +505,6 @@ export default function NewServerPage() {
               </div>
             </TabsContent>
           </Tabs>
-
-           <div className="flex justify-end pt-6">
-            <Button>Adicionar Servidor</Button>
-          </div>
         </CardContent>
       </Card>
     </div>
