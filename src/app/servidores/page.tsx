@@ -1,4 +1,3 @@
-
 'use client';
 import React from 'react';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,8 @@ import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger, SheetFooter, SheetClose } from '@/components/ui/sheet';
+import { Label } from '@/components/ui/label';
 
 const servers = [
   {
@@ -22,6 +23,7 @@ const servers = [
     rating: 9.5,
     phone: '(67) 99999-1234',
     funcao: 'Gerente de Projetos',
+    vinculo: 'Efetivo',
   },
   {
     initials: 'BC',
@@ -31,6 +33,7 @@ const servers = [
     rating: 8.0,
     phone: '(67) 99999-5678',
     funcao: 'Desenvolvedor Frontend',
+    vinculo: 'Contratado',
   },
   {
     initials: 'CD',
@@ -40,6 +43,7 @@ const servers = [
     rating: 7.2,
     phone: '(67) 99999-4321',
     funcao: 'Designer UI/UX',
+    vinculo: 'Terceirizado',
   },
     {
     initials: 'JD',
@@ -49,6 +53,7 @@ const servers = [
     rating: 3.5,
     phone: '(67) 98888-4321',
     funcao: 'Estagiário',
+    vinculo: 'Contratado',
   },
   {
     initials: 'LTC',
@@ -58,6 +63,7 @@ const servers = [
     rating: 3.2,
     phone: '(67) 98167-2870',
     funcao: 'ATNM',
+    vinculo: 'Efetivo',
   },
    {
     initials: 'FG',
@@ -67,19 +73,28 @@ const servers = [
     rating: 8.8,
     phone: '(67) 98888-1111',
     funcao: 'Desenvolvedor Backend',
+    vinculo: 'Comissionado',
   },
 ];
 
 servers.sort((a, b) => a.name.localeCompare(b.name));
 
+const statusOptions = ['Ativo', 'Inativo', 'Licença'];
+const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comissionado'];
+
+
 export default function ServerListPage() {
   const isMobile = useIsMobile();
   const [selectedServers, setSelectedServers] = React.useState<Record<string, boolean>>({});
+  
+  const [statusFilters, setStatusFilters] = React.useState<string[]>([]);
+  const [vinculoFilters, setVinculoFilters] = React.useState<string[]>([]);
+
 
   const handleSelectAll = (checked: boolean) => {
     const newSelectedServers: Record<string, boolean> = {};
     if (checked) {
-      servers.forEach(server => {
+      filteredServers.forEach(server => {
         newSelectedServers[server.email] = true;
       });
     }
@@ -92,8 +107,32 @@ export default function ServerListPage() {
       [email]: checked,
     }));
   };
+  
+  const handleStatusFilterChange = (status: string) => {
+    setStatusFilters(prev => 
+      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+    );
+  };
 
-  const allSelected = servers.length > 0 && Object.keys(selectedServers).length === servers.length && Object.values(selectedServers).every(v => v);
+  const handleVinculoFilterChange = (vinculo: string) => {
+    setVinculoFilters(prev => 
+      prev.includes(vinculo) ? prev.filter(v => v !== vinculo) : [...prev, vinculo]
+    );
+  };
+
+  const clearFilters = () => {
+    setStatusFilters([]);
+    setVinculoFilters([]);
+  };
+
+  const filteredServers = servers.filter(server => {
+    const statusMatch = statusFilters.length === 0 || statusFilters.includes(server.status);
+    const vinculoMatch = vinculoFilters.length === 0 || vinculoFilters.includes(server.vinculo);
+    return statusMatch && vinculoMatch;
+  });
+
+
+  const allSelected = filteredServers.length > 0 && Object.keys(selectedServers).length === filteredServers.length && Object.values(selectedServers).every(v => v);
   const someSelected = Object.keys(selectedServers).length > 0 && !allSelected;
 
 
@@ -157,10 +196,60 @@ export default function ServerListPage() {
       </Button>
 
       <div className="grid grid-cols-2 gap-2">
-        <Button variant="outline">
-          <Filter className="mr-2 h-4 w-4" />
-          Filtrar
-        </Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline">
+              <Filter className="mr-2 h-4 w-4" />
+              Filtrar
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Filtrar Servidores</SheetTitle>
+              <SheetDescription>
+                Refine sua busca por status ou tipo de vínculo.
+              </SheetDescription>
+            </SheetHeader>
+            <div className="py-4 space-y-6">
+              <div className="space-y-3">
+                <h4 className="font-semibold">Status</h4>
+                <div className="space-y-2">
+                  {statusOptions.map(status => (
+                    <div key={status} className="flex items-center space-x-2">
+                      <Checkbox 
+                        id={`filter-status-${status}`} 
+                        checked={statusFilters.includes(status)}
+                        onCheckedChange={() => handleStatusFilterChange(status)}
+                      />
+                      <Label htmlFor={`filter-status-${status}`} className="font-normal">{status}</Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-3">
+                <h4 className="font-semibold">Vínculo</h4>
+                 <div className="space-y-2">
+                  {vinculoOptions.map(vinculo => (
+                    <div key={vinculo} className="flex items-center space-x-2">
+                      <Checkbox 
+                        id={`filter-vinculo-${vinculo}`} 
+                        checked={vinculoFilters.includes(vinculo)}
+                        onCheckedChange={() => handleVinculoFilterChange(vinculo)}
+                      />
+                      <Label htmlFor={`filter-vinculo-${vinculo}`} className="font-normal">{vinculo}</Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <SheetFooter>
+              <Button variant="outline" onClick={clearFilters}>Limpar Filtros</Button>
+              <SheetClose asChild>
+                <Button>Aplicar</Button>
+              </SheetClose>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
         <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
           Partilhar Formulário
         </Button>
@@ -182,7 +271,7 @@ export default function ServerListPage() {
                 </label>
               </div>
               <div className="space-y-4 p-4">
-                {servers.map((server) => (
+                {filteredServers.map((server) => (
                   <div key={server.email} className="flex items-start gap-4 pb-4 border-b last:border-b-0">
                     <Checkbox
                       id={`server-${server.email}`}
@@ -191,7 +280,7 @@ export default function ServerListPage() {
                       className="mt-1"
                     />
                     <div className="flex flex-col items-center gap-2">
-                      <Link href={`/servidores/${server.email}`}>
+                      <Link href={`/servidores/${server.email.split('@')[0]}`}>
                         <Avatar className="h-12 w-12">
                           <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                         </Avatar>
@@ -212,7 +301,7 @@ export default function ServerListPage() {
                       </div>
                     </div>
                     <div className="flex-1 space-y-2">
-                      <Link href={`/servidores/${server.email}`}>
+                      <Link href={`/servidores/${server.email.split('@')[0]}`}>
                         <p className="font-semibold">{server.name}</p>
                       </Link>
                       <p className="text-sm text-muted-foreground">{server.email}</p>
@@ -254,7 +343,7 @@ export default function ServerListPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {servers.map((server) => (
+                  {filteredServers.map((server) => (
                     <TableRow key={server.email}>
                       <TableCell>
                         <div className="flex items-center gap-3">
@@ -263,7 +352,7 @@ export default function ServerListPage() {
                             checked={selectedServers[server.email] || false}
                             onCheckedChange={(checked) => handleSelectServer(server.email, checked as boolean)}
                           />
-                          <Link href={`/servidores/${server.email}`} className="flex items-center gap-3">
+                          <Link href={`/servidores/${server.email.split('@')[0]}`} className="flex items-center gap-3">
                               <Avatar className="h-12 w-12">
                                   <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                               </Avatar>
