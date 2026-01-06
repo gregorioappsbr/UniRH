@@ -30,7 +30,7 @@ export default function NewServerPage() {
               <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground">Formação</TabsTrigger>
               <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground">Observações</TabsTrigger>
             </TabsList>
-            <TabsContent value="pessoais" className="mt-6">
+            <TabsContent value="pessoais" className="mt-8">
               <div className="space-y-8">
                 <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Identificação</h2>
@@ -210,7 +210,7 @@ export default function NewServerPage() {
 
               </div>
             </TabsContent>
-            <TabsContent value="profissionais" className="mt-6">
+            <TabsContent value="profissionais" className="mt-8">
               <div className="space-y-8">
                 <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Informações do Cargo</h2>
@@ -305,7 +305,7 @@ export default function NewServerPage() {
                 </div>
               </div>
             </TabsContent>
-            <TabsContent value="formacao" className="mt-6">
+            <TabsContent value="formacao" className="mt-8">
               <div className="space-y-8">
                 <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Formação Acadêmica</h2>
@@ -383,7 +383,7 @@ export default function NewServerPage() {
 
               </div>
             </TabsContent>
-            <TabsContent value="observacoes" className="mt-6">
+            <TabsContent value="observacoes" className="mt-8">
                <div className="space-y-6">
                 <h2 className="text-lg font-semibold">Observações Gerais</h2>
                 <div className="space-y-2">
