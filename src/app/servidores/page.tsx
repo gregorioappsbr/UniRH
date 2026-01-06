@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Phone, MinusCircle, AlertCircle, Briefcase } from 'lucide-react';
+import { Users, PlusCircle, Filter, Share2, KeyRound, Award, Phone, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -51,9 +51,9 @@ const servers = [
 export default function ServerListPage() {
 
   const getRatingClass = (rating: number) => {
-    if (rating >= 8) return 'text-green-400';
-    if (rating >= 4) return 'text-yellow-400';
-    return 'text-red-400';
+    if (rating >= 8) return 'text-green-400 border-green-400';
+    if (rating >= 4) return 'text-yellow-400 border-yellow-400';
+    return 'text-red-400 border-red-400';
   };
 
   const getStatusClass = (status: string) => {
@@ -72,6 +72,21 @@ export default function ServerListPage() {
     const justNumbers = phone.replace(/\D/g, '');
     return `https://wa.me/55${justNumbers}`;
   }
+
+  const getFuncaoIcon = (funcao: string) => {
+    switch (funcao) {
+      case 'Gerente de Projetos':
+        return <UserCog className="h-4 w-4" />;
+      case 'Desenvolvedor Frontend':
+        return <Code className="h-4 w-4" />;
+      case 'Designer UI/UX':
+        return <PenTool className="h-4 w-4" />;
+      case 'Estagiário':
+        return <GraduationCap className="h-4 w-4" />;
+      default:
+        return <Briefcase className="h-4 w-4" />;
+    }
+  };
 
   return (
     <div className="p-4 space-y-4">
@@ -123,7 +138,7 @@ export default function ServerListPage() {
                   
                   {server.funcao && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Briefcase className="h-4 w-4" />
+                      {getFuncaoIcon(server.funcao)}
                       <span>{server.funcao}</span>
                     </div>
                   )}

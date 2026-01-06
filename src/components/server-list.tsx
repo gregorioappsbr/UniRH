@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Award, KeyRound, Briefcase, MinusCircle, AlertCircle } from 'lucide-react';
+import { Phone, Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -41,9 +41,9 @@ export function ServerList() {
     const isMobile = useIsMobile();
 
     const getRatingClass = (rating: number) => {
-        if (rating >= 8) return 'text-green-400';
-        if (rating >= 4) return 'text-yellow-400';
-        return 'text-red-400';
+        if (rating >= 8) return 'text-green-400 border-green-400';
+        if (rating >= 4) return 'text-yellow-400 border-yellow-400';
+        return 'text-red-400 border-red-400';
     };
 
     const getStatusClass = (status: string) => {
@@ -62,6 +62,17 @@ export function ServerList() {
       const justNumbers = phone.replace(/\D/g, '');
       return `https://wa.me/55${justNumbers}`;
     }
+
+    const getFuncaoIcon = (funcao: string) => {
+      switch (funcao) {
+        case 'Gerente de Projetos':
+          return <UserCog className="h-4 w-4" />;
+        case 'Desenvolvedor Frontend':
+          return <Code className="h-4 w-4" />;
+        default:
+          return <Briefcase className="h-4 w-4" />;
+      }
+    };
 
 
   return (
@@ -99,12 +110,12 @@ export function ServerList() {
                       <p className="text-sm text-muted-foreground">{server.email}</p>
                       {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Briefcase className="h-4 w-4" />
+                          {getFuncaoIcon(server.funcao)}
                           <span>{server.funcao}</span>
                         </div>
                       )}
                       {server.phone && (
-                        <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary">
+                        <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
                           <Phone className="h-4 w-4" />
                           <span>{server.phone}</span>
                         </a>
@@ -152,7 +163,7 @@ export function ServerList() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Briefcase className="h-4 w-4" />
+                           {getFuncaoIcon(server.funcao)}
                           <span>{server.funcao}</span>
                         </div>
                       </TableCell>
