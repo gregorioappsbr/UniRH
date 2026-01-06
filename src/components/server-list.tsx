@@ -1,3 +1,4 @@
+
 import {
   Card,
   CardContent,
@@ -32,8 +33,8 @@ export function ServerList() {
   return (
     <Card className="bg-card">
       <CardHeader className="text-center">
-        <CardTitle>Servidores Recentes</CardTitle>
-        <CardDescription>
+        <CardTitle className="md:text-3xl">Servidores Recentes</CardTitle>
+        <CardDescription className="md:text-base">
           Uma lista das últimas adições à sua equipe.
         </CardDescription>
       </CardHeader>
