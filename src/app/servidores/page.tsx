@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Share2, KeyRound, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog } from 'lucide-react';
+import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -157,9 +157,11 @@ export default function ServerListPage() {
                   <div key={index} className="flex items-start gap-4 pb-4 border-b last:border-b-0">
                     <Checkbox id={`server-${index}`} className="mt-1" />
                     <div className="flex flex-col items-center gap-2">
-                      <Avatar>
-                        <AvatarFallback>{server.initials}</AvatarFallback>
-                      </Avatar>
+                      <Link href={`/servidores/${index}`}>
+                        <Avatar>
+                          <AvatarFallback>{server.initials}</AvatarFallback>
+                        </Avatar>
+                      </Link>
                        <div className="flex flex-col items-center gap-1">
                         {server.status && (
                           <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
@@ -176,7 +178,9 @@ export default function ServerListPage() {
                       </div>
                     </div>
                     <div className="flex-1 space-y-2">
-                      <p className="font-semibold">{server.name}</p>
+                      <Link href={`/servidores/${index}`}>
+                        <p className="font-semibold">{server.name}</p>
+                      </Link>
                       <p className="text-sm text-muted-foreground">{server.email}</p>
                        {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -206,7 +210,7 @@ export default function ServerListPage() {
                     <TableHead>Status</TableHead>
                     <TableHead>Nota</TableHead>
                     <TableHead>Função</TableHead>
-                    <TableHead>Telefone</TableHead>
+                    <TableHead className="pr-8">Telefone</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -216,7 +220,7 @@ export default function ServerListPage() {
                         <Checkbox id={`server-desktop-${index}`} />
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-3">
+                        <Link href={`/servidores/${index}`} className="flex items-center gap-3">
                             <Avatar>
                                 <AvatarFallback>{server.initials}</AvatarFallback>
                             </Avatar>
@@ -224,7 +228,7 @@ export default function ServerListPage() {
                                 <p className="font-semibold">{server.name}</p>
                                 <p className="text-sm text-muted-foreground">{server.email}</p>
                             </div>
-                        </div>
+                        </Link>
                       </TableCell>
                       <TableCell>
                          <Badge variant="outline" className={cn(getStatusClass(server.status))}>
