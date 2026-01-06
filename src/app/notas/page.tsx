@@ -5,9 +5,10 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, Notebook, Share, Edit, Trash2, FileText, Copy } from 'lucide-react';
+import { PlusCircle, Notebook, Share, Edit, Trash2, FileText, Copy, FileDown } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { jsPDF } from "jspdf";
 
 const initialNotes = [
   {
@@ -55,25 +56,31 @@ export default function NotesPage() {
   };
   
   const handleShare = async (note: Note) => {
+    const textToShare = `*${note.title}*\n\n${note.content}`;
     if (navigator.share) {
       try {
         await navigator.share({
           title: note.title,
-          text: note.content,
+          text: textToShare,
         });
       } catch (error) {
-        console.error('Erro ao compartilhar', error);
-        toast({
-          variant: 'destructive',
-          title: 'Erro ao compartilhar',
-          description: 'Não foi possível compartilhar a nota.',
-        });
+         if (error instanceof DOMException && error.name === 'AbortError') {
+          // User cancelled the share sheet
+        } else {
+          console.error('Erro ao compartilhar', error);
+          toast({
+            variant: 'destructive',
+            title: 'Erro ao compartilhar',
+            description: 'Não foi possível compartilhar a nota.',
+          });
+        }
       }
     } else {
+      // Fallback for browsers that do not support navigator.share
+      handleCopy(note);
       toast({
-        variant: 'destructive',
-        title: 'Não suportado',
-        description: 'Seu navegador não suporta a API de compartilhamento.',
+        title: 'Copiado!',
+        description: 'Seu navegador não suporta compartilhamento. A nota foi copiada para a área de transferência.',
       });
     }
   };
@@ -94,6 +101,25 @@ export default function NotesPage() {
         });
     });
   };
+
+  const handleExportPDF = (note: Note) => {
+    try {
+      const doc = new jsPDF();
+      doc.setFontSize(16);
+      doc.text(note.title, 10, 10);
+      doc.setFontSize(12);
+      doc.text(note.content, 10, 20);
+      doc.save(`${note.title.replace(/\s/g, '_')}.pdf`);
+    } catch(error) {
+       console.error('Erro ao exportar PDF', error);
+       toast({
+          variant: 'destructive',
+          title: 'Erro ao exportar',
+          description: 'Não foi possível exportar a nota como PDF.',
+        });
+    }
+  };
+
 
   return (
     <div className="p-4 space-y-4">
@@ -141,6 +167,10 @@ export default function NotesPage() {
                        <DropdownMenuItem onClick={() => handleCopy(note)}>
                         <Copy className="mr-2 h-4 w-4" />
                         <span>Copiar Texto</span>
+                      </DropdownMenuItem>
+                       <DropdownMenuItem onClick={() => handleExportPDF(note)}>
+                        <FileDown className="mr-2 h-4 w-4" />
+                        <span>Exportar como PDF</span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
