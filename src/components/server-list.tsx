@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Star, KeyRound } from 'lucide-react';
+import { Phone, Star, KeyRound, Award } from 'lucide-react';
 
 const servers = [
   {
@@ -22,9 +22,9 @@ const servers = [
     initials: 'BC',
     name: 'Bruno Costa',
     email: 'bruno.costa@exemplo.com',
-    status: null,
-    rating: null,
-    phone: null,
+    status: 'Ativo',
+    rating: 8.0,
+    phone: '(67) 99999-5678',
   },
 ];
 
@@ -38,7 +38,6 @@ export function ServerList() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="border-b pb-2 text-sm text-muted-foreground">Nome</div>
         {servers.map((server, index) => (
           <div key={index} className="flex items-start gap-4 border-b pb-4 last:border-b-0">
             <Avatar>
@@ -49,14 +48,14 @@ export function ServerList() {
               <p className="text-sm text-muted-foreground">{server.email}</p>
               <div className="flex items-center gap-4 mt-2 text-xs">
                 {server.status && (
-                  <Badge variant="outline" className="text-green-400 border-green-400">
-                    <KeyRound className="w-3 h-3 mr-1" />
+                  <Badge variant="outline" className={server.status === 'Ativo' ? "text-green-400 border-green-400" : "text-yellow-400 border-yellow-400"}>
+                    {server.status === 'Ativo' ? <KeyRound className="w-3 h-3 mr-1" /> : <Award className="w-3 h-3 mr-1" />}
                     {server.status}
                   </Badge>
                 )}
                 {server.rating && (
                   <div className="flex items-center text-muted-foreground">
-                    <Star className="w-3 h-3 mr-1 text-yellow-400" />
+                    <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
                     <span>Nota: {server.rating}</span>
                   </div>
                 )}

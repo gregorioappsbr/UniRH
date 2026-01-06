@@ -3,7 +3,7 @@
 import {
   Home,
   Users,
-  Notebook,
+  FileText,
   Settings,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 const navItems = [
   { href: '/', label: 'Painel', icon: Home },
   { href: '/servidores', label: 'Servidores', icon: Users },
-  { href: '/notas', label: 'Notas', icon: Notebook },
+  { href: '/notas', label: 'Notas', icon: FileText },
   { href: '/ajustes', label: 'Ajustes', icon: Settings },
 ];
 
