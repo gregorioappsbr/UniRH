@@ -9,8 +9,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { X } from "lucide-react"
 import Link from "next/link"
+import React, { useState } from "react"
+import { maskCPF, maskRG, maskCEP, maskPhone } from "@/lib/masks"
 
 export default function NewServerPage() {
+    const [cpf, setCpf] = useState('');
+    const [rg, setRg] = useState('');
+    const [cep, setCep] = useState('');
+    const [telefonePrincipal, setTelefonePrincipal] = useState('');
+    const [telefoneSecundario, setTelefoneSecundario] = useState('');
+    const [contatoEmergencia, setContatoEmergencia] = useState('');
+
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, masker: (value: string) => string, setter: React.Dispatch<React.SetStateAction<string>>) => {
+        const { value } = e.target;
+        setter(masker(value));
+    };
+
   return (
     <div className="p-4">
       <Card className="bg-card text-card-foreground border-border">
@@ -25,13 +40,13 @@ export default function NewServerPage() {
           </header>
 
           <Tabs defaultValue="pessoais" className="w-full">
-            <div className="border rounded-md">
-              <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted">
-                <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Pessoais</TabsTrigger>
-                <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Profissionais</TabsTrigger>
-                <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Formação</TabsTrigger>
-                <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Observações</TabsTrigger>
-              </TabsList>
+             <div className="border rounded-md">
+                <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
+                    <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Pessoais</TabsTrigger>
+                    <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Profissionais</TabsTrigger>
+                    <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Formação</TabsTrigger>
+                    <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Observações</TabsTrigger>
+                </TabsList>
             </div>
             <TabsContent value="pessoais" className="mt-8 md:mt-10">
               <div className="space-y-8">
@@ -48,11 +63,11 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="cpf">CPF</Label>
-                      <Input id="cpf" placeholder="000.000.000-00" />
+                      <Input id="cpf" placeholder="000.000.000-00" value={cpf} onChange={(e) => handleChange(e, maskCPF, setCpf)} maxLength={14} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="rg">RG</Label>
-                      <Input id="rg" placeholder="00.000.000-0" />
+                      <Input id="rg" placeholder="00.000.000-0" value={rg} onChange={(e) => handleChange(e, maskRG, setRg)} maxLength={12} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="orgao-emissor">Órgão Emissor</Label>
@@ -141,11 +156,11 @@ export default function NewServerPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="telefone-principal">Telefone Principal</Label>
-                      <Input id="telefone-principal" type="tel" placeholder="(00) 00000-0000" />
+                      <Input id="telefone-principal" type="tel" placeholder="(00) 00000-0000" value={telefonePrincipal} onChange={(e) => handleChange(e, maskPhone, setTelefonePrincipal)} maxLength={15} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="telefone-secundario">Telefone Secundário</Label>
-                      <Input id="telefone-secundario" type="tel" placeholder="(00) 00000-0000" />
+                      <Input id="telefone-secundario" type="tel" placeholder="(00) 00000-0000" value={telefoneSecundario} onChange={(e) => handleChange(e, maskPhone, setTelefoneSecundario)} maxLength={15} />
                     </div>
                      <div className="space-y-2 col-span-2">
                       <Label htmlFor="email-pessoal">E-mail Pessoal</Label>
@@ -159,7 +174,7 @@ export default function NewServerPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="cep">CEP</Label>
-                      <Input id="cep" placeholder="00000-000" />
+                      <Input id="cep" placeholder="00000-000" value={cep} onChange={(e) => handleChange(e, maskCEP, setCep)} maxLength={9} />
                     </div>
                     <div className="space-y-2 col-span-2">
                       <Label htmlFor="logradouro">Logradouro</Label>
@@ -206,7 +221,7 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="contato-emergencia-telefone">Telefone</Label>
-                      <Input id="contato-emergencia-telefone" type="tel" placeholder="(00) 00000-0000" />
+                      <Input id="contato-emergencia-telefone" type="tel" placeholder="(00) 00000-0000" value={contatoEmergencia} onChange={(e) => handleChange(e, maskPhone, setContatoEmergencia)} maxLength={15} />
                     </div>
                   </div>
                 </div>
