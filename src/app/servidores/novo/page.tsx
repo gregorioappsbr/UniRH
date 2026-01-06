@@ -53,7 +53,7 @@ export default function NewServerPage() {
                 <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Identificação</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="nome-completo">Nome Completo</Label>
                       <Input id="nome-completo" placeholder="Ex: João da Silva" />
                     </div>
@@ -140,11 +140,11 @@ export default function NewServerPage() {
                 <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Filiação</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     <div className="space-y-2">
+                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="nome-mae">Nome da Mãe</Label>
                       <Input id="nome-mae" />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="nome-pai">Nome do Pai</Label>
                       <Input id="nome-pai" />
                     </div>
@@ -215,7 +215,7 @@ export default function NewServerPage() {
                 <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Contato de Emergência</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="contato-emergencia-nome">Nome</Label>
                       <Input id="contato-emergencia-nome" placeholder="Ex: Maria da Silva" />
                     </div>
@@ -245,11 +245,11 @@ export default function NewServerPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="cargo">Cargo</Label>
                       <Input id="cargo" placeholder="Ex: Desenvolvedor(a) Frontend" />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="funcao">Função</Label>
                       <Input id="funcao" placeholder="Ex: Coordenador de Curso" />
                     </div>
@@ -269,7 +269,7 @@ export default function NewServerPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                     <div className="space-y-2">
+                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="setor-lotacao">Setor / Lotação</Label>
                       <Input id="setor-lotacao" placeholder="Ex: Tecnologia da Informação" />
                     </div>
@@ -327,7 +327,7 @@ export default function NewServerPage() {
               <div className="space-y-8">
                 <div className="space-y-6">
                   <h2 className="text-lg font-semibold">Formação Acadêmica</h2>
-                  <div className="space-y-2">
+                  <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="escolaridade">Escolaridade</Label>
                     <Select>
                       <SelectTrigger id="escolaridade">
@@ -349,11 +349,11 @@ export default function NewServerPage() {
                     <CardTitle className="text-base">Graduação Base</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="curso-graduacao-base">Curso de Graduação</Label>
                       <Input id="curso-graduacao-base" placeholder="Ex: Análise de Sistemas" />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="instituicao-graduacao">Instituição de Graduação</Label>
                       <Input id="instituicao-graduacao" placeholder="Nome da universidade" />
                     </div>
@@ -369,7 +369,7 @@ export default function NewServerPage() {
                     <CardTitle className="text-base">Pós-Graduação</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="tipo-pos-graduacao">Tipo de Pós-Graduação</Label>
                       <Select>
                         <SelectTrigger id="tipo-pos-graduacao">
@@ -384,11 +384,11 @@ export default function NewServerPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="curso-pos-graduacao">Curso de Pós-Graduação</Label>
                       <Input id="curso-pos-graduacao" placeholder="Nome do curso" />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="instituicao-pos-graduacao">Instituição de Pós-Graduação</Label>
                       <Input id="instituicao-pos-graduacao" placeholder="Nome da instituição" />
                     </div>

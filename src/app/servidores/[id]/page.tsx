@@ -135,7 +135,7 @@ export default function ServerProfilePage() {
       
       <Tabs defaultValue="faltas" className="w-full flex-1 flex flex-col">
         <div className="border rounded-md">
-          <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap md:grid w-full md:grid-cols-4 text-foreground bg-muted">
+          <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
             <TabsTrigger value="ficha" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Ficha</TabsTrigger>
             <TabsTrigger value="faltas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Faltas</TabsTrigger>
             <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Licenças</TabsTrigger>
