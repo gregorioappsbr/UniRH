@@ -272,16 +272,20 @@ export default function ServerProfilePage() {
 
     useEffect(() => {
         if (editingFeria) return; // Don't change periods when editing
+        
+        if (feriasParcelamento === 'custom') {
+            setFeriasPeriodos([]);
+            return;
+        }
+
         let numPeriodos = 1;
         if (feriasParcelamento === '15d') numPeriodos = 2;
         if (feriasParcelamento === '10d') numPeriodos = 3;
         
-        if (feriasParcelamento !== 'custom') {
-           const newPeriodos = Array.from({ length: numPeriodos }, () => ({
-                startDia: '', startMes: '', startAno: '', endDia: '', endMes: '', endAno: ''
-            }));
-            setFeriasPeriodos(newPeriodos);
-        }
+        const newPeriodos = Array.from({ length: numPeriodos }, () => ({
+            startDia: '', startMes: '', startAno: '', endDia: '', endMes: '', endAno: ''
+        }));
+        setFeriasPeriodos(newPeriodos);
 
     }, [feriasParcelamento, editingFeria]);
 
@@ -1156,7 +1160,7 @@ export default function ServerProfilePage() {
                                 {feriasPeriodos.map((periodo, index) => (
                                     <div key={index} className="space-y-3 p-3 border rounded-md relative">
                                         <Label className="font-semibold">Período {index + 1}</Label>
-                                        {feriasParcelamento === 'custom' && feriasPeriodos.length > 1 && (
+                                        {feriasParcelamento === 'custom' && feriasPeriodos.length > 1 && !editingFeria && (
                                             <Button
                                                 type="button"
                                                 variant="ghost"
@@ -1302,3 +1306,4 @@ export default function ServerProfilePage() {
     
 
     
+
