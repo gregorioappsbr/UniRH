@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth, initiateEmailSignIn } from '@/firebase';
+import { useAuth } from '@/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,7 +33,7 @@ export default function LoginPage() {
       toast({
         variant: 'destructive',
         title: 'Erro de login',
-        description: error.message || 'Não foi possível fazer login. Verifique suas credenciais.',
+        description: 'Credenciais inválidas. Verifique seu e-mail e senha.',
       });
     }
   };
