@@ -30,10 +30,14 @@ export default function LoginPage() {
       router.push('/');
     } catch (error: any) {
       console.error('Erro de login:', error);
+      let description = 'Credenciais inválidas. Verifique seu e-mail e senha.';
+      if (error.code === 'auth/network-request-failed') {
+        description = 'Erro de rede. Verifique sua conexão com a internet.';
+      }
       toast({
         variant: 'destructive',
         title: 'Erro de login',
-        description: 'Credenciais inválidas. Verifique seu e-mail e senha.',
+        description: description,
       });
     }
   };
