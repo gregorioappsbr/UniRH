@@ -8,9 +8,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LogOut, Settings, CalendarDays, Share, Trash2, Sun, Moon, Laptop } from 'lucide-react';
-import { useAuth } from '@/firebase';
+import { LogOut, Settings, CalendarDays, Share, Trash2, Sun, Moon, Laptop, Save } from 'lucide-react';
+import { useUser, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
+import { updateProfile } from 'firebase/auth';
+import { useToast } from '@/hooks/use-toast';
 
 const events = [
   {
@@ -33,33 +35,73 @@ const events = [
 type Theme = "light" | "dark" | "system";
 
 export default function SettingsPage() {
+  const { user, isUserLoading } = useUser();
   const auth = useAuth();
   const router = useRouter();
-  const [theme, setTheme] = useState<Theme>('dark');
+  const { toast } = useToast();
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [currentTheme, setCurrentTheme] = useState<Theme>('dark');
+  const [selectedTheme, setSelectedTheme] = useState<Theme>('dark');
+
+  useEffect(() => {
+    if (user) {
+      setName(user.displayName || 'Mirna');
+      setEmail(user.email || 'mirna.almeida@uems.br');
+    }
+  }, [user]);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') as Theme | null;
-    if (storedTheme) {
-      setTheme(storedTheme);
-    } else {
-       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-       setTheme(systemTheme);
-    }
+    const initialTheme = storedTheme || 'dark';
+    setCurrentTheme(initialTheme);
+    setSelectedTheme(initialTheme);
   }, []);
 
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
 
-    let effectiveTheme = theme;
-    if (theme === 'system') {
+    let effectiveTheme = currentTheme;
+    if (currentTheme === 'system') {
       effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
     
     root.classList.add(effectiveTheme);
     root.style.colorScheme = effectiveTheme;
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+  }, [currentTheme]);
+
+
+  const handleSaveChanges = async () => {
+    if (!auth.currentUser) return;
+
+    try {
+      // Update profile name
+      if (name !== auth.currentUser.displayName) {
+        await updateProfile(auth.currentUser, { displayName: name });
+      }
+
+      // Save and apply theme
+      localStorage.setItem('theme', selectedTheme);
+      setCurrentTheme(selectedTheme);
+      
+      toast({
+        title: "Alterações salvas!",
+        description: "Suas configurações foram atualizadas.",
+      });
+
+      router.push('/');
+
+    } catch (error) {
+      console.error('Erro ao salvar alterações:', error);
+       toast({
+        variant: 'destructive',
+        title: 'Erro',
+        description: 'Não foi possível salvar as alterações.',
+      });
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -69,6 +111,10 @@ export default function SettingsPage() {
       console.error('Erro ao fazer logout:', error);
     }
   };
+  
+  if (isUserLoading) {
+    return <div className="p-4 text-center">Carregando...</div>
+  }
 
   return (
     <div className="p-4 space-y-6 flex flex-col flex-1 h-full">
@@ -98,11 +144,11 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nome</Label>
-                <Input id="name" defaultValue="Mirna" />
+                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" defaultValue="mirna.almeida@uems.br" />
+                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled />
               </div>
             </CardContent>
           </Card>
@@ -115,15 +161,15 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-2">
-                <Button variant={theme === 'light' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setTheme('light')}>
+                <Button variant={selectedTheme === 'light' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setSelectedTheme('light')}>
                   <Sun className="h-4 w-4" />
                   Claro
                 </Button>
-                <Button variant={theme === 'dark' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setTheme('dark')}>
+                <Button variant={selectedTheme === 'dark' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setSelectedTheme('dark')}>
                   <Moon className="h-4 w-4" />
                   Escuro
                 </Button>
-                <Button variant={theme === 'system' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setTheme('system')}>
+                <Button variant={selectedTheme === 'system' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setSelectedTheme('system')}>
                   <Laptop className="h-4 w-4" />
                   Sistema
                 </Button>
@@ -217,7 +263,10 @@ export default function SettingsPage() {
           <LogOut className="mr-2 h-4 w-4" />
           Sair da Conta
         </Button>
-        <Button className="w-full">Salvar Alterações</Button>
+        <Button className="w-full" onClick={handleSaveChanges}>
+          <Save className="mr-2 h-4 w-4" />
+          Salvar Alterações
+        </Button>
       </div>
     </div>
   );
