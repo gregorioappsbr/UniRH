@@ -147,6 +147,8 @@ export default function SettingsPage() {
             description: "Nenhuma nova configuração para salvar.",
         });
     }
+
+    router.push('/');
   };
 
   const handleLogout = async () => {
@@ -337,5 +339,7 @@ export default function SettingsPage() {
       </div>
     </div>
   );
+
+    
 
     
