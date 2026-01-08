@@ -1,0 +1,80 @@
+{
+  "entities": {
+    "Application": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Application",
+      "type": "object",
+      "description": "Represents the application being created by the user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Application entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the application."
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the application."
+        },
+        "primaryColor": {
+          "type": "string",
+          "description": "The primary color of the application's user interface. (e.g., #A088F9)"
+        },
+        "backgroundColor": {
+          "type": "string",
+          "description": "The background color of the application's user interface. (e.g., #F4F2FC)"
+        },
+        "highlightColor": {
+          "type": "string",
+          "description": "The highlight color of the application's user interface. (e.g., #F988D8)"
+        },
+        "font": {
+          "type": "string",
+          "description": "The font used in the application's user interface. (e.g., Poppins)"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "primaryColor",
+        "backgroundColor",
+        "highlightColor",
+        "font"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}/applications/{applicationId}",
+        "definition": {
+          "entityName": "Application",
+          "schema": {
+            "$ref": "#/backend/entities/Application"
+          },
+          "description": "Stores application details created by a user. Accessible only by the user with the corresponding userId.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            },
+            {
+              "name": "applicationId",
+              "description": "The unique identifier of the application."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to securely store application details created by users. Each user has their own collection of applications, providing a clear ownership model and simplified security rules. The `applications` subcollection under each user document ensures that only the user can access and modify their own application data. This design adheres to the principle of Authorization Independence by avoiding dependencies on parent document data within the rules. All data required to authorize a request is available within the application document itself, allowing for atomic operations and easier debugging. This design supports secure list operations (QAPs) by scoping application data to individual users."
+  }
+}

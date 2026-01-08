@@ -1,0 +1,101 @@
+/**
+ * This Firestore Security Ruleset establishes a strict user-ownership security model.
+ *
+ * Core Philosophy:
+ * The rules enforce that users can only interact with data they have explicitly created.
+ * All data is isolated within a user-specific data tree, preventing any user from
+ * accessing, listing, or modifying another user's information. The default posture is
+ * to deny all access unless a rule explicitly grants it.
+ *
+ * Data Structure:
+ * Data is organized hierarchically under a top-level `users` collection. Each user's
+ * data, such as their created applications, is stored in a subcollection under their
+ * unique user ID document: /users/{userId}/applications/{applicationId}.
+ *
+ * Key Security Decisions:
+ * - No Global Access: There are no admin roles or global read/write permissions.
+ * - Strict Data Isolation: All rules are scoped to the authenticated user's ID (`request.auth.uid`),
+ *   ensuring a user's operations are confined to their own documents.
+ * - User Listing Disabled: The rules do not allow querying the top-level `/users`
+ *   collection, preventing malicious actors from enumerating all users of the application.
+ * - Ownership is Immutable: Once a document is created, its core identifying fields
+ *   (like its own ID) cannot be changed to prevent re-associating it with a different entity.
+ *
+ * Denormalization for Authorization:
+ * This ruleset relies on path-based security. The `{userId}` in the document path is the
+ * sole source of truth for ownership. This is highly performant as it avoids extra document
+ * reads (`get()` calls) to determine ownership.
+ *
+ * Structural Segregation:
+ * Not applicable in this model, as all data is considered private to the owning user.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Validates if the currently authenticated user is the owner of the document
+     * based on the provided userId, which typically comes from a path segment.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * A stricter version of isOwner for update and delete operations.
+     * It ensures the document already exists before allowing the operation to proceed.
+     * This prevents writes to non-existent documents.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * On create, validates that the document's internal `id` field matches the
+     * document ID from the path (`applicationId`). This enforces relational
+     * integrity from the moment of creation.
+     */
+    function hasValidApplicationDataOnCreate(applicationId) {
+      return request.resource.data.id == applicationId;
+    }
+
+    /**
+     * On update, validates that the document's internal `id` field is immutable.
+     * This prevents the primary identifier of the document from being changed after creation.
+     */
+    function hasValidApplicationDataOnUpdate() {
+      return request.resource.data.id == resource.data.id;
+    }
+
+
+    // ----------------------------------------------------------------------
+    // Collection Rules
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Secures the 'applications' subcollection, granting full access only to the user who owns the data tree.
+     * @path /users/{userId}/applications/{applicationId}
+     * @allow (create) An authenticated user creating a new application document under their own user ID path.
+     * @deny (get) An authenticated user trying to read an application from another user's path.
+     * @principle Restricts access to a user's own data tree, enforcing strict data isolation.
+     */
+    match /users/{userId}/applications/{applicationId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && hasValidApplicationDataOnCreate(applicationId);
+      allow update: if isExistingOwner(userId) && hasValidApplicationDataOnUpdate();
+      allow delete: if isExistingOwner(userId);
+    }
+  }
+}
