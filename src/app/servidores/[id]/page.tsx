@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useParams } from 'next/navigation';
 import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
-import { doc, collection, addDoc, deleteDoc } from 'firebase/firestore';
+import { doc, collection, addDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { useState, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -97,6 +97,7 @@ type Licenca = {
   id: string;
   startDate: string;
   endDate: string;
+  type: string;
   reason: string;
 }
 
@@ -118,9 +119,10 @@ export default function ServerProfilePage() {
 
     // State for Licenças
     const [isLicencaDialogOpen, setIsLicencaDialogOpen] = useState(false);
+    const [licencaType, setLicencaType] = useState('');
     const [licencaReason, setLicencaReason] = useState('');
-    const [licencaInicio, setLicencaInicio] = useState('');
-    const [licencaFim, setLicencaFim] = useState('');
+    const [licencaStartDate, setLicencaStartDate] = useState('');
+    const [licencaEndDate, setLicencaEndDate] = useState('');
     const [selectedLicencaYear, setSelectedLicencaYear] = useState<string>(new Date().getFullYear().toString());
     const [selectedLicencaMonth, setSelectedLicencaMonth] = useState<string>((new Date().getMonth() + 1).toString());
 
@@ -160,6 +162,7 @@ export default function ServerProfilePage() {
             await addDoc(faltasCollectionRef, {
                 date: dataCompleta,
                 reason: faltaReason,
+                createdAt: serverTimestamp(),
             });
             toast({ title: 'Sucesso', description: 'Falta registrada com sucesso.' });
             setIsFaltaDialogOpen(false);
@@ -186,23 +189,28 @@ export default function ServerProfilePage() {
     };
     
     const handleSaveLicenca = async () => {
-        if (!firestore || !id || !licencaInicio || !licencaFim) {
-            toast({ variant: 'destructive', title: 'Erro', description: 'As datas de início e fim são obrigatórias.' });
+        if (!firestore || !id || !licencaStartDate || !licencaEndDate || !licencaType) {
+            toast({ variant: 'destructive', title: 'Erro', description: 'Tipo de licença e datas são obrigatórios.' });
             return;
         }
+
+        const finalReason = licencaType === 'outro' ? licencaReason : licencaType;
 
         try {
             const licencasCollectionRef = collection(firestore, 'servers', id as string, 'licencas');
             await addDoc(licencasCollectionRef, {
-                startDate: licencaInicio,
-                endDate: licencaFim,
-                reason: licencaReason,
+                startDate: licencaStartDate,
+                endDate: licencaEndDate,
+                type: licencaType,
+                reason: finalReason,
+                createdAt: serverTimestamp(),
             });
             toast({ title: 'Sucesso', description: 'Licença registrada com sucesso.' });
             setIsLicencaDialogOpen(false);
-            setLicencaInicio('');
-            setLicencaFim('');
+            setLicencaStartDate('');
+            setLicencaEndDate('');
             setLicencaReason('');
+            setLicencaType('');
         } catch (error) {
             console.error("Erro ao registrar licença:", error);
             toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível registrar a licença.' });
@@ -232,13 +240,11 @@ export default function ServerProfilePage() {
     const filteredLicencas = useMemo(() => {
       if (!licencas) return [];
       return licencas.filter(licenca => {
-          // Check if the license period overlaps with the selected month and year
           const [startDay, startMonth, startYear] = licenca.startDate.split('/');
           const licenseStartDate = new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
           
-          const selectedDate = new Date(parseInt(selectedLicencaYear), parseInt(selectedLicencaMonth) - 1, 1);
-
-          return licenseStartDate.getFullYear().toString() === selectedLicencaYear && (licenseStartDate.getMonth() + 1).toString() === selectedLicencaMonth;
+          return licenseStartDate.getFullYear().toString() === selectedLicencaYear && 
+                 (licenseStartDate.getMonth() + 1).toString().padStart(2, '0') === selectedLicencaMonth.padStart(2, '0');
       });
     }, [licencas, selectedLicencaYear, selectedLicencaMonth]);
 
@@ -672,12 +678,42 @@ export default function ServerProfilePage() {
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                        <div className="space-y-2">
+                            <Label htmlFor="licenca-type">Tipo de Licença</Label>
+                            <Select value={licencaType} onValueChange={setLicencaType}>
+                                <SelectTrigger id="licenca-type">
+                                    <SelectValue placeholder="Selecione o tipo..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Médica">Médica</SelectItem>
+                                    <SelectItem value="Capacitação">Capacitação</SelectItem>
+                                    <SelectItem value="TIP">TIP</SelectItem>
+                                    <SelectItem value="Maternidade">Maternidade</SelectItem>
+                                    <SelectItem value="Paternidade">Paternidade</SelectItem>
+                                    <SelectItem value="Gala">Gala</SelectItem>
+                                    <SelectItem value="Nojo">Nojo</SelectItem>
+                                    <SelectItem value="Eleitoral">Eleitoral</SelectItem>
+                                    <SelectItem value="outro">Outro</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        {licencaType === 'outro' && (
+                            <div className="space-y-2">
+                                <Label htmlFor="licenca-outro-reason">Descrição do Tipo</Label>
+                                <Textarea
+                                    id="licenca-outro-reason"
+                                    placeholder="Descreva o tipo de licença..."
+                                    value={licencaReason}
+                                    onChange={(e) => setLicencaReason(e.target.value)}
+                                />
+                            </div>
+                        )}
+                       <div className="space-y-2">
                           <Label>Data de Início</Label>
                           <Input
                             type="text"
                             placeholder="DD/MM/AAAA"
-                            value={licencaInicio}
-                            onChange={(e) => setLicencaInicio(e.target.value)}
+                            value={licencaStartDate}
+                            onChange={(e) => setLicencaStartDate(e.target.value)}
                           />
                        </div>
                        <div className="space-y-2">
@@ -685,19 +721,21 @@ export default function ServerProfilePage() {
                           <Input
                             type="text"
                             placeholder="DD/MM/AAAA"
-                            value={licencaFim}
-                            onChange={(e) => setLicencaFim(e.target.value)}
+                            value={licencaEndDate}
+                            onChange={(e) => setLicencaEndDate(e.target.value)}
                           />
                        </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="licenca-reason">Descrição</Label>
-                        <Textarea
-                          id="licenca-reason"
-                          placeholder="Adicione uma descrição ou observação..."
-                          value={licencaReason}
-                          onChange={(e) => setLicencaReason(e.target.value)}
-                        />
-                      </div>
+                       {licencaType !== 'outro' && (
+                        <div className="space-y-2">
+                            <Label htmlFor="licenca-reason">Descrição</Label>
+                            <Textarea
+                            id="licenca-reason"
+                            placeholder="Adicione uma descrição ou observação..."
+                            value={licencaReason}
+                            onChange={(e) => setLicencaReason(e.target.value)}
+                            />
+                        </div>
+                       )}
                     </div>
                     <DialogFooter>
                       <Button variant="ghost" onClick={() => setIsLicencaDialogOpen(false)}>Cancelar</Button>
@@ -792,4 +830,6 @@ export default function ServerProfilePage() {
 }
  
     
+    
+
     
