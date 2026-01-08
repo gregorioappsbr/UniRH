@@ -48,7 +48,6 @@
   },
   "auth": {
     "providers": [
-      "password",
       "anonymous",
       "email"
     ]
