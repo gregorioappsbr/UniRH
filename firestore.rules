@@ -3,23 +3,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
   
-    // Define os UIDs autorizados.
-    // IMPORTANTE: Substitua "UID_MIRNA" e "UID_LILIAN" pelos UIDs reais 
-    // gerados no painel do Firebase Authentication após criar as contas.
     function isAuthorizedUser() {
       let authorizedEmails = ["mirna.almeida@uems.br", "litencarv@uems.br"];
       return request.auth != null && request.auth.token.email in authorizedEmails;
     }
 
-    // Apenas usuários autorizados podem ler e escrever notas.
-    // Todos os usuários autorizados compartilham e acessam as mesmas notas.
-    match /notes/{noteId} {
-      allow read, write: if isAuthorizedUser();
-    }
-
-    // Apenas usuários autorizados podem ler e escrever dados de servidores.
-    // Todos os usuários autorizados compartilham e acessam os mesmos dados.
-    match /servers/{serverId} {
+    match /{document=**} {
       allow read, write: if isAuthorizedUser();
     }
   }
