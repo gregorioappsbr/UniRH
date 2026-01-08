@@ -178,74 +178,83 @@ export default function NotesPage() {
 
       {isLoading && <p className="text-center">Carregando notas...</p>}
 
-      <Accordion type="single" collapsible className="w-full space-y-4">
-        {notes && notes.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map((note) => (
-          <AccordionItem key={note.id} value={`item-${note.id}`} className="bg-card border rounded-lg overflow-hidden">
-            <AccordionTrigger className="p-4 hover:no-underline">
-              <div className="flex flex-col items-start text-left">
-                <span className="text-xs text-muted-foreground">Atualizado em {new Date(note.updatedAt).toLocaleString('pt-BR')}</span>
-                <span className="text-lg font-semibold mt-1">{note.title}</span>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent className="p-4 pt-0">
-               <div className="space-y-4">
-                <p>{note.content}</p>
-                <div className="flex justify-end space-x-2">
-                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <Share className="h-5 w-5 text-green-500" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem onClick={() => handleShare(note)}>
-                        <FileText className="mr-2 h-4 w-4" />
-                        <span>Compartilhar como Texto</span>
-                      </DropdownMenuItem>
-                       <DropdownMenuItem onClick={() => handleShareWhatsApp(note)}>
-                        <WhatsAppIcon className="mr-2 h-4 w-4" />
-                        <span>Compartilhar no WhatsApp</span>
-                      </DropdownMenuItem>
-                       <DropdownMenuItem onClick={() => handleCopy(note)}>
-                        <Copy className="mr-2 h-4 w-4" />
-                        <span>Copiar Texto</span>
-                      </DropdownMenuItem>
-                       <DropdownMenuItem onClick={() => handleExportPDF(note)}>
-                        <FileDown className="mr-2 h-4 w-4" />
-                        <span>Exportar como PDF</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  <Button variant="ghost" size="icon" asChild>
-                    <Link href={`/notas/novo?id=${note.id}`}>
-                      <Edit className="h-5 w-5 text-blue-500" />
-                    </Link>
-                  </Button>
-
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <Trash2 className="h-5 w-5 text-red-500" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Essa ação não pode ser desfeita. Isso excluirá permanentemente sua nota.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogAction onClick={() => handleDeleteNote(note.id)}>Confirmar</AlertDialogAction>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    </AlertDialogContent>
-                  </AlertDialog>
+      {!isLoading && notes && notes.length > 0 ? (
+        <Accordion type="single" collapsible className="w-full space-y-4">
+          {notes.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map((note) => (
+            <AccordionItem key={note.id} value={`item-${note.id}`} className="bg-card border rounded-lg overflow-hidden">
+              <AccordionTrigger className="p-4 hover:no-underline">
+                <div className="flex flex-col items-start text-left">
+                  <span className="text-xs text-muted-foreground">Atualizado em {new Date(note.updatedAt).toLocaleString('pt-BR')}</span>
+                  <span className="text-lg font-semibold mt-1">{note.title}</span>
                 </div>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+              </AccordionTrigger>
+              <AccordionContent className="p-4 pt-0">
+                 <div className="space-y-4">
+                  <p>{note.content}</p>
+                  <div className="flex justify-end space-x-2">
+                     <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <Share className="h-5 w-5 text-green-500" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => handleShare(note)}>
+                          <FileText className="mr-2 h-4 w-4" />
+                          <span>Compartilhar como Texto</span>
+                        </DropdownMenuItem>
+                         <DropdownMenuItem onClick={() => handleShareWhatsApp(note)}>
+                          <WhatsAppIcon className="mr-2 h-4 w-4" />
+                          <span>Compartilhar no WhatsApp</span>
+                        </DropdownMenuItem>
+                         <DropdownMenuItem onClick={() => handleCopy(note)}>
+                          <Copy className="mr-2 h-4 w-4" />
+                          <span>Copiar Texto</span>
+                        </DropdownMenuItem>
+                         <DropdownMenuItem onClick={() => handleExportPDF(note)}>
+                          <FileDown className="mr-2 h-4 w-4" />
+                          <span>Exportar como PDF</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <Button variant="ghost" size="icon" asChild>
+                      <Link href={`/notas/novo?id=${note.id}`}>
+                        <Edit className="h-5 w-5 text-blue-500" />
+                      </Link>
+                    </Button>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <Trash2 className="h-5 w-5 text-red-500" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Essa ação não pode ser desfeita. Isso excluirá permanentemente sua nota.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogAction onClick={() => handleDeleteNote(note.id)}>Confirmar</AlertDialogAction>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      ) : (
+        !isLoading && (
+          <div className="flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-muted-foreground/50 rounded-lg mt-4">
+            <p className="text-muted-foreground">Nenhuma nota encontrada.</p>
+            <p className="text-muted-foreground text-sm mt-1">Clique em "Adicionar Nova Nota" para começar a escrever.</p>
+          </div>
+        )
+      )}
     </div>
   );
 }
