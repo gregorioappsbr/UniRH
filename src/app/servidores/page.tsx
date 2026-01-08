@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { jsPDF } from "jspdf";
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const initialServers = [
   {
@@ -317,6 +317,7 @@ const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comi
 export default function ServerListPage() {
   const isMobile = useIsMobile();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
 
   const [servers, setServers] = useState<any[]>([]);
@@ -338,6 +339,15 @@ export default function ServerListPage() {
       setServers(initialServers);
     }
   }, []);
+
+  useEffect(() => {
+    const vinculoQuery = searchParams.get('vinculo');
+    if (vinculoQuery) {
+      // Capitalize the first letter
+      const capitalizedVinculo = vinculoQuery.charAt(0).toUpperCase() + vinculoQuery.slice(1);
+      setVinculoFilters(prev => [...prev, capitalizedVinculo]);
+    }
+  }, [searchParams]);
 
   servers.sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
 
@@ -406,6 +416,7 @@ export default function ServerListPage() {
   }
   
   const formatWhatsAppLink = (phone: string) => {
+    if (!phone) return '';
     const justNumbers = phone.replace(/\D/g, '');
     return `https://wa.me/55${justNumbers}`;
   }
@@ -901,30 +912,28 @@ const handleExportPDF = async () => {
               </div>
               <div className="space-y-4 p-4">
                 {filteredServers.map((server) => (
-                  <div
-                    key={server.emailInstitucional}
-                    className="flex items-start gap-4 pb-4 border-b last:border-b-0"
-                  >
-                    <Checkbox
-                      id={`server-${server.emailInstitucional}`}
-                      checked={selectedServers[server.emailInstitucional] || false}
-                      onCheckedChange={(checked) => handleSelectServer(server.emailInstitucional, checked as boolean)}
-                      className="mt-1"
-                    />
-                     <div 
-                      className="flex-1"
+                   <div 
+                      key={server.emailInstitucional}
+                      className="flex items-start gap-4 pb-4 border-b last:border-b-0 cursor-pointer"
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (
                           target.closest('a') ||
                           target.closest('input[type="checkbox"]') ||
-                          (target.parentElement && target.parentElement.id.includes(`server-${server.emailInstitucional}`))
+                          (target.parentElement && target.parentElement.id === `server-${server.emailInstitucional}`)
                         ) {
                           return;
                         }
                         router.push(`/servidores/${server.emailInstitucional.split('@')[0]}`);
                       }}
                     >
+                    <Checkbox
+                      id={`server-${server.emailInstitucional}`}
+                      checked={selectedServers[server.emailInstitucional] || false}
+                      onCheckedChange={(checked) => handleSelectServer(server.emailInstitucional, checked as boolean)}
+                      className="mt-1"
+                    />
+                     <div className="flex-1">
                       <div className="flex flex-col items-center gap-2 float-left mr-4">
                         <Avatar className="h-12 w-12">
                           <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
@@ -944,7 +953,7 @@ const handleExportPDF = async () => {
                           )}
                         </div>
                       </div>
-                      <div className="flex-1 space-y-2 cursor-pointer">
+                      <div className="flex-1 space-y-2">
                         <p className="font-semibold">{server.nomeCompleto}</p>
                         <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
                         {server.funcao && (
@@ -1052,5 +1061,3 @@ const handleExportPDF = async () => {
     </div>
   );
 }
-
-    
