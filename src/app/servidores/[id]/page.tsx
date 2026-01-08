@@ -121,10 +121,14 @@ export default function ServerProfilePage() {
     const [isLicencaDialogOpen, setIsLicencaDialogOpen] = useState(false);
     const [licencaType, setLicencaType] = useState('');
     const [licencaReason, setLicencaReason] = useState('');
-    const [licencaStartDate, setLicencaStartDate] = useState('');
-    const [licencaEndDate, setLicencaEndDate] = useState('');
     const [selectedLicencaYear, setSelectedLicencaYear] = useState<string>(new Date().getFullYear().toString());
     const [selectedLicencaMonth, setSelectedLicencaMonth] = useState<string>((new Date().getMonth() + 1).toString());
+    const [licencaStartDia, setLicencaStartDia] = useState('');
+    const [licencaStartMes, setLicencaStartMes] = useState('');
+    const [licencaStartAno, setLicencaStartAno] = useState('');
+    const [licencaEndDia, setLicencaEndDia] = useState('');
+    const [licencaEndMes, setLicencaEndMes] = useState('');
+    const [licencaEndAno, setLicencaEndAno] = useState('');
 
     const serverRef = useMemoFirebase(() => {
         if (!firestore || !id) return null;
@@ -189,11 +193,23 @@ export default function ServerProfilePage() {
     };
     
     const handleSaveLicenca = async () => {
-        if (!firestore || !id || !licencaStartDate || !licencaEndDate || !licencaType) {
-            toast({ variant: 'destructive', title: 'Erro', description: 'Tipo de licença e datas são obrigatórios.' });
+        const startDia = parseInt(licencaStartDia, 10);
+        const startMes = parseInt(licencaStartMes, 10);
+        const startAno = parseInt(licencaStartAno, 10);
+        const endDia = parseInt(licencaEndDia, 10);
+        const endMes = parseInt(licencaEndMes, 10);
+        const endAno = parseInt(licencaEndAno, 10);
+
+        if (!firestore || !id || !licencaType || 
+            !startDia || !startMes || !startAno || startDia > 31 || startMes > 12 || startAno < 2000 ||
+            !endDia || !endMes || !endAno || endDia > 31 || endMes > 12 || endAno < 2000
+        ) {
+            toast({ variant: 'destructive', title: 'Erro', description: 'Tipo de licença e datas são obrigatórios e devem ser válidos.' });
             return;
         }
-
+        
+        const licencaStartDate = `${String(startDia).padStart(2, '0')}/${String(startMes).padStart(2, '0')}/${startAno}`;
+        const licencaEndDate = `${String(endDia).padStart(2, '0')}/${String(endMes).padStart(2, '0')}/${endAno}`;
         const finalReason = licencaType === 'outro' ? licencaReason : licencaType;
 
         try {
@@ -211,6 +227,12 @@ export default function ServerProfilePage() {
             setLicencaEndDate('');
             setLicencaReason('');
             setLicencaType('');
+            setLicencaStartDia('');
+            setLicencaStartMes('');
+            setLicencaStartAno('');
+            setLicencaEndDia('');
+            setLicencaEndMes('');
+            setLicencaEndAno('');
         } catch (error) {
             console.error("Erro ao registrar licença:", error);
             toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível registrar a licença.' });
@@ -707,24 +729,22 @@ export default function ServerProfilePage() {
                                 />
                             </div>
                         )}
-                       <div className="space-y-2">
-                          <Label>Data de Início</Label>
-                          <Input
-                            type="text"
-                            placeholder="DD/MM/AAAA"
-                            value={licencaStartDate}
-                            onChange={(e) => setLicencaStartDate(e.target.value)}
-                          />
-                       </div>
-                       <div className="space-y-2">
-                          <Label>Data de Fim</Label>
-                          <Input
-                            type="text"
-                            placeholder="DD/MM/AAAA"
-                            value={licencaEndDate}
-                            onChange={(e) => setLicencaEndDate(e.target.value)}
-                          />
-                       </div>
+                        <div className="space-y-2">
+                            <Label>Data de Início</Label>
+                            <div className="grid grid-cols-3 gap-2">
+                                <Input type="number" placeholder="Dia" value={licencaStartDia} onChange={(e) => setLicencaStartDia(e.target.value)} maxLength={2} />
+                                <Input type="number" placeholder="Mês" value={licencaStartMes} onChange={(e) => setLicencaStartMes(e.target.value)} maxLength={2} />
+                                <Input type="number" placeholder="Ano" value={licencaStartAno} onChange={(e) => setLicencaStartAno(e.target.value)} maxLength={4} />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Data de Fim</Label>
+                            <div className="grid grid-cols-3 gap-2">
+                                <Input type="number" placeholder="Dia" value={licencaEndDia} onChange={(e) => setLicencaEndDia(e.target.value)} maxLength={2} />
+                                <Input type="number" placeholder="Mês" value={licencaEndMes} onChange={(e) => setLicencaEndMes(e.target.value)} maxLength={2} />
+                                <Input type="number" placeholder="Ano" value={licencaEndAno} onChange={(e) => setLicencaEndAno(e.target.value)} maxLength={4} />
+                            </div>
+                        </div>
                        {licencaType !== 'outro' && (
                         <div className="space-y-2">
                             <Label htmlFor="licenca-reason">Descrição</Label>
@@ -830,6 +850,8 @@ export default function ServerProfilePage() {
 }
  
     
+    
+
     
 
     
