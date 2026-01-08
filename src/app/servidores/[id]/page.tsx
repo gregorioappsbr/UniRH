@@ -687,7 +687,7 @@ export default function ServerProfilePage() {
 
                 {isLoadingFaltas ? <p>Carregando faltas...</p> : (filteredFaltas && filteredFaltas.length > 0) ? (
                   <Table>
-                    <TableHeader>
+                    <TableHeader className="hidden md:table-header-group">
                       <TableRow>
                         <TableHead>Data</TableHead>
                         <TableHead>Descrição</TableHead>
@@ -696,10 +696,14 @@ export default function ServerProfilePage() {
                     </TableHeader>
                     <TableBody>
                       {filteredFaltas.map((falta) => (
-                        <TableRow key={falta.id}>
-                          <TableCell className="font-medium">{falta.date}</TableCell>
-                          <TableCell className="text-muted-foreground">{falta.reason || 'Sem justificativa'}</TableCell>
-                          <TableCell className="text-right">
+                        <TableRow key={falta.id} className="flex flex-col md:table-row p-4 md:p-0 border-b last:border-b-0 md:border-b">
+                          <TableCell className="font-medium p-0 md:p-4">
+                            <span className="md:hidden font-semibold">Data: </span>{falta.date}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground p-0 md:p-4">
+                             <span className="md:hidden font-semibold text-foreground">Descrição: </span>{falta.reason || 'Sem justificativa'}
+                          </TableCell>
+                          <TableCell className="p-0 md:p-4 mt-2 md:mt-0 text-right">
                              <div className="flex items-center justify-end gap-2">
                                 <Button variant="ghost" size="icon" onClick={() => { setEditingFalta(falta); setIsFaltaDialogOpen(true); }}>
                                   <Edit className="h-5 w-5" />
@@ -847,7 +851,7 @@ export default function ServerProfilePage() {
 
                 {isLoadingLicencas ? <p>Carregando licenças...</p> : (filteredLicencas && filteredLicencas.length > 0) ? (
                   <Table>
-                    <TableHeader>
+                    <TableHeader className="hidden md:table-header-group">
                       <TableRow>
                         <TableHead>Período</TableHead>
                         <TableHead>Tipo</TableHead>
@@ -857,11 +861,17 @@ export default function ServerProfilePage() {
                     </TableHeader>
                     <TableBody>
                       {filteredLicencas.map((licenca) => (
-                        <TableRow key={licenca.id}>
-                          <TableCell className="font-medium">{`${licenca.startDate} - ${licenca.endDate}`}</TableCell>
-                          <TableCell>{licenca.type}</TableCell>
-                          <TableCell className="text-muted-foreground">{licenca.reason || '-'}</TableCell>
-                          <TableCell className="text-right">
+                        <TableRow key={licenca.id} className="flex flex-col md:table-row p-4 md:p-0 border-b last:border-b-0 md:border-b">
+                          <TableCell className="font-medium p-0 md:p-4">
+                            <span className="md:hidden font-semibold">Período: </span>{`${licenca.startDate} - ${licenca.endDate}`}
+                          </TableCell>
+                          <TableCell className="p-0 md:p-4">
+                            <span className="md:hidden font-semibold">Tipo: </span>{licenca.type}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground p-0 md:p-4">
+                            <span className="md:hidden font-semibold text-foreground">Descrição: </span>{licenca.reason || '-'}
+                          </TableCell>
+                          <TableCell className="p-0 md:p-4 mt-2 md:mt-0 text-right">
                              <div className="flex items-center justify-end gap-2">
                                 <Button variant="ghost" size="icon" onClick={() => { setEditingLicenca(licenca); setIsLicencaDialogOpen(true); }}>
                                   <Edit className="h-5 w-5" />
@@ -917,3 +927,4 @@ export default function ServerProfilePage() {
 
     
 
+    
