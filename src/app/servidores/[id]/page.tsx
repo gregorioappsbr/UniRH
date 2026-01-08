@@ -22,6 +22,7 @@ import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase
 import { doc, collection, addDoc, deleteDoc } from 'firebase/firestore';
 import { useState, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 // Define a type for the server data
 type Server = {
@@ -542,42 +543,53 @@ export default function ServerProfilePage() {
                 </div>
 
                 {isLoadingFaltas ? <p>Carregando faltas...</p> : (filteredFaltas && filteredFaltas.length > 0) ? (
-                  filteredFaltas.map((falta) => (
-                  <div key={falta.id} className="flex items-center justify-between p-4 rounded-lg bg-background">
-                    <div>
-                      <p className="font-medium">{falta.date}</p>
-                      <p className="text-sm text-muted-foreground">{falta.reason || 'Sem justificativa'}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => { /* Lógica de edição aqui */ }}>
-                        <Edit className="h-5 w-5" />
-                      </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <Trash2 className="h-5 w-5 text-destructive" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Esta ação não pode ser desfeita. Isso excluirá permanentemente o registro de falta.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteFalta(falta.id)}>
-                              Excluir
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </div>
-                  ))
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Data</TableHead>
+                        <TableHead>Descrição</TableHead>
+                        <TableHead className="text-right">Ações</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredFaltas.map((falta) => (
+                        <TableRow key={falta.id}>
+                          <TableCell className="font-medium">{falta.date}</TableCell>
+                          <TableCell className="text-muted-foreground">{falta.reason || 'Sem justificativa'}</TableCell>
+                          <TableCell className="text-right">
+                             <div className="flex items-center justify-end gap-2">
+                                <Button variant="ghost" size="icon" onClick={() => { /* Lógica de edição aqui */ }}>
+                                  <Edit className="h-5 w-5" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                      <Trash2 className="h-5 w-5 text-destructive" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Esta ação não pode ser desfeita. Isso excluirá permanentemente o registro de falta.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDeleteFalta(falta.id)}>
+                                        Excluir
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 ) : (
-                  <p className="text-center text-muted-foreground">Nenhuma falta registrada para este período.</p>
+                  <p className="text-center text-muted-foreground py-4">Nenhuma falta registrada para este período.</p>
                 )}
               </CardContent>
             </Card>
