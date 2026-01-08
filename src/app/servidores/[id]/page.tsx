@@ -223,16 +223,14 @@ export default function ServerProfilePage() {
             });
             toast({ title: 'Sucesso', description: 'Licença registrada com sucesso.' });
             setIsLicencaDialogOpen(false);
-            setLicencaStartDate('');
-            setLicencaEndDate('');
-            setLicencaReason('');
-            setLicencaType('');
             setLicencaStartDia('');
             setLicencaStartMes('');
             setLicencaStartAno('');
             setLicencaEndDia('');
             setLicencaEndMes('');
             setLicencaEndAno('');
+            setLicencaReason('');
+            setLicencaType('');
         } catch (error) {
             console.error("Erro ao registrar licença:", error);
             toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível registrar a licença.' });
@@ -801,7 +799,7 @@ export default function ServerProfilePage() {
                       {filteredLicencas.map((licenca) => (
                         <TableRow key={licenca.id}>
                           <TableCell className="font-medium">{`${licenca.startDate} - ${licenca.endDate}`}</TableCell>
-                          <TableCell className="text-muted-foreground">{licenca.reason || 'Sem justificativa'}</TableCell>
+                          <TableCell className="text-muted-foreground">{licenca.reason || licenca.type}</TableCell>
                           <TableCell className="text-right">
                              <div className="flex items-center justify-end gap-2">
                                 <Button variant="ghost" size="icon" onClick={() => { /* Lógica de edição aqui */ }}>
@@ -850,6 +848,8 @@ export default function ServerProfilePage() {
 }
  
     
+    
+
     
 
     
