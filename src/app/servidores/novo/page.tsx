@@ -106,7 +106,7 @@ export default function NewServerPage() {
 
       <Tabs defaultValue="pessoais" className="w-full flex-1 flex flex-col overflow-hidden">
           <div className="border rounded-t-lg sticky top-0 bg-background z-10">
-            <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
+            <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground dark:bg-muted md:grid md:grid-cols-4">
                 <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Pessoais</TabsTrigger>
                 <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Profissionais</TabsTrigger>
                 <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Formação</TabsTrigger>
@@ -116,7 +116,7 @@ export default function NewServerPage() {
         <div className="border border-t-0 rounded-b-lg p-6 flex-1 overflow-y-auto pb-24">
           <TabsContent value="pessoais" className="mt-0">
             <div className="space-y-8">
-              <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
+              <div className="space-y-6 bg-muted/30 p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Identificação</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 md:col-span-2">
@@ -306,7 +306,7 @@ export default function NewServerPage() {
                 </div>
               </div>
 
-              <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
+              <div className="space-y-6 bg-muted/30 p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Filiação</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                    <div className="space-y-2 md:col-span-2">
@@ -320,7 +320,7 @@ export default function NewServerPage() {
                 </div>
               </div>
 
-               <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
+               <div className="space-y-6 bg-muted/30 p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Contato</h2>
                 <div className="flex flex-col space-y-4">
                   <div className="space-y-2">
@@ -346,7 +346,7 @@ export default function NewServerPage() {
                 </div>
               </div>
 
-              <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
+              <div className="space-y-6 bg-muted/30 p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Endereço</h2>
                 <div className="flex flex-col space-y-4">
                   <div className="space-y-2">
@@ -422,7 +422,7 @@ export default function NewServerPage() {
           </TabsContent>
           <TabsContent value="profissionais" className="mt-0">
             <div className="space-y-8">
-              <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
+              <div className="space-y-6 bg-muted/30 p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Informações do Cargo</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 md:col-span-2">
@@ -574,7 +574,7 @@ export default function NewServerPage() {
           </TabsContent>
           <TabsContent value="formacao" className="mt-0">
             <div className="space-y-8">
-              <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
+              <div className="space-y-6 bg-muted/30 p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Formação Acadêmica</h2>
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="escolaridade">Escolaridade</Label>
@@ -600,7 +600,7 @@ export default function NewServerPage() {
               </div>
 
               {(escolaridade === 'ensino-fundamental' || escolaridade === 'ensino-medio') && (
-                <Card className="bg-card border border-border">
+                <Card className="bg-muted/30 dark:bg-card border border-border">
                   <CardHeader>
                     <CardTitle className="text-base">
                       {escolaridade === 'ensino-fundamental' ? 'Ensino Fundamental' : 'Ensino Médio'}
@@ -620,7 +620,7 @@ export default function NewServerPage() {
               )}
 
               {(escolaridade === 'graduacao' || escolaridade === 'pos-graduacao') && (
-                <Card className="bg-card border border-border">
+                <Card className="bg-muted/30 dark:bg-card border border-border">
                   <CardHeader>
                     <CardTitle className="text-base">Graduação Base</CardTitle>
                   </CardHeader>
@@ -642,7 +642,7 @@ export default function NewServerPage() {
               )}
               
               {escolaridade === 'pos-graduacao' && (
-                <Card className="bg-card border border-border">
+                <Card className="bg-muted/30 dark:bg-card border border-border">
                   <CardHeader>
                     <CardTitle className="text-base">Pós-Graduação</CardTitle>
                   </CardHeader>
@@ -686,7 +686,7 @@ export default function NewServerPage() {
             </div>
           </TabsContent>
           <TabsContent value="observacoes" className="mt-0 flex flex-col flex-1">
-             <div className="space-y-6 flex-1 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
+             <div className="space-y-6 flex-1 bg-muted/30 p-4 rounded-lg dark:bg-transparent dark:p-0">
               <h2 className="text-lg font-semibold">Observações Gerais</h2>
               <div className="space-y-2">
                   <Label htmlFor="observacoes-text">Observações</Label>
@@ -705,5 +705,3 @@ export default function NewServerPage() {
     </form>
   )
 }
-
-    
