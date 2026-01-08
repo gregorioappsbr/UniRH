@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LogOut, Settings, CalendarDays, Share, Trash2 } from 'lucide-react';
+import { LogOut, Settings, CalendarDays, Share, Trash2, Sun, Moon, Laptop } from 'lucide-react';
 import { useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 
@@ -88,9 +88,18 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-2">
-                <Button variant="outline">Claro</Button>
-                <Button variant="default">Escuro</Button>
-                <Button variant="outline" className="bg-cyan-500/20 text-cyan-400 border-cyan-500/50">Sistema</Button>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Sun className="h-4 w-4" />
+                  Claro
+                </Button>
+                <Button variant="default" className="flex items-center gap-2">
+                  <Moon className="h-4 w-4" />
+                  Escuro
+                </Button>
+                <Button variant="outline" className="bg-cyan-500/20 text-cyan-400 border-cyan-500/50 flex items-center gap-2">
+                  <Laptop className="h-4 w-4" />
+                  Sistema
+                </Button>
               </div>
             </CardContent>
           </Card>
