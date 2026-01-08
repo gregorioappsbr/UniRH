@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -13,6 +14,7 @@ import { useUser, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { updateProfile } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 const events = [
   {
@@ -57,34 +59,36 @@ export default function SettingsPage() {
     const initialTheme = storedTheme || 'dark';
     setCurrentTheme(initialTheme);
     setSelectedTheme(initialTheme);
-  }, []);
 
-  useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
-
-    let effectiveTheme = currentTheme;
-    if (currentTheme === 'system') {
-      effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    if (initialTheme === 'system') {
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.classList.add(systemTheme);
+    } else {
+      root.classList.add(initialTheme);
     }
-    
-    root.classList.add(effectiveTheme);
-    root.style.colorScheme = effectiveTheme;
-  }, [currentTheme]);
-
+  }, []);
 
   const handleSaveChanges = async () => {
     if (!auth.currentUser) return;
 
     try {
-      // Update profile name
       if (name !== auth.currentUser.displayName) {
         await updateProfile(auth.currentUser, { displayName: name });
       }
 
-      // Save and apply theme
       localStorage.setItem('theme', selectedTheme);
       setCurrentTheme(selectedTheme);
+
+      const root = window.document.documentElement;
+      root.classList.remove('light', 'dark');
+      if (selectedTheme === 'system') {
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        root.classList.add(systemTheme);
+      } else {
+        root.classList.add(selectedTheme);
+      }
       
       toast({
         title: "Alterações salvas!",
@@ -160,17 +164,38 @@ export default function SettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-3 gap-2">
-                <Button variant={selectedTheme === 'light' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setSelectedTheme('light')}>
-                  <Sun className="h-4 w-4" />
+              <div className="grid grid-cols-3 gap-4">
+                <Button
+                  variant="outline"
+                  className={cn(
+                    'flex items-center gap-2 h-16 bg-white text-black hover:bg-gray-200 hover:text-black',
+                    selectedTheme === 'light' && 'ring-2 ring-primary'
+                  )}
+                  onClick={() => setSelectedTheme('light')}
+                >
+                  <Sun className="h-5 w-5" />
                   Claro
                 </Button>
-                <Button variant={selectedTheme === 'dark' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setSelectedTheme('dark')}>
-                  <Moon className="h-4 w-4" />
+                <Button
+                  variant="outline"
+                  className={cn(
+                    'flex items-center gap-2 h-16 bg-black text-white hover:bg-gray-800 hover:text-white',
+                    selectedTheme === 'dark' && 'ring-2 ring-primary'
+                  )}
+                  onClick={() => setSelectedTheme('dark')}
+                >
+                  <Moon className="h-5 w-5" />
                   Escuro
                 </Button>
-                <Button variant={selectedTheme === 'system' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setSelectedTheme('system')}>
-                  <Laptop className="h-4 w-4" />
+                <Button
+                  variant="outline"
+                  className={cn(
+                    'flex items-center gap-2 h-16',
+                    selectedTheme === 'system' && 'ring-2 ring-primary'
+                  )}
+                  onClick={() => setSelectedTheme('system')}
+                >
+                  <Laptop className="h-5 w-5" />
                   Sistema
                 </Button>
               </div>
@@ -270,4 +295,5 @@ export default function SettingsPage() {
       </div>
     </div>
   );
-}
+
+    
