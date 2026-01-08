@@ -853,8 +853,8 @@ export default function ServerProfilePage() {
                   <Table>
                     <TableHeader className="hidden md:table-header-group">
                       <TableRow>
-                        <TableHead>Período</TableHead>
                         <TableHead>Tipo</TableHead>
+                        <TableHead>Período</TableHead>
                         <TableHead>Descrição</TableHead>
                         <TableHead className="text-right">Ações</TableHead>
                       </TableRow>
@@ -862,11 +862,11 @@ export default function ServerProfilePage() {
                     <TableBody>
                       {filteredLicencas.map((licenca) => (
                         <TableRow key={licenca.id} className="flex flex-col md:table-row p-4 md:p-0 border-b last:border-b-0 md:border-b">
+                           <TableCell className="p-0 md:p-4">
+                            <span className="md:hidden font-semibold">Tipo: </span>{licenca.type}
+                          </TableCell>
                           <TableCell className="font-medium p-0 md:p-4">
                             <span className="md:hidden font-semibold">Período: </span>{`${licenca.startDate} - ${licenca.endDate}`}
-                          </TableCell>
-                          <TableCell className="p-0 md:p-4">
-                            <span className="md:hidden font-semibold">Tipo: </span>{licenca.type}
                           </TableCell>
                           <TableCell className="text-muted-foreground p-0 md:p-4">
                             <span className="md:hidden font-semibold text-foreground">Descrição: </span>{licenca.reason || '-'}
@@ -919,6 +919,8 @@ export default function ServerProfilePage() {
 }
  
     
+    
+
     
 
     
