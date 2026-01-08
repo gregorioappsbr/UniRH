@@ -12,9 +12,12 @@ import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 // Define a type for the server data
 type Server = {
+    id: string;
     initials: string;
     nomeCompleto: string;
     cargo: string;
@@ -60,20 +63,14 @@ type Server = {
 export default function ServerProfilePage() {
     const params = useParams();
     const { id } = params;
-    const [server, setServer] = useState<Server | null>(null);
-    const [loading, setLoading] = useState(true);
+    const firestore = useFirestore();
 
-    useEffect(() => {
-        if (id) {
-            const storedServers = localStorage.getItem('servers');
-            if (storedServers) {
-                const servers = JSON.parse(storedServers);
-                const foundServer = servers.find((s: any) => s.emailInstitucional.split('@')[0] === id);
-                setServer(foundServer);
-            }
-        }
-        setLoading(false);
-    }, [id]);
+    const serverRef = useMemoFirebase(() => {
+        if (!firestore || !id) return null;
+        return doc(firestore, 'servers', id as string);
+    }, [firestore, id]);
+
+    const { data: server, isLoading } = useDoc<Server>(serverRef);
 
   const fichaItems = server ? [
     { 
@@ -166,7 +163,7 @@ export default function ServerProfilePage() {
     return `https://wa.me/55${justNumbers}`;
   }
 
-  if (loading) {
+  if (isLoading) {
     return <div className="p-4 text-center">Carregando...</div>;
   }
 
@@ -264,7 +261,7 @@ export default function ServerProfilePage() {
                   <AccordionContent className="p-4 pt-0">
                     <div className="space-y-2">
                       {item.content.map((detail, detailIndex) => detail.value && (
-                        <div key={detailIndex} className="flex justify-between items-center text-sm p-2 bg-card rounded-md">
+                        <div key={detailIndex} className="flex justify-between items-center text-sm p-2 bg-background dark:bg-muted/30 rounded-md">
                           <span className="font-semibold text-muted-foreground">{detail.label}:</span>
                           <span className="text-right text-foreground">{detail.value}</span>
                         </div>
@@ -319,5 +316,3 @@ export default function ServerProfilePage() {
     </div>
   );
 }
-
-    

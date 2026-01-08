@@ -10,26 +10,11 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import type { jsPDF } from "jspdf";
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
-
-const initialNotes = [
-  {
-    title: 'Reunião de Alinhamento',
-    updatedAt: '31/12/2022 às 20:00',
-    content: 'Discutir as metas do próximo trimestre com a equipe de desenvolvimento.',
-  },
-  {
-    title: 'Ideias para o Novo Projeto',
-    updatedAt: '01/01/2023 às 20:00',
-    content: 'Brainstorm de novas funcionalidades e possíveis tecnologias a serem utilizadas.',
-  },
-  {
-    title: 'Lembretes Pessoais',
-    updatedAt: '02/01/2023 às 20:00',
-    content: 'Comprar café, agendar dentista e ligar para o cliente X.',
-  },
-];
+import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
+import { collection, deleteDoc, doc } from 'firebase/firestore';
 
 type Note = {
+  id: string;
   title: string;
   content: string;
   updatedAt: string;
@@ -37,28 +22,33 @@ type Note = {
 
 
 export default function NotesPage() {
-  const [notes, setNotes] = useState<Note[]>([]);
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
 
-  useEffect(() => {
+  const notesQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'notes');
+  }, [firestore]);
+
+  const { data: notes, isLoading } = useCollection<Note>(notesQuery);
+
+  const handleDeleteNote = async (noteId: string) => {
+    if (!firestore) return;
     try {
-      const storedNotes = localStorage.getItem('notes');
-      if (storedNotes) {
-        setNotes(JSON.parse(storedNotes));
-      } else {
-        setNotes(initialNotes);
-        localStorage.setItem('notes', JSON.stringify(initialNotes));
-      }
+      await deleteDoc(doc(firestore, 'notes', noteId));
+      toast({
+        title: "Nota excluída!",
+        description: "A nota foi removida com sucesso.",
+      });
     } catch (error) {
-      console.error("Failed to access localStorage:", error);
-      setNotes(initialNotes);
+       console.error('Erro ao excluir nota:', error);
+       toast({
+          variant: 'destructive',
+          title: 'Erro ao excluir',
+          description: 'Não foi possível excluir a nota.',
+        });
     }
-  }, []);
-
-  const handleDeleteNote = (indexToDelete: number) => {
-    const newNotes = notes.filter((_, index) => index !== indexToDelete);
-    setNotes(newNotes);
-    localStorage.setItem('notes', JSON.stringify(newNotes));
   };
   
   const handleShare = async (note: Note) => {
@@ -186,12 +176,14 @@ export default function NotesPage() {
         </Link>
       </Button>
 
+      {isLoading && <p className="text-center">Carregando notas...</p>}
+
       <Accordion type="single" collapsible className="w-full space-y-4">
-        {notes.map((note, index) => (
-          <AccordionItem key={index} value={`item-${index}`} className="bg-card border rounded-lg overflow-hidden">
+        {notes && notes.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map((note) => (
+          <AccordionItem key={note.id} value={`item-${note.id}`} className="bg-card border rounded-lg overflow-hidden">
             <AccordionTrigger className="p-4 hover:no-underline">
               <div className="flex flex-col items-start text-left">
-                <span className="text-xs text-muted-foreground">Atualizado em {note.updatedAt}</span>
+                <span className="text-xs text-muted-foreground">Atualizado em {new Date(note.updatedAt).toLocaleString('pt-BR')}</span>
                 <span className="text-lg font-semibold mt-1">{note.title}</span>
               </div>
             </AccordionTrigger>
@@ -226,7 +218,7 @@ export default function NotesPage() {
                   </DropdownMenu>
 
                   <Button variant="ghost" size="icon" asChild>
-                    <Link href={{ pathname: '/notas/novo', query: { title: note.title, content: note.content, originalTitle: note.title } }}>
+                    <Link href={`/notas/novo?id=${note.id}`}>
                       <Edit className="h-5 w-5 text-blue-500" />
                     </Link>
                   </Button>
@@ -244,7 +236,7 @@ export default function NotesPage() {
                           Essa ação não pode ser desfeita. Isso excluirá permanentemente sua nota.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
-                      <AlertDialogAction onClick={() => handleDeleteNote(index)}>Confirmar</AlertDialogAction>
+                      <AlertDialogAction onClick={() => handleDeleteNote(note.id)}>Confirmar</AlertDialogAction>
                       <AlertDialogCancel>Cancelar</AlertDialogCancel>
                     </AlertDialogContent>
                   </AlertDialog>

@@ -9,66 +9,79 @@ import { X, Save } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc, setDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 type Note = {
   title: string;
   content: string;
-  updatedAt: string;
+  updatedAt: any;
 };
 
 export default function NovaNotaPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
+  const firestore = useFirestore();
+
+  const noteId = searchParams.get('id');
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [originalTitle, setOriginalTitle] = useState<string | null>(null);
+
+  const noteRef = useMemoFirebase(() => {
+    if (!firestore || !noteId) return null;
+    return doc(firestore, 'notes', noteId);
+  }, [firestore, noteId]);
+
+  const { data: noteData, isLoading } = useDoc<Note>(noteRef);
 
   useEffect(() => {
-    const noteTitle = searchParams.get('title');
-    const noteContent = searchParams.get('content');
-    const initialOriginalTitle = searchParams.get('originalTitle');
-
-    if (noteTitle) {
-      setTitle(noteTitle);
+    if (noteData) {
+      setTitle(noteData.title);
+      setContent(noteData.content);
+      setIsEditing(true);
+    } else if (noteId) {
       setIsEditing(true);
     }
-    if (noteContent) {
-      setContent(noteContent);
-    }
-    if (initialOriginalTitle) {
-      setOriginalTitle(initialOriginalTitle);
-    }
-  }, [searchParams]);
+  }, [noteData, noteId]);
 
-  const handleSave = () => {
-    const storedNotes = localStorage.getItem('notes');
-    let notes: Note[] = storedNotes ? JSON.parse(storedNotes) : [];
-    const now = new Date();
-    const updatedAt = `${now.toLocaleDateString()} às ${now.toLocaleTimeString()}`;
+  const handleSave = async () => {
+    if (!firestore) return;
 
-    if (isEditing && originalTitle) {
-      // Find the note by its original title and update it
-      const noteIndex = notes.findIndex(note => note.title === originalTitle);
-      if (noteIndex !== -1) {
-        notes[noteIndex] = { title, content, updatedAt };
+    const updatedAt = serverTimestamp();
+    const notePayload = { title, content, updatedAt };
+
+    try {
+      if (isEditing && noteId) {
+        // Update existing note
+        const docRef = doc(firestore, 'notes', noteId);
+        await setDoc(docRef, notePayload, { merge: true });
+      } else {
+        // Add a new note
+        await addDoc(collection(firestore, 'notes'), notePayload);
       }
-    } else {
-      // Add a new note
-      const newNote = { title, content, updatedAt };
-      notes.push(newNote);
+
+      toast({
+          title: "Nota salva!",
+          description: "Sua nota foi salva com sucesso.",
+      });
+
+      router.push('/notas');
+    } catch (error) {
+      console.error("Erro ao salvar nota:", error);
+      toast({
+          variant: "destructive",
+          title: "Erro ao salvar",
+          description: "Não foi possível salvar a nota.",
+      });
     }
-
-    localStorage.setItem('notes', JSON.stringify(notes));
-    toast({
-        title: "Nota salva!",
-        description: "Sua nota foi salva com sucesso.",
-    });
-
-    router.push('/notas');
   };
+
+  if (isEditing && isLoading) {
+    return <div className="p-4 text-center">Carregando nota...</div>
+  }
 
   return (
     <div className="p-4 space-y-4 flex flex-col h-full">

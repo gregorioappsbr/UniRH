@@ -13,11 +13,14 @@ import React from "react"
 import { useForm, Controller } from "react-hook-form";
 import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
 import { useRouter } from "next/navigation"
+import { useFirestore } from "@/firebase"
+import { collection, addDoc } from "firebase/firestore"
 
 export default function NewServerPage() {
     const { register, handleSubmit, watch, control } = useForm();
     const router = useRouter();
     const { toast } = useToast();
+    const firestore = useFirestore();
     
     const possuiCNH = watch('possuiCNH', 'nao');
     const genero = watch('genero', '');
@@ -26,22 +29,27 @@ export default function NewServerPage() {
     const turno = watch('turno', '');
     const escolaridade = watch('escolaridade', '');
 
-    const onSubmit = (data: any) => {
-        const storedServers = localStorage.getItem('servers');
-        let servers = storedServers ? JSON.parse(storedServers) : [];
-        
+    const onSubmit = async (data: any) => {
+        if (!firestore) return;
+
         const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
-        const newServer = { ...data, initials, rating: Math.floor(Math.random() * 5) + 5 }; // Add initials and a random rating
+        const newServer = { ...data, initials, rating: Math.floor(Math.random() * 5) + 5 };
 
-        servers.push(newServer);
-        localStorage.setItem('servers', JSON.stringify(servers));
-        
-        toast({
-            title: "Servidor adicionado!",
-            description: "O novo servidor foi adicionado com sucesso.",
-        });
-
-        router.push('/servidores');
+        try {
+          await addDoc(collection(firestore, 'servers'), newServer);
+          toast({
+              title: "Servidor adicionado!",
+              description: "O novo servidor foi adicionado com sucesso.",
+          });
+          router.push('/servidores');
+        } catch (error) {
+          console.error("Erro ao adicionar servidor:", error);
+          toast({
+              variant: "destructive",
+              title: "Erro ao adicionar",
+              description: "Não foi possível adicionar o novo servidor.",
+          });
+        }
     };
 
     const applyMask = (masker: (value: string) => string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -656,5 +664,3 @@ export default function NewServerPage() {
     </form>
   )
 }
-
-    

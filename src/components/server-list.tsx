@@ -19,60 +19,25 @@ import Link from 'next/link';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
 
-
-const servers = [
-  {
-    initials: 'AMS',
-    name: 'Ana Maria da Silva e Souza',
-    email: 'ana.silva@exemplo.com',
-    status: 'Ativo',
-    rating: 9.5,
-    phone: '(67) 99999-1234',
-    funcao: 'Gerente de Projetos',
-  },
-  {
-    initials: 'BC',
-    name: 'Bruno Costa',
-    email: 'bruno.costa@exemplo.com',
-    status: 'Ativo',
-    rating: 8.0,
-    phone: '(67) 99999-5678',
-    funcao: 'Desenvolvedor Frontend',
-  },
-  {
-    initials: 'CD',
-    name: 'Carla Dias',
-    email: 'carla.dias@exemplo.com',
-    status: 'Licença',
-    rating: 7.2,
-    phone: '(67) 99999-4321',
-    funcao: 'Designer UI/UX',
-  },
-    {
-    initials: 'JD',
-    name: 'João Dias',
-    email: 'joao.dias@exemplo.com',
-    status: 'Inativo',
-    rating: 3.5,
-    phone: '(67) 98888-4321',
-    funcao: 'Estagiário',
-  },
-  {
-    initials: 'LTC',
-    name: 'Lilian Tenório Carvalho',
-    email: 'litencarv@uems.br',
-    status: 'Ativo',
-    rating: 3.2,
-    phone: '(67) 98167-2870',
-    funcao: 'ATNM',
-  },
-];
 
 export function ServerList() {
     const isMobile = useIsMobile();
     const router = useRouter();
-    const recentServers = servers.slice(0, 5);
+    const firestore = useFirestore();
+
+    const serversQuery = useMemoFirebase(() => {
+        if (!firestore) return null;
+        return collection(firestore, 'servers');
+    }, [firestore]);
+
+    const { data: servers = [], isLoading } = useCollection<any>(serversQuery);
+
+    const recentServers = [...servers]
+      .sort((a, b) => b.id.localeCompare(a.id)) // Assuming a timestamp-based ID or similar for "recent"
+      .slice(0, 5);
 
     const getRatingClass = (rating: number) => {
         if (rating >= 8) return 'text-green-400';
@@ -93,6 +58,7 @@ export function ServerList() {
     }
 
     const formatWhatsAppLink = (phone: string) => {
+      if (!phone) return '';
       const justNumbers = phone.replace(/\D/g, '');
       return `https://wa.me/55${justNumbers}`;
     }
@@ -124,17 +90,20 @@ export function ServerList() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {isMobile ? (
+        {isLoading ? (
+            <p className="text-center">Carregando...</p>
+        ) : isMobile ? (
              <div className="space-y-4">
-                {recentServers.map((server, index) => (
+                {recentServers.map((server) => (
                   <div
-                    key={index}
+                    key={server.id}
                     className="flex items-start gap-4 border-b pb-4 last:border-b-0 cursor-pointer"
                     onClick={(e) => {
-                      if ((e.target as HTMLElement).closest('a')) {
+                      const target = e.target as HTMLElement;
+                      if (target.closest('a')) {
                         return;
                       }
-                      router.push(`/servidores/${server.email.split('@')[0]}`);
+                      router.push(`/servidores/${server.id}`);
                     }}
                   >
                     <div className="flex flex-col items-center gap-2">
@@ -157,18 +126,18 @@ export function ServerList() {
                       </div>
                     </div>
                     <div className="flex-1 space-y-2">
-                      <p className="font-semibold">{server.name}</p>
-                      <p className="text-sm text-muted-foreground">{server.email}</p>
+                      <p className="font-semibold">{server.nomeCompleto}</p>
+                      <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
                        {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           {getFuncaoIcon(server.funcao)}
                           <span>{server.funcao}</span>
                         </div>
                       )}
-                      {server.phone && (
-                        <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
+                      {server.telefonePrincipal && (
+                        <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
                           <WhatsAppIcon className="h-4 w-4" />
-                          <span>{server.phone}</span>
+                          <span>{server.telefonePrincipal}</span>
                         </a>
                       )}
                     </div>
@@ -187,15 +156,16 @@ export function ServerList() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {recentServers.map((server, index) => (
+                  {recentServers.map((server) => (
                     <TableRow
-                      key={index}
+                      key={server.id}
                       className="cursor-pointer"
                       onClick={(e) => {
-                        if ((e.target as HTMLElement).closest('a')) {
+                        const target = e.target as HTMLElement;
+                        if (target.closest('a')) {
                           return;
                         }
-                        router.push(`/servidores/${server.email.split('@')[0]}`);
+                        router.push(`/servidores/${server.id}`);
                       }}
                     >
                       <TableCell>
@@ -204,8 +174,8 @@ export function ServerList() {
                                 <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <p className="font-semibold">{server.name}</p>
-                                <p className="text-sm text-muted-foreground">{server.email}</p>
+                                <p className="font-semibold">{server.nomeCompleto}</p>
+                                <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
                             </div>
                         </div>
                       </TableCell>
@@ -228,9 +198,9 @@ export function ServerList() {
                         </div>
                       </TableCell>
                        <TableCell className="whitespace-nowrap">
-                         <a href={formatWhatsAppLink(server.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary">
+                         <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary">
                             <WhatsAppIcon className="h-4 w-4" />
-                            <span>{server.phone}</span>
+                            <span>{server.telefonePrincipal}</span>
                         </a>
                       </TableCell>
                     </TableRow>

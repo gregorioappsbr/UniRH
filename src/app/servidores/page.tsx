@@ -17,297 +17,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useToast } from '@/hooks/use-toast';
 import { jsPDF } from "jspdf";
 import { useRouter, useSearchParams } from 'next/navigation';
-
-const initialServers = [
-  {
-    "nomeCompleto": "Ana Maria da Silva e Souza",
-    "nomeSocial": "Ana",
-    "cpf": "111.222.333-44",
-    "rg": "11.222.333-4 (SSP/SP)",
-    "dataNascimento": "10/08/1985",
-    "genero": "Feminino",
-    "corRaca": "Parda",
-    "estadoCivil": "Casada",
-    "nacionalidade": "Brasileira",
-    "naturalidade": "São Paulo/SP",
-    "pcd": "Não",
-    "telefonePrincipal": "(67) 99999-1234",
-    "telefoneSecundario": "(67) 98888-1234",
-    "emailPessoal": "ana.pessoal@email.com",
-    "contatoEmergenciaNome": "Carlos Souza",
-    "contatoEmergenciaTelefone": "(67) 97777-1234",
-    "cep": "79002-071",
-    "logradouro": "Rua 14 de Julho, 1000",
-    "complemento": "Apto 101",
-    "bairro": "Centro",
-    "cidade": "Campo Grande",
-    "uf": "MS",
-    "vinculo": "Efetivo",
-    "matricula": "11966200",
-    "cargo": "Gerente de Projetos",
-    "funcao": "Gerente de Projetos",
-    "dataInicio": "20/05/2010",
-    "possuiDGA": "Não",
-    "especificacaoDGA": "",
-    "setor": "Diretoria",
-    "ramal": "7651",
-    "jornada": "40h",
-    "turno": "Integral",
-    "status": "Ativo",
-    "emailInstitucional": "ana.silva@exemplo.com",
-    "escolaridade": "Pós-Graduação",
-    "cursoGraduacao": "Administração",
-    "instituicaoGraduacao": "UFMS",
-    "anoConclusaoGrad": "2008",
-    "tipoPosGraduacao": "MBA",
-    "cursoPosGraduacao": "Gestão de Projetos",
-    "instituicaoPosGrad": "FGV",
-    "anoConclusaoPosGrad": "2012",
-    "observacoes": "Excelente líder de equipe.",
-    "initials": "AMS",
-    "rating": 9.5
-  },
-  {
-    "nomeCompleto": "Bruno Costa",
-    "nomeSocial": "Bruno",
-    "cpf": "222.333.444-55",
-    "rg": "22.333.444-5 (SSP/RJ)",
-    "dataNascimento": "15/03/1990",
-    "genero": "Masculino",
-    "corRaca": "Branca",
-    "estadoCivil": "Solteiro",
-    "nacionalidade": "Brasileira",
-    "naturalidade": "Rio de Janeiro/RJ",
-    "pcd": "Não",
-    "telefonePrincipal": "(67) 99999-5678",
-    "telefoneSecundario": "",
-    "emailPessoal": "bruno.pessoal@email.com",
-    "contatoEmergenciaNome": "Fernanda Costa",
-    "contatoEmergenciaTelefone": "(67) 97777-5678",
-    "cep": "79002-072",
-    "logradouro": "Rua Afonso Pena, 2000",
-    "complemento": "",
-    "bairro": "Centro",
-    "cidade": "Campo Grande",
-    "uf": "MS",
-    "vinculo": "Contratado",
-    "matricula": "",
-    "cargo": "Desenvolvedor Frontend",
-    "funcao": "Desenvolvedor Frontend",
-    "dataInicio": "01/02/2022",
-    "possuiDGA": "Não",
-    "especificacaoDGA": "",
-    "setor": "Tecnologia da Informação",
-    "ramal": "7652",
-    "jornada": "40h",
-    "turno": "Integral",
-    "status": "Ativo",
-    "emailInstitucional": "bruno.costa@exemplo.com",
-    "escolaridade": "Graduação",
-    "cursoGraduacao": "Ciência da Computação",
-    "instituicaoGraduacao": "UFRJ",
-    "anoConclusaoGrad": "2015",
-    "tipoPosGraduacao": "",
-    "cursoPosGraduacao": "",
-    "instituicaoPosGrad": "",
-    "anoConclusaoPosGrad": "",
-    "observacoes": "Desenvolvedor talentoso.",
-    "initials": "BC",
-    "rating": 8.0
-  },
-  {
-    "nomeCompleto": "Carla Dias",
-    "nomeSocial": "Carla",
-    "cpf": "333.444.555-66",
-    "rg": "33.444.555-6 (SSP/BA)",
-    "dataNascimento": "25/11/1992",
-    "genero": "Feminino",
-    "corRaca": "Preta",
-    "estadoCivil": "Solteira",
-    "nacionalidade": "Brasileira",
-    "naturalidade": "Salvador/BA",
-    "pcd": "Não",
-    "telefonePrincipal": "(67) 99999-4321",
-    "telefoneSecundario": "",
-    "emailPessoal": "carla.pessoal@email.com",
-    "contatoEmergenciaNome": "Pedro Dias",
-    "contatoEmergenciaTelefone": "(67) 97777-4321",
-    "cep": "79002-073",
-    "logradouro": "Rua Barão do Rio Branco, 3000",
-    "complemento": "",
-    "bairro": "Centro",
-    "cidade": "Campo Grande",
-    "uf": "MS",
-    "vinculo": "Terceirizado",
-    "matricula": "",
-    "cargo": "Designer UI/UX",
-    "funcao": "Designer UI/UX",
-    "dataInicio": "10/09/2021",
-    "possuiDGA": "Não",
-    "especificacaoDGA": "",
-    "setor": "Marketing",
-    "ramal": "7653",
-    "jornada": "30h",
-    "turno": "Vespertino",
-    "status": "Licença",
-    "emailInstitucional": "carla.dias@exemplo.com",
-    "escolaridade": "Graduação",
-    "cursoGraduacao": "Design Gráfico",
-    "instituicaoGraduacao": "UFBA",
-    "anoConclusaoGrad": "2016",
-    "tipoPosGraduacao": "",
-    "cursoPosGraduacao": "",
-    "instituicaoPosGrad": "",
-    "anoConclusaoPosGrad": "",
-    "observacoes": "",
-    "initials": "CD",
-    "rating": 7.2
-  },
-  {
-    "nomeCompleto": "João Dias",
-    "nomeSocial": "João",
-    "cpf": "444.555.666-77",
-    "rg": "44.555.666-7 (SSP/MS)",
-    "dataNascimento": "01/01/2002",
-    "genero": "Masculino",
-    "corRaca": "Branca",
-    "estadoCivil": "Solteiro",
-    "nacionalidade": "Brasileira",
-    "naturalidade": "Dourados/MS",
-    "pcd": "Não",
-    "telefonePrincipal": "(67) 98888-4321",
-    "telefoneSecundario": "",
-    "emailPessoal": "joao.pessoal@email.com",
-    "contatoEmergenciaNome": "Maria Dias",
-    "contatoEmergenciaTelefone": "(67) 96666-4321",
-    "cep": "79800-000",
-    "logradouro": "Avenida Marcelino Pires, 4000",
-    "complemento": "",
-    "bairro": "Centro",
-    "cidade": "Dourados",
-    "uf": "MS",
-    "vinculo": "Contratado",
-    "matricula": "",
-    "cargo": "Estagiário",
-    "funcao": "Estagiário",
-    "dataInicio": "15/02/2023",
-    "possuiDGA": "Não",
-    "especificacaoDGA": "",
-    "setor": "Tecnologia da Informação",
-    "ramal": "7654",
-    "jornada": "20h",
-    "turno": "Matutino",
-    "status": "Inativo",
-    "emailInstitucional": "joao.dias@exemplo.com",
-    "escolaridade": "Graduação",
-    "cursoGraduacao": "Sistemas de Informação (Cursando)",
-    "instituicaoGraduacao": "UEMS",
-    "anoConclusaoGrad": "",
-    "tipoPosGraduacao": "",
-    "cursoPosGraduacao": "",
-    "instituicaoPosGrad": "",
-    "anoConclusaoPosGrad": "",
-    "observacoes": "Contrato finalizado.",
-    "initials": "JD",
-    "rating": 3.5
-  },
-  {
-    "nomeCompleto": "Lilian Tenório Carvalho",
-    "nomeSocial": "Lilian",
-    "cpf": "875.950.871-04",
-    "rg": "00.102.907-6 (SSP/MS)",
-    "dataNascimento": "05/05/1979",
-    "genero": "Feminino",
-    "corRaca": "Branco",
-    "estadoCivil": "União Estável",
-    "nacionalidade": "Brasileira",
-    "naturalidade": "Cassilandia MS",
-    "pcd": "Não",
-    "telefonePrincipal": "(67) 98167-2870",
-    "telefoneSecundario": "(67) 99850-4484",
-    "emailPessoal": "litencarv@icloud.com",
-    "contatoEmergenciaNome": "Lucas Nascimento",
-    "contatoEmergenciaTelefone": "(67) 99886-3817",
-    "cep": "79541-066",
-    "logradouro": "R. Joaquim Bernardes de Freitas, 128",
-    "complemento": "casa",
-    "bairro": "Jardim Minas Gerais",
-    "cidade": "Cassilândia",
-    "uf": "MS",
-    "vinculo": "Efetivo",
-    "matricula": "119662021",
-    "cargo": "ATNM",
-    "funcao": "Assistente administrativo",
-    "dataInicio": "15/09/2004",
-    "possuiDGA": "Sim",
-    "especificacaoDGA": "DGA -S/Gestor Administrativo",
-    "setor": "Secretaria da Gerência",
-    "ramal": "7650",
-    "jornada": "40h",
-    "turno": "Integral",
-    "status": "Ativo",
-    "emailInstitucional": "litencarv@uems.br",
-    "escolaridade": "Pós-Graduação",
-    "cursoGraduacao": "Letras-Hab. Português/Inglês",
-    "instituicaoGraduacao": "UEMS",
-    "anoConclusaoGrad": "2002",
-    "tipoPosGraduacao": "Especialização",
-    "cursoPosGraduacao": "Didática Geral",
-    "instituicaoPosGrad": "FIC",
-    "anoConclusaoPosGrad": "2017",
-    "observacoes": "Boa funcionária",
-    "initials": "LTC",
-    "rating": 3.2
-  },
-  {
-    "nomeCompleto": "Fernando Gomes",
-    "nomeSocial": "Fernando",
-    "cpf": "555.666.777-88",
-    "rg": "55.666.777-8 (SSP/PR)",
-    "dataNascimento": "12/04/1988",
-    "genero": "Masculino",
-    "corRaca": "Branca",
-    "estadoCivil": "Casado",
-    "nacionalidade": "Brasileira",
-    "naturalidade": "Curitiba/PR",
-    "pcd": "Não",
-    "telefonePrincipal": "(67) 98888-1111",
-    "telefoneSecundario": "",
-    "emailPessoal": "fernando.pessoal@email.com",
-    "contatoEmergenciaNome": "Juliana Gomes",
-    "contatoEmergenciaTelefone": "(67) 95555-1111",
-    "cep": "79002-074",
-    "logradouro": "Rua Dom Aquino, 5000",
-    "complemento": "Apto 502",
-    "bairro": "Centro",
-    "cidade": "Campo Grande",
-    "uf": "MS",
-    "vinculo": "Comissionado",
-    "matricula": "",
-    "cargo": "Desenvolvedor Backend",
-    "funcao": "Desenvolvedor Backend",
-    "dataInicio": "01/07/2020",
-    "possuiDGA": "Sim",
-    "especificacaoDGA": "Chefe de Divisão de Tecnologia",
-    "setor": "Tecnologia da Informação",
-    "ramal": "7655",
-    "jornada": "40h",
-    "turno": "Integral",
-    "status": "Ativo",
-    "emailInstitucional": "fernando.gomes@exemplo.com",
-    "escolaridade": "Pós-Graduação",
-    "cursoGraduacao": "Engenharia de Software",
-    "instituicaoGraduacao": "UTFPR",
-    "anoConclusaoGrad": "2011",
-    "tipoPosGraduacao": "Mestrado",
-    "cursoPosGraduacao": "Ciência da Computação",
-    "instituicaoPosGrad": "UNICAMP",
-    "anoConclusaoPosGrad": "2014",
-    "observacoes": "Especialista em microsserviços.",
-    "initials": "FG",
-    "rating": 8.8
-  }
-];
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, deleteDoc, doc } from 'firebase/firestore';
 
 
 const statusOptions = ['Ativo', 'Inativo', 'Licença'];
@@ -319,37 +30,31 @@ export default function ServerListPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
+  const firestore = useFirestore();
 
-  const [servers, setServers] = useState<any[]>([]);
+  const serversQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'servers');
+  }, [firestore]);
+
+  const { data: servers = [], isLoading } = useCollection<any>(serversQuery);
+
   const [selectedServers, setSelectedServers] = useState<Record<string, boolean>>({});
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [vinculoFilters, setVinculoFilters] = useState<string[]>([]);
-
-  useEffect(() => {
-    try {
-      const storedServers = localStorage.getItem('servers');
-      if (storedServers) {
-        setServers(JSON.parse(storedServers));
-      } else {
-        localStorage.setItem('servers', JSON.stringify(initialServers));
-        setServers(initialServers);
-      }
-    } catch (error) {
-      console.error("Failed to access localStorage:", error);
-      setServers(initialServers);
-    }
-  }, []);
 
   useEffect(() => {
     const vinculoQuery = searchParams.get('vinculo');
     if (vinculoQuery) {
       // Capitalize the first letter
       const capitalizedVinculo = vinculoQuery.charAt(0).toUpperCase() + vinculoQuery.slice(1);
-      setVinculoFilters(prev => [...prev, capitalizedVinculo]);
+      if (vinculoOptions.includes(capitalizedVinculo) && !vinculoFilters.includes(capitalizedVinculo)) {
+        setVinculoFilters(prev => [...prev, capitalizedVinculo]);
+      }
     }
   }, [searchParams]);
 
-  servers.sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
+  const sortedServers = [...servers].sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
 
   const selectionCount = Object.values(selectedServers).filter(Boolean).length;
 
@@ -357,16 +62,16 @@ export default function ServerListPage() {
     const newSelectedServers: Record<string, boolean> = {};
     if (checked) {
       filteredServers.forEach(server => {
-        newSelectedServers[server.emailInstitucional] = true;
+        newSelectedServers[server.id] = true;
       });
     }
     setSelectedServers(newSelectedServers);
   };
 
-  const handleSelectServer = (email: string, checked: boolean) => {
+  const handleSelectServer = (id: string, checked: boolean) => {
     setSelectedServers(prev => ({
       ...prev,
-      [email]: checked,
+      [id]: checked,
     }));
   };
   
@@ -387,7 +92,7 @@ export default function ServerListPage() {
     setVinculoFilters([]);
   };
 
-  const filteredServers = servers.filter(server => {
+  const filteredServers = sortedServers.filter(server => {
     const statusMatch = statusFilters.length === 0 || statusFilters.includes(server.status);
     const vinculoMatch = vinculoFilters.length === 0 || vinculoFilters.includes(server.vinculo);
     return statusMatch && vinculoMatch;
@@ -567,7 +272,7 @@ export default function ServerListPage() {
 
   const getAllSelectedServersDetails = (forWhatsApp: boolean = false) => {
     return servers
-      .filter(server => selectedServers[server.emailInstitucional])
+      .filter(server => selectedServers[server.id])
       .map(server => getSelectedServersDetails(server, forWhatsApp))
       .join('\n\n---\n\n');
   }
@@ -627,7 +332,7 @@ export default function ServerListPage() {
   };
 
 const handleExportPDF = async () => {
-    const selected = servers.filter(server => selectedServers[server.emailInstitucional]);
+    const selected = servers.filter(server => selectedServers[server.id]);
     if (selected.length === 0) return;
 
     try {
@@ -897,7 +602,8 @@ const handleExportPDF = async () => {
 
       <Card>
         <CardContent className="p-0">
-          {isMobile ? (
+          {isLoading && <p className="text-center p-4">Carregando servidores...</p>}
+          {!isLoading && isMobile ? (
             <>
               <div className="flex items-center p-4 border-b">
                 <Checkbox
@@ -913,24 +619,24 @@ const handleExportPDF = async () => {
               <div className="space-y-4 p-4">
                 {filteredServers.map((server) => (
                    <div 
-                      key={server.emailInstitucional}
+                      key={server.id}
                       className="flex items-start gap-4 pb-4 border-b last:border-b-0 cursor-pointer"
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (
                           target.closest('a') ||
                           target.closest('input[type="checkbox"]') ||
-                          (target.parentElement && target.parentElement.id === `server-${server.emailInstitucional}`)
+                          (target.parentElement && target.parentElement.id === `server-${server.id}`)
                         ) {
                           return;
                         }
-                        router.push(`/servidores/${server.emailInstitucional.split('@')[0]}`);
+                        router.push(`/servidores/${server.id}`);
                       }}
                     >
                     <Checkbox
-                      id={`server-${server.emailInstitucional}`}
-                      checked={selectedServers[server.emailInstitucional] || false}
-                      onCheckedChange={(checked) => handleSelectServer(server.emailInstitucional, checked as boolean)}
+                      id={`server-${server.id}`}
+                      checked={selectedServers[server.id] || false}
+                      onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
                       className="mt-1"
                     />
                      <div className="flex-1">
@@ -997,24 +703,25 @@ const handleExportPDF = async () => {
                 <TableBody>
                   {filteredServers.map((server) => (
                     <TableRow 
-                      key={server.emailInstitucional} 
+                      key={server.id} 
                       className="cursor-pointer"
                       onClick={(e) => {
+                         const target = e.target as HTMLElement;
                          if (
-                          (e.target as HTMLElement).closest('input[type="checkbox"]') ||
-                          (e.target as HTMLElement).closest('a')
+                          target.closest('input[type="checkbox"]') ||
+                          target.closest('a')
                         ) {
                           return;
                         }
-                        router.push(`/servidores/${server.emailInstitucional.split('@')[0]}`);
+                        router.push(`/servidores/${server.id}`);
                       }}
                     >
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Checkbox
-                            id={`server-desktop-${server.emailInstitucional}`}
-                            checked={selectedServers[server.emailInstitucional] || false}
-                            onCheckedChange={(checked) => handleSelectServer(server.emailInstitucional, checked as boolean)}
+                            id={`server-desktop-${server.id}`}
+                            checked={selectedServers[server.id] || false}
+                            onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
                           />
                           <div className="flex items-center gap-3">
                               <Avatar className="h-12 w-12">
