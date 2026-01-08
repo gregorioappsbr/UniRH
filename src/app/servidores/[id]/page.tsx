@@ -12,6 +12,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle, FileText, Users, ScrollText } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -19,7 +20,7 @@ import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useParams } from 'next/navigation';
 import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
 import { doc, collection, addDoc, deleteDoc } from 'firebase/firestore';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 // Define a type for the server data
@@ -111,6 +112,9 @@ export default function ServerProfilePage() {
     const [faltaMes, setFaltaMes] = useState('');
     const [faltaAno, setFaltaAno] = useState('');
 
+    const [selectedFaltaYear, setSelectedFaltaYear] = useState<string>(new Date().getFullYear().toString());
+    const [selectedFaltaMonth, setSelectedFaltaMonth] = useState<string>((new Date().getMonth() + 1).toString());
+
     const serverRef = useMemoFirebase(() => {
         if (!firestore || !id) return null;
         return doc(firestore, 'servers', id as string);
@@ -171,6 +175,32 @@ export default function ServerProfilePage() {
         toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível remover a falta.' });
       }
     };
+
+    const filteredFaltas = useMemo(() => {
+        if (!faltas) return [];
+        return faltas.filter(falta => {
+            const [day, month, year] = falta.date.split('/');
+            return year === selectedFaltaYear && month === selectedFaltaMonth.padStart(2, '0');
+        });
+    }, [faltas, selectedFaltaYear, selectedFaltaMonth]);
+
+    const yearOptions = useMemo(() => {
+        const currentYear = new Date().getFullYear();
+        const years = [];
+        for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+            years.push(i.toString());
+        }
+        return years;
+    }, []);
+
+    const monthOptions = [
+        { value: '1', label: 'Janeiro' }, { value: '2', label: 'Fevereiro' },
+        { value: '3', label: 'Março' }, { value: '4', label: 'Abril' },
+        { value: '5', label: 'Maio' }, { value: '6', label: 'Junho' },
+        { value: '7', label: 'Julho' }, { value: '8', label: 'Agosto' },
+        { value: '9', label: 'Setembro' }, { value: '10', label: 'Outubro' },
+        { value: '11', label: 'Novembro' }, { value: '12', label: 'Dezembro' }
+    ];
 
 
     const calculatedRating = 10 - ((faltas?.length ?? 0) * 1) - ((licencas?.length ?? 0) * 0.5);
@@ -488,8 +518,31 @@ export default function ServerProfilePage() {
                 </Dialog>
               </CardHeader>
               <CardContent className="space-y-4">
-                {isLoadingFaltas ? <p>Carregando faltas...</p> : (faltas && faltas.length > 0) ? (
-                  faltas.map((falta) => (
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                    <Select value={selectedFaltaMonth} onValueChange={setSelectedFaltaMonth}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Selecione o Mês" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {monthOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <Select value={selectedFaltaYear} onValueChange={setSelectedFaltaYear}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Selecione o Ano" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {yearOptions.map(year => (
+                                <SelectItem key={year} value={year}>{year}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                {isLoadingFaltas ? <p>Carregando faltas...</p> : (filteredFaltas && filteredFaltas.length > 0) ? (
+                  filteredFaltas.map((falta) => (
                   <div key={falta.id} className="flex items-center justify-between p-4 rounded-lg bg-background">
                     <div>
                       <p className="font-medium">{falta.date}</p>
@@ -524,7 +577,7 @@ export default function ServerProfilePage() {
                   </div>
                   ))
                 ) : (
-                  <p className="text-center text-muted-foreground">Nenhuma falta registrada.</p>
+                  <p className="text-center text-muted-foreground">Nenhuma falta registrada para este período.</p>
                 )}
               </CardContent>
             </Card>
@@ -544,5 +597,4 @@ export default function ServerProfilePage() {
   );
 }
  
-
     
