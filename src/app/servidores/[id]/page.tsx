@@ -158,6 +158,7 @@ export default function ServerProfilePage() {
     const [feriasPeriodos, setFeriasPeriodos] = useState<FeriasPeriodo[]>([
         { startDia: '', startMes: '', startAno: '', endDia: '', endMes: '', endAno: '' }
     ]);
+    const [selectedFeriaMonth, setSelectedFeriaMonth] = useState<string>((new Date().getMonth() + 1).toString());
 
     const serverRef = useMemoFirebase(() => {
         if (!firestore || !id) return null;
@@ -432,7 +433,6 @@ export default function ServerProfilePage() {
                 startDate: `${String(startDia).padStart(2, '0')}/${String(startMes).padStart(2, '0')}/${startAno}`,
                 endDate: `${String(endDia).padStart(2, '0')}/${String(endMes).padStart(2, '0')}/${endAno}`,
                 periodoAquisitivo: feriaPeriodoAquisitivo,
-                reason: feriaReason,
                 updatedAt: serverTimestamp(),
             };
             
@@ -469,7 +469,6 @@ export default function ServerProfilePage() {
                 startDate: `${String(startDia).padStart(2, '0')}/${String(startMes).padStart(2, '0')}/${startAno}`,
                 endDate: `${String(endDia).padStart(2, '0')}/${String(endMes).padStart(2, '0')}/${endAno}`,
                 periodoAquisitivo: feriaPeriodoAquisitivo,
-                reason: feriaReason,
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp(),
             };
@@ -1196,16 +1195,6 @@ export default function ServerProfilePage() {
                                         Adicionar Período
                                     </Button>
                                 )}
-
-                                <div className="space-y-2">
-                                    <Label htmlFor="feria-reason">Observações</Label>
-                                    <Textarea
-                                        id="feria-reason"
-                                        placeholder="Adicione uma descrição ou observação..."
-                                        value={feriaReason}
-                                        onChange={(e) => setFeriaReason(e.target.value)}
-                                    />
-                                </div>
                             </div>
                             <DialogFooter>
                                 <Button variant="ghost" onClick={() => setIsFeriaDialogOpen(false)}>Cancelar</Button>
@@ -1215,7 +1204,7 @@ export default function ServerProfilePage() {
                     </Dialog>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 gap-4 mb-4">
+                    <div className="grid grid-cols-2 gap-4 mb-4">
                         <Select value={selectedFeriaYear} onValueChange={setSelectedFeriaYear}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Selecione o Ano" />
@@ -1223,6 +1212,16 @@ export default function ServerProfilePage() {
                             <SelectContent>
                                 {yearOptions.map(year => (
                                     <SelectItem key={year} value={year}>{year}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                         <Select value={selectedFeriaMonth} onValueChange={setSelectedFeriaMonth}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Selecione o Mês" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {monthOptions.map(option => (
+                                    <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -1283,7 +1282,7 @@ export default function ServerProfilePage() {
                             </TableBody>
                         </Table>
                     ) : (
-                        <p className="text-center text-muted-foreground py-4">Nenhum registro de férias para este ano.</p>
+                        <p className="text-center text-muted-foreground py-4">Nenhum registro de férias para este período.</p>
                     )}
                 </CardContent>
             </Card>
@@ -1306,4 +1305,5 @@ export default function ServerProfilePage() {
     
 
     
+
 
