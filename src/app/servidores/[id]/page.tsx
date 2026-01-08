@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle, FileText, Users, ScrollText } from 'lucide-react';
+import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle, FileText, Users, ScrollText, CalendarDays } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -101,6 +101,13 @@ type Licenca = {
   reason: string;
 }
 
+type Feria = {
+  id: string;
+  startDate: string;
+  endDate: string;
+  periodoAquisitivo: string;
+  reason: string;
+};
 
 export default function ServerProfilePage() {
     const params = useParams();
@@ -132,6 +139,20 @@ export default function ServerProfilePage() {
     const [licencaEndAno, setLicencaEndAno] = useState('');
     const [editingLicenca, setEditingLicenca] = useState<Licenca | null>(null);
 
+    // State for Ferias
+    const [isFeriaDialogOpen, setIsFeriaDialogOpen] = useState(false);
+    const [feriaReason, setFeriaReason] = useState('');
+    const [feriaPeriodoAquisitivo, setFeriaPeriodoAquisitivo] = useState('');
+    const [selectedFeriaYear, setSelectedFeriaYear] = useState<string>(new Date().getFullYear().toString());
+    const [feriaStartDia, setFeriaStartDia] = useState('');
+    const [feriaStartMes, setFeriaStartMes] = useState('');
+    const [feriaStartAno, setFeriaStartAno] = useState('');
+    const [feriaEndDia, setFeriaEndDia] = useState('');
+    const [feriaEndMes, setFeriaEndMes] = useState('');
+    const [feriaEndAno, setFeriaEndAno] = useState('');
+    const [editingFeria, setEditingFeria] = useState<Feria | null>(null);
+
+
     const serverRef = useMemoFirebase(() => {
         if (!firestore || !id) return null;
         return doc(firestore, 'servers', id as string);
@@ -147,9 +168,16 @@ export default function ServerProfilePage() {
         return collection(firestore, 'servers', id as string, 'licencas');
     }, [firestore, id]);
 
+    const feriasQuery = useMemoFirebase(() => {
+      if (!firestore || !id) return null;
+      return collection(firestore, 'servers', id as string, 'ferias');
+    }, [firestore, id]);
+
+
     const { data: server, isLoading: isLoadingServer } = useDoc<Server>(serverRef);
     const { data: faltas, isLoading: isLoadingFaltas } = useCollection<Falta>(faltasQuery);
     const { data: licencas, isLoading: isLoadingLicencas } = useCollection<Licenca>(licencasQuery);
+    const { data: ferias, isLoading: isLoadingFerias } = useCollection<Feria>(feriasQuery);
 
     const resetFaltaForm = () => {
         setFaltaDia('');
@@ -169,6 +197,18 @@ export default function ServerProfilePage() {
         setLicencaReason('');
         setLicencaType('');
         setEditingLicenca(null);
+    };
+
+    const resetFeriaForm = () => {
+        setFeriaStartDia('');
+        setFeriaStartMes('');
+        setFeriaStartAno('');
+        setFeriaEndDia('');
+        setFeriaEndMes('');
+        setFeriaEndAno('');
+        setFeriaReason('');
+        setFeriaPeriodoAquisitivo('');
+        setEditingFeria(null);
     };
 
     useEffect(() => {
@@ -208,6 +248,28 @@ export default function ServerProfilePage() {
         }
     }, [isLicencaDialogOpen, editingLicenca]);
     
+     useEffect(() => {
+        if (isFeriaDialogOpen) {
+            if (editingFeria) {
+                const [startDay, startMonth, startYear] = editingFeria.startDate.split('/');
+                const [endDay, endMonth, endYear] = editingFeria.endDate.split('/');
+                setFeriaStartDia(startDay);
+                setFeriaStartMes(startMonth);
+                setFeriaStartAno(startYear);
+                setFeriaEndDia(endDay);
+                setFeriaEndMes(endMonth);
+                setFeriaEndAno(endYear);
+                setFeriaPeriodoAquisitivo(editingFeria.periodoAquisitivo);
+                setFeriaReason(editingFeria.reason);
+            } else {
+                resetFeriaForm();
+            }
+        } else {
+            resetFeriaForm();
+        }
+    }, [isFeriaDialogOpen, editingFeria]);
+
+
     const handleSaveFalta = async () => {
         const dia = parseInt(faltaDia, 10);
         const mes = parseInt(faltaMes, 10);
@@ -308,6 +370,63 @@ export default function ServerProfilePage() {
       }
     };
 
+    const handleSaveFeria = async () => {
+      const startDia = parseInt(feriaStartDia, 10);
+      const startMes = parseInt(feriaStartMes, 10);
+      const startAno = parseInt(feriaStartAno, 10);
+      const endDia = parseInt(feriaEndDia, 10);
+      const endMes = parseInt(feriaEndMes, 10);
+      const endAno = parseInt(feriaEndAno, 10);
+
+      if (!firestore || !id || !feriaPeriodoAquisitivo ||
+          !startDia || !startMes || !startAno || startDia > 31 || startMes > 12 || startAno < 2000 ||
+          !endDia || !endMes || !endAno || endDia > 31 || endMes > 12 || endAno < 2000
+      ) {
+          toast({ variant: 'destructive', title: 'Erro', description: 'Período aquisitivo e datas são obrigatórios e devem ser válidos.' });
+          return;
+      }
+      
+      const feriaStartDate = `${String(startDia).padStart(2, '0')}/${String(startMes).padStart(2, '0')}/${startAno}`;
+      const feriaEndDate = `${String(endDia).padStart(2, '0')}/${String(endMes).padStart(2, '0')}/${endAno}`;
+
+      const feriaPayload = {
+          startDate: feriaStartDate,
+          endDate: feriaEndDate,
+          periodoAquisitivo: feriaPeriodoAquisitivo,
+          reason: feriaReason,
+          updatedAt: serverTimestamp(),
+      };
+
+      try {
+          if (editingFeria) {
+              const feriaDocRef = doc(firestore, 'servers', id as string, 'ferias', editingFeria.id);
+              await setDoc(feriaDocRef, feriaPayload, { merge: true });
+              toast({ title: 'Sucesso', description: 'Férias atualizadas com sucesso.' });
+          } else {
+              const feriasCollectionRef = collection(firestore, 'servers', id as string, 'ferias');
+              await addDoc(feriasCollectionRef, { ...feriaPayload, createdAt: serverTimestamp() });
+              toast({ title: 'Sucesso', description: 'Férias registradas com sucesso.' });
+          }
+          setIsFeriaDialogOpen(false);
+      } catch (error) {
+          console.error("Erro ao registrar férias:", error);
+          toast({ variant: 'destructive', title: 'Erro', description: `Não foi possível ${editingFeria ? 'atualizar' : 'registrar'} as férias.` });
+      }
+    };
+
+    const handleDeleteFeria = async (feriaId: string) => {
+        if (!firestore || !id || !feriaId) return;
+        try {
+            const feriaDocRef = doc(firestore, 'servers', id as string, 'ferias', feriaId);
+            await deleteDoc(feriaDocRef);
+            toast({ title: 'Sucesso', description: 'Registro de férias removido com sucesso.' });
+        } catch (error) {
+            console.error("Erro ao remover férias:", error);
+            toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível remover o registro de férias.' });
+        }
+    };
+
+
     const filteredFaltas = useMemo(() => {
         if (!faltas) return [];
         return faltas.filter(falta => {
@@ -326,6 +445,14 @@ export default function ServerProfilePage() {
                  (licenseStartDate.getMonth() + 1).toString().padStart(2, '0') === selectedLicencaMonth.padStart(2, '0');
       });
     }, [licencas, selectedLicencaYear, selectedLicencaMonth]);
+
+    const filteredFerias = useMemo(() => {
+      if (!ferias) return [];
+      return ferias.filter(feria => {
+          const [startDay, startMonth, startYear] = feria.startDate.split('/');
+          return startYear === selectedFeriaYear;
+      });
+    }, [ferias, selectedFeriaYear]);
 
 
     const yearOptions = useMemo(() => {
@@ -486,7 +613,7 @@ export default function ServerProfilePage() {
     return `https://wa.me/55${justNumbers}`;
   }
 
-  const isLoading = isLoadingServer || isLoadingFaltas || isLoadingLicencas;
+  const isLoading = isLoadingServer || isLoadingFaltas || isLoadingLicencas || isLoadingFerias;
 
   if (isLoading) {
     return <div className="p-4 text-center">Carregando...</div>;
@@ -910,7 +1037,139 @@ export default function ServerProfilePage() {
             </Card>
           </TabsContent>
           <TabsContent value="ferias" className="mt-8 md:mt-10">
-            <p className="text-center text-muted-foreground">Conteúdo de Férias.</p>
+            <Card className="bg-card">
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <CalendarDays className="h-6 w-6 text-primary" />
+                        <CardTitle className="text-lg">Férias</CardTitle>
+                    </div>
+                    <Dialog open={isFeriaDialogOpen} onOpenChange={setIsFeriaDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button size="sm" onClick={() => setEditingFeria(null)} className="bg-blue-500 hover:bg-blue-600 text-white">
+                                <PlusCircle className="h-4 w-4 mr-2" />
+                                Adicionar Férias
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                            <DialogHeader>
+                                <DialogTitle>{editingFeria ? 'Editar Férias' : 'Registrar Novas Férias'}</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4 py-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="feria-periodo-aquisitivo">Período Aquisitivo</Label>
+                                    <Input 
+                                      id="feria-periodo-aquisitivo" 
+                                      placeholder="Ex: 2023/2024"
+                                      value={feriaPeriodoAquisitivo}
+                                      onChange={(e) => setFeriaPeriodoAquisitivo(e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Data de Início</Label>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        <Input type="number" placeholder="Dia" value={feriaStartDia} onChange={(e) => setFeriaStartDia(e.target.value)} maxLength={2} />
+                                        <Input type="number" placeholder="Mês" value={feriaStartMes} onChange={(e) => setFeriaStartMes(e.target.value)} maxLength={2} />
+                                        <Input type="number" placeholder="Ano" value={feriaStartAno} onChange={(e) => setFeriaStartAno(e.target.value)} maxLength={4} />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Data de Fim</Label>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        <Input type="number" placeholder="Dia" value={feriaEndDia} onChange={(e) => setFeriaEndDia(e.target.value)} maxLength={2} />
+                                        <Input type="number" placeholder="Mês" value={feriaEndMes} onChange={(e) => setFeriaEndMes(e.target.value)} maxLength={2} />
+                                        <Input type="number" placeholder="Ano" value={feriaEndAno} onChange={(e) => setFeriaEndAno(e.target.value)} maxLength={4} />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="feria-reason">Observações</Label>
+                                    <Textarea
+                                        id="feria-reason"
+                                        placeholder="Adicione uma descrição ou observação..."
+                                        value={feriaReason}
+                                        onChange={(e) => setFeriaReason(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button variant="ghost" onClick={() => setIsFeriaDialogOpen(false)}>Cancelar</Button>
+                                <Button onClick={handleSaveFeria}>Salvar</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4 mb-4">
+                        <Select value={selectedFeriaYear} onValueChange={setSelectedFeriaYear}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Selecione o Ano" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {yearOptions.map(year => (
+                                    <SelectItem key={year} value={year}>{year}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {isLoadingFerias ? <p>Carregando férias...</p> : (filteredFerias && filteredFerias.length > 0) ? (
+                        <Table>
+                            <TableHeader className="hidden md:table-header-group">
+                                <TableRow>
+                                    <TableHead>Período Aquisitivo</TableHead>
+                                    <TableHead>Período de Gozo</TableHead>
+                                    <TableHead>Observações</TableHead>
+                                    <TableHead className="text-right">Ações</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {filteredFerias.map((feria) => (
+                                    <TableRow key={feria.id} className="flex flex-col md:table-row p-4 md:p-0 border-b last:border-b-0 md:border-b">
+                                        <TableCell className="p-0 md:p-4 font-medium">
+                                          <span className="md:hidden font-semibold">Período Aquisitivo: </span>{feria.periodoAquisitivo}
+                                        </TableCell>
+                                        <TableCell className="p-0 md:p-4">
+                                            <span className="md:hidden font-semibold">Período de Gozo: </span>{`${feria.startDate} - ${feria.endDate}`}
+                                        </TableCell>
+                                        <TableCell className="text-muted-foreground p-0 md:p-4">
+                                          <span className="md:hidden font-semibold text-foreground">Observações: </span>{feria.reason || '-'}
+                                        </TableCell>
+                                        <TableCell className="p-0 md:p-4 mt-2 md:mt-0 text-right">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <Button variant="ghost" size="icon" onClick={() => { setEditingFeria(feria); setIsFeriaDialogOpen(true); }}>
+                                                    <Edit className="h-5 w-5" />
+                                                </Button>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant="ghost" size="icon">
+                                                            <Trash2 className="h-5 w-5 text-destructive" />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                Esta ação não pode ser desfeita. Isso excluirá permanentemente o registro de férias.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                            <AlertDialogAction onClick={() => handleDeleteFeria(feria.id)}>
+                                                                Excluir
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    ) : (
+                        <p className="text-center text-muted-foreground py-4">Nenhum registro de férias para este ano.</p>
+                    )}
+                </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       )}
