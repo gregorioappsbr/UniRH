@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useParams } from 'next/navigation';
 import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
-import { doc, collection, addDoc, deleteDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, collection, addDoc, deleteDoc, serverTimestamp, setDoc, writeBatch } from 'firebase/firestore';
 import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -109,6 +109,15 @@ type Feria = {
   reason: string;
 };
 
+type FeriasPeriodo = {
+  startDia: string;
+  startMes: string;
+  startAno: string;
+  endDia: string;
+  endMes: string;
+  endAno: string;
+};
+
 export default function ServerProfilePage() {
     const params = useParams();
     const { id } = params;
@@ -144,14 +153,11 @@ export default function ServerProfilePage() {
     const [feriaReason, setFeriaReason] = useState('');
     const [feriaPeriodoAquisitivo, setFeriaPeriodoAquisitivo] = useState('');
     const [selectedFeriaYear, setSelectedFeriaYear] = useState<string>(new Date().getFullYear().toString());
-    const [feriaStartDia, setFeriaStartDia] = useState('');
-    const [feriaStartMes, setFeriaStartMes] = useState('');
-    const [feriaStartAno, setFeriaStartAno] = useState('');
-    const [feriaEndDia, setFeriaEndDia] = useState('');
-    const [feriaEndMes, setFeriaEndMes] = useState('');
-    const [feriaEndAno, setFeriaEndAno] = useState('');
     const [editingFeria, setEditingFeria] = useState<Feria | null>(null);
-
+    const [feriasParcelamento, setFeriasParcelamento] = useState('30d');
+    const [feriasPeriodos, setFeriasPeriodos] = useState<FeriasPeriodo[]>([
+        { startDia: '', startMes: '', startAno: '', endDia: '', endMes: '', endAno: '' }
+    ]);
 
     const serverRef = useMemoFirebase(() => {
         if (!firestore || !id) return null;
@@ -200,14 +206,10 @@ export default function ServerProfilePage() {
     };
 
     const resetFeriaForm = () => {
-        setFeriaStartDia('');
-        setFeriaStartMes('');
-        setFeriaStartAno('');
-        setFeriaEndDia('');
-        setFeriaEndMes('');
-        setFeriaEndAno('');
+        setFeriasPeriodos([{ startDia: '', startMes: '', startAno: '', endDia: '', endMes: '', endAno: '' }]);
         setFeriaReason('');
         setFeriaPeriodoAquisitivo('');
+        setFeriasParcelamento('30d');
         setEditingFeria(null);
     };
 
@@ -251,16 +253,15 @@ export default function ServerProfilePage() {
      useEffect(() => {
         if (isFeriaDialogOpen) {
             if (editingFeria) {
-                const [startDay, startMonth, startYear] = editingFeria.startDate.split('/');
+                 const [startDay, startMonth, startYear] = editingFeria.startDate.split('/');
                 const [endDay, endMonth, endYear] = editingFeria.endDate.split('/');
-                setFeriaStartDia(startDay);
-                setFeriaStartMes(startMonth);
-                setFeriaStartAno(startYear);
-                setFeriaEndDia(endDay);
-                setFeriaEndMes(endMonth);
-                setFeriaEndAno(endYear);
+                setFeriasPeriodos([{
+                    startDia: startDay, startMes: startMonth, startAno: startYear,
+                    endDia: endDay, endMes: endMonth, endAno: endYear
+                }]);
                 setFeriaPeriodoAquisitivo(editingFeria.periodoAquisitivo);
                 setFeriaReason(editingFeria.reason);
+                setFeriasParcelamento('edit'); // Special mode for editing
             } else {
                 resetFeriaForm();
             }
@@ -268,6 +269,38 @@ export default function ServerProfilePage() {
             resetFeriaForm();
         }
     }, [isFeriaDialogOpen, editingFeria]);
+
+    useEffect(() => {
+        if (editingFeria) return; // Don't change periods when editing
+        let numPeriodos = 1;
+        if (feriasParcelamento === '15d') numPeriodos = 2;
+        if (feriasParcelamento === '10d') numPeriodos = 3;
+        
+        if (feriasParcelamento !== 'custom') {
+           const newPeriodos = Array.from({ length: numPeriodos }, () => ({
+                startDia: '', startMes: '', startAno: '', endDia: '', endMes: '', endAno: ''
+            }));
+            setFeriasPeriodos(newPeriodos);
+        }
+
+    }, [feriasParcelamento, editingFeria]);
+
+     const handleFeriasPeriodoChange = (index: number, field: keyof FeriasPeriodo, value: string) => {
+        const newPeriodos = [...feriasPeriodos];
+        newPeriodos[index][field] = value;
+        setFeriasPeriodos(newPeriodos);
+    };
+
+    const addFeriasPeriodo = () => {
+        setFeriasPeriodos([...feriasPeriodos, { startDia: '', startMes: '', startAno: '', endDia: '', endMes: '', endAno: '' }]);
+    };
+
+    const removeFeriasPeriodo = (index: number) => {
+        if (feriasPeriodos.length > 1) {
+            const newPeriodos = feriasPeriodos.filter((_, i) => i !== index);
+            setFeriasPeriodos(newPeriodos);
+        }
+    };
 
 
     const handleSaveFalta = async () => {
@@ -371,48 +404,86 @@ export default function ServerProfilePage() {
     };
 
     const handleSaveFeria = async () => {
-      const startDia = parseInt(feriaStartDia, 10);
-      const startMes = parseInt(feriaStartMes, 10);
-      const startAno = parseInt(feriaStartAno, 10);
-      const endDia = parseInt(feriaEndDia, 10);
-      const endMes = parseInt(feriaEndMes, 10);
-      const endAno = parseInt(feriaEndAno, 10);
+        if (!firestore || !id || !feriaPeriodoAquisitivo) {
+            toast({ variant: 'destructive', title: 'Erro', description: 'Período aquisitivo é obrigatório.' });
+            return;
+        }
 
-      if (!firestore || !id || !feriaPeriodoAquisitivo ||
-          !startDia || !startMes || !startAno || startDia > 31 || startMes > 12 || startAno < 2000 ||
-          !endDia || !endMes || !endAno || endDia > 31 || endMes > 12 || endAno < 2000
-      ) {
-          toast({ variant: 'destructive', title: 'Erro', description: 'Período aquisitivo e datas são obrigatórios e devem ser válidos.' });
-          return;
-      }
-      
-      const feriaStartDate = `${String(startDia).padStart(2, '0')}/${String(startMes).padStart(2, '0')}/${startAno}`;
-      const feriaEndDate = `${String(endDia).padStart(2, '0')}/${String(endMes).padStart(2, '0')}/${endAno}`;
+        // Handle editing a single vacation period
+        if (editingFeria) {
+            const periodo = feriasPeriodos[0];
+            const startDia = parseInt(periodo.startDia, 10);
+            const startMes = parseInt(periodo.startMes, 10);
+            const startAno = parseInt(periodo.startAno, 10);
+            const endDia = parseInt(periodo.endDia, 10);
+            const endMes = parseInt(periodo.endMes, 10);
+            const endAno = parseInt(periodo.endAno, 10);
 
-      const feriaPayload = {
-          startDate: feriaStartDate,
-          endDate: feriaEndDate,
-          periodoAquisitivo: feriaPeriodoAquisitivo,
-          reason: feriaReason,
-          updatedAt: serverTimestamp(),
-      };
+            if (!startDia || !startMes || !startAno || !endDia || !endMes || !endAno) {
+                toast({ variant: 'destructive', title: 'Erro', description: 'Todas as datas do período de férias devem ser preenchidas.' });
+                return;
+            }
 
-      try {
-          if (editingFeria) {
-              const feriaDocRef = doc(firestore, 'servers', id as string, 'ferias', editingFeria.id);
-              await setDoc(feriaDocRef, feriaPayload, { merge: true });
-              toast({ title: 'Sucesso', description: 'Férias atualizadas com sucesso.' });
-          } else {
-              const feriasCollectionRef = collection(firestore, 'servers', id as string, 'ferias');
-              await addDoc(feriasCollectionRef, { ...feriaPayload, createdAt: serverTimestamp() });
-              toast({ title: 'Sucesso', description: 'Férias registradas com sucesso.' });
-          }
-          setIsFeriaDialogOpen(false);
-      } catch (error) {
-          console.error("Erro ao registrar férias:", error);
-          toast({ variant: 'destructive', title: 'Erro', description: `Não foi possível ${editingFeria ? 'atualizar' : 'registrar'} as férias.` });
-      }
+            const feriaPayload = {
+                startDate: `${String(startDia).padStart(2, '0')}/${String(startMes).padStart(2, '0')}/${startAno}`,
+                endDate: `${String(endDia).padStart(2, '0')}/${String(endMes).padStart(2, '0')}/${endAno}`,
+                periodoAquisitivo: feriaPeriodoAquisitivo,
+                reason: feriaReason,
+                updatedAt: serverTimestamp(),
+            };
+            
+            try {
+                const feriaDocRef = doc(firestore, 'servers', id as string, 'ferias', editingFeria.id);
+                await setDoc(feriaDocRef, feriaPayload, { merge: true });
+                toast({ title: 'Sucesso', description: 'Férias atualizadas com sucesso.' });
+                setIsFeriaDialogOpen(false);
+            } catch (error) {
+                 console.error("Erro ao atualizar férias:", error);
+                toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível atualizar as férias.' });
+            }
+            return;
+        }
+
+
+        // Handle adding new vacation periods (potentially multiple)
+        const batch = writeBatch(firestore);
+        
+        for (const periodo of feriasPeriodos) {
+            const startDia = parseInt(periodo.startDia, 10);
+            const startMes = parseInt(periodo.startMes, 10);
+            const startAno = parseInt(periodo.startAno, 10);
+            const endDia = parseInt(periodo.endDia, 10);
+            const endMes = parseInt(periodo.endMes, 10);
+            const endAno = parseInt(periodo.endAno, 10);
+
+            if (!startDia || !startMes || !startAno || !endDia || !endMes || !endAno) {
+                toast({ variant: 'destructive', title: 'Erro', description: 'Todas as datas dos períodos de férias devem ser preenchidas.' });
+                return; // Stop the whole batch if one is invalid
+            }
+
+            const feriaPayload = {
+                startDate: `${String(startDia).padStart(2, '0')}/${String(startMes).padStart(2, '0')}/${startAno}`,
+                endDate: `${String(endDia).padStart(2, '0')}/${String(endMes).padStart(2, '0')}/${endAno}`,
+                periodoAquisitivo: feriaPeriodoAquisitivo,
+                reason: feriaReason,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+            };
+
+            const newFeriaRef = doc(collection(firestore, 'servers', id as string, 'ferias'));
+            batch.set(newFeriaRef, feriaPayload);
+        }
+
+        try {
+            await batch.commit();
+            toast({ title: 'Sucesso', description: 'Período(s) de férias registrado(s) com sucesso.' });
+            setIsFeriaDialogOpen(false);
+        } catch (error) {
+            console.error("Erro ao registrar férias em lote:", error);
+            toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível registrar os períodos de férias.' });
+        }
     };
+
 
     const handleDeleteFeria = async (feriaId: string) => {
         if (!firestore || !id || !feriaId) return;
@@ -1050,11 +1121,11 @@ export default function ServerProfilePage() {
                                 Adicionar Férias
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-md">
+                        <DialogContent className="sm:max-w-lg">
                             <DialogHeader>
                                 <DialogTitle>{editingFeria ? 'Editar Férias' : 'Registrar Novas Férias'}</DialogTitle>
                             </DialogHeader>
-                            <div className="space-y-4 py-4">
+                            <div className="space-y-4 py-4 max-h-[60vh] overflow-y-auto pr-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="feria-periodo-aquisitivo">Período Aquisitivo</Label>
                                     <Input 
@@ -1062,24 +1133,66 @@ export default function ServerProfilePage() {
                                       placeholder="Ex: 2023/2024"
                                       value={feriaPeriodoAquisitivo}
                                       onChange={(e) => setFeriaPeriodoAquisitivo(e.target.value)}
+                                      disabled={!!editingFeria}
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label>Data de Início</Label>
-                                    <div className="grid grid-cols-3 gap-2">
-                                        <Input type="number" placeholder="Dia" value={feriaStartDia} onChange={(e) => setFeriaStartDia(e.target.value)} maxLength={2} />
-                                        <Input type="number" placeholder="Mês" value={feriaStartMes} onChange={(e) => setFeriaStartMes(e.target.value)} maxLength={2} />
-                                        <Input type="number" placeholder="Ano" value={feriaStartAno} onChange={(e) => setFeriaStartAno(e.target.value)} maxLength={4} />
+                                { !editingFeria &&
+                                  <div className="space-y-2">
+                                      <Label htmlFor="ferias-parcelamento">Parcelamento de Férias</Label>
+                                      <Select value={feriasParcelamento} onValueChange={setFeriasParcelamento}>
+                                          <SelectTrigger id="ferias-parcelamento">
+                                              <SelectValue placeholder="Selecione o parcelamento..." />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                              <SelectItem value="30d">Um período de 30 dias</SelectItem>
+                                              <SelectItem value="15d">Dois períodos de 15 dias</SelectItem>
+                                              <SelectItem value="10d">Três períodos de 10 dias</SelectItem>
+                                              <SelectItem value="custom">Personalizado</SelectItem>
+                                          </SelectContent>
+                                      </Select>
+                                  </div>
+                                }
+                                
+                                {feriasPeriodos.map((periodo, index) => (
+                                    <div key={index} className="space-y-3 p-3 border rounded-md relative">
+                                        <Label className="font-semibold">Período {index + 1}</Label>
+                                        {feriasParcelamento === 'custom' && feriasPeriodos.length > 1 && (
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="absolute top-1 right-1 h-6 w-6"
+                                                onClick={() => removeFeriasPeriodo(index)}
+                                            >
+                                                <Trash2 className="h-4 w-4 text-destructive" />
+                                            </Button>
+                                        )}
+                                        <div className="space-y-2">
+                                            <Label className="text-xs">Data de Início</Label>
+                                            <div className="grid grid-cols-3 gap-2">
+                                                <Input type="number" placeholder="Dia" value={periodo.startDia} onChange={(e) => handleFeriasPeriodoChange(index, 'startDia', e.target.value)} maxLength={2} />
+                                                <Input type="number" placeholder="Mês" value={periodo.startMes} onChange={(e) => handleFeriasPeriodoChange(index, 'startMes', e.target.value)} maxLength={2} />
+                                                <Input type="number" placeholder="Ano" value={periodo.startAno} onChange={(e) => handleFeriasPeriodoChange(index, 'startAno', e.target.value)} maxLength={4} />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label className="text-xs">Data de Fim</Label>
+                                            <div className="grid grid-cols-3 gap-2">
+                                                <Input type="number" placeholder="Dia" value={periodo.endDia} onChange={(e) => handleFeriasPeriodoChange(index, 'endDia', e.target.value)} maxLength={2} />
+                                                <Input type="number" placeholder="Mês" value={periodo.endMes} onChange={(e) => handleFeriasPeriodoChange(index, 'endMes', e.target.value)} maxLength={2} />
+                                                <Input type="number" placeholder="Ano" value={periodo.endAno} onChange={(e) => handleFeriasPeriodoChange(index, 'endAno', e.target.value)} maxLength={4} />
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label>Data de Fim</Label>
-                                    <div className="grid grid-cols-3 gap-2">
-                                        <Input type="number" placeholder="Dia" value={feriaEndDia} onChange={(e) => setFeriaEndDia(e.target.value)} maxLength={2} />
-                                        <Input type="number" placeholder="Mês" value={feriaEndMes} onChange={(e) => setFeriaEndMes(e.target.value)} maxLength={2} />
-                                        <Input type="number" placeholder="Ano" value={feriaEndAno} onChange={(e) => setFeriaEndAno(e.target.value)} maxLength={4} />
-                                    </div>
-                                </div>
+                                ))}
+
+                                {feriasParcelamento === 'custom' && !editingFeria && (
+                                    <Button type="button" variant="outline" size="sm" onClick={addFeriasPeriodo} className="w-full">
+                                        <PlusCircle className="h-4 w-4 mr-2" />
+                                        Adicionar Período
+                                    </Button>
+                                )}
+
                                 <div className="space-y-2">
                                     <Label htmlFor="feria-reason">Observações</Label>
                                     <Textarea
