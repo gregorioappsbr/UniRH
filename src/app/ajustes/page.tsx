@@ -11,7 +11,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LogOut, Settings, CalendarDays, Share, Trash2, Sun, Moon, Laptop } from 'lucide-react';
 import { useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
 
 const events = [
   {
@@ -52,14 +51,13 @@ export default function SettingsPage() {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
 
+    let effectiveTheme = theme;
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      root.classList.add(systemTheme);
-       root.style.colorScheme = systemTheme;
-    } else {
-      root.classList.add(theme);
-      root.style.colorScheme = theme;
+      effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
+    
+    root.classList.add(effectiveTheme);
+    root.style.colorScheme = effectiveTheme;
     localStorage.setItem('theme', theme);
   }, [theme]);
 
