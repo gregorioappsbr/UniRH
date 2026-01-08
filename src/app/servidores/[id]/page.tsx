@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle, FileText, ScrollText, Users } from 'lucide-react';
+import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle, FileText, Users, ScrollText } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -268,7 +268,7 @@ export default function ServerProfilePage() {
   return (
     <div className="p-4 space-y-4 flex flex-col flex-1 h-full">
       <header className="flex items-center">
-        <Button variant="ghost" asChild className="text-foreground hover:text-primary p-2">
+        <Button variant="ghost" asChild className="hover:text-primary p-2">
           <Link href="/servidores" className="flex items-center gap-2 text-lg">
             <ArrowLeft className="h-5 w-5" />
             <span className="font-bold">Voltar</span>
