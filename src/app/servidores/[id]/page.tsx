@@ -107,14 +107,22 @@ export default function ServerProfilePage() {
     const firestore = useFirestore();
     const { toast } = useToast();
 
+    // State for Faltas
     const [isFaltaDialogOpen, setIsFaltaDialogOpen] = useState(false);
     const [faltaReason, setFaltaReason] = useState('');
     const [faltaDia, setFaltaDia] = useState('');
     const [faltaMes, setFaltaMes] = useState('');
     const [faltaAno, setFaltaAno] = useState('');
-
     const [selectedFaltaYear, setSelectedFaltaYear] = useState<string>(new Date().getFullYear().toString());
     const [selectedFaltaMonth, setSelectedFaltaMonth] = useState<string>((new Date().getMonth() + 1).toString());
+
+    // State for Licenças
+    const [isLicencaDialogOpen, setIsLicencaDialogOpen] = useState(false);
+    const [licencaReason, setLicencaReason] = useState('');
+    const [licencaInicio, setLicencaInicio] = useState('');
+    const [licencaFim, setLicencaFim] = useState('');
+    const [selectedLicencaYear, setSelectedLicencaYear] = useState<string>(new Date().getFullYear().toString());
+    const [selectedLicencaMonth, setSelectedLicencaMonth] = useState<string>((new Date().getMonth() + 1).toString());
 
     const serverRef = useMemoFirebase(() => {
         if (!firestore || !id) return null;
@@ -176,6 +184,42 @@ export default function ServerProfilePage() {
         toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível remover a falta.' });
       }
     };
+    
+    const handleSaveLicenca = async () => {
+        if (!firestore || !id || !licencaInicio || !licencaFim) {
+            toast({ variant: 'destructive', title: 'Erro', description: 'As datas de início e fim são obrigatórias.' });
+            return;
+        }
+
+        try {
+            const licencasCollectionRef = collection(firestore, 'servers', id as string, 'licencas');
+            await addDoc(licencasCollectionRef, {
+                startDate: licencaInicio,
+                endDate: licencaFim,
+                reason: licencaReason,
+            });
+            toast({ title: 'Sucesso', description: 'Licença registrada com sucesso.' });
+            setIsLicencaDialogOpen(false);
+            setLicencaInicio('');
+            setLicencaFim('');
+            setLicencaReason('');
+        } catch (error) {
+            console.error("Erro ao registrar licença:", error);
+            toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível registrar a licença.' });
+        }
+    };
+
+    const handleDeleteLicenca = async (licencaId: string) => {
+      if (!firestore || !id || !licencaId) return;
+      try {
+        const licencaDocRef = doc(firestore, 'servers', id as string, 'licencas', licencaId);
+        await deleteDoc(licencaDocRef);
+        toast({ title: 'Sucesso', description: 'Licença removida com sucesso.' });
+      } catch (error) {
+        console.error("Erro ao remover licença:", error);
+        toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível remover a licença.' });
+      }
+    };
 
     const filteredFaltas = useMemo(() => {
         if (!faltas) return [];
@@ -184,6 +228,20 @@ export default function ServerProfilePage() {
             return year === selectedFaltaYear && month === selectedFaltaMonth.padStart(2, '0');
         });
     }, [faltas, selectedFaltaYear, selectedFaltaMonth]);
+    
+    const filteredLicencas = useMemo(() => {
+      if (!licencas) return [];
+      return licencas.filter(licenca => {
+          // Check if the license period overlaps with the selected month and year
+          const [startDay, startMonth, startYear] = licenca.startDate.split('/');
+          const licenseStartDate = new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
+          
+          const selectedDate = new Date(parseInt(selectedLicencaYear), parseInt(selectedLicencaMonth) - 1, 1);
+
+          return licenseStartDate.getFullYear().toString() === selectedLicencaYear && (licenseStartDate.getMonth() + 1).toString() === selectedLicencaMonth;
+      });
+    }, [licencas, selectedLicencaYear, selectedLicencaMonth]);
+
 
     const yearOptions = useMemo(() => {
         const currentYear = new Date().getFullYear();
@@ -326,10 +384,10 @@ export default function ServerProfilePage() {
   };
 
   const getStatusClass = (status: string) => {
-    if (status === 'Ativo') return 'bg-green-100 text-green-800 border-green-300 dark:bg-green-500/20 dark:text-green-400 dark:border-green-500/50';
-    if (status === 'Licença') return 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-500/20 dark:text-yellow-400 dark:border-yellow-500/50';
-    return 'bg-red-100 text-red-800 border-red-300 dark:bg-red-500/20 dark:text-red-400 dark:border-red-500/50';
-  };
+    if (status === 'Ativo') return 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/50 dark:text-green-400 dark:border-green-500/50';
+    if (status === 'Licença') return 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/50 dark:text-yellow-400 dark:border-yellow-500/50';
+    return 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/50 dark:text-red-400 dark:border-red-500/50';
+};
 
   const getStatusIcon = (status: string) => {
     if (status === 'Ativo') return <CheckCircle className="h-3 w-3 mr-1" />;
@@ -428,7 +486,7 @@ export default function ServerProfilePage() {
             <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
               <TabsTrigger value="ficha" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Ficha</TabsTrigger>
               <TabsTrigger value="faltas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Faltas</TabsTrigger>
-              <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground w-1/2 md:w_auto flex-grow">Licenças</TabsTrigger>
+              <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Licenças</TabsTrigger>
               <TabsTrigger value="ferias" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Férias</TabsTrigger>
             </TabsList>
           </div>
@@ -593,12 +651,136 @@ export default function ServerProfilePage() {
                 )}
               </CardContent>
             </Card>
-            <div className="mt-auto pt-4">
-              <Button className="w-full">Salvar Alterações</Button>
-            </div>
           </TabsContent>
           <TabsContent value="licencas" className="mt-8 md:mt-10">
-            <p className="text-center text-muted-foreground">Conteúdo de Licenças.</p>
+             <Card className="bg-card">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CalendarX className="h-6 w-6 text-primary" />
+                  <CardTitle className="text-lg">Licenças</CardTitle>
+                </div>
+                 <Dialog open={isLicencaDialogOpen} onOpenChange={setIsLicencaDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <PlusCircle className="h-4 w-4 mr-2" />
+                      Adicionar Licença
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Registrar Nova Licença</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                       <div className="space-y-2">
+                          <Label>Data de Início</Label>
+                          <Input
+                            type="text"
+                            placeholder="DD/MM/AAAA"
+                            value={licencaInicio}
+                            onChange={(e) => setLicencaInicio(e.target.value)}
+                          />
+                       </div>
+                       <div className="space-y-2">
+                          <Label>Data de Fim</Label>
+                          <Input
+                            type="text"
+                            placeholder="DD/MM/AAAA"
+                            value={licencaFim}
+                            onChange={(e) => setLicencaFim(e.target.value)}
+                          />
+                       </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="licenca-reason">Descrição</Label>
+                        <Textarea
+                          id="licenca-reason"
+                          placeholder="Adicione uma descrição ou observação..."
+                          value={licencaReason}
+                          onChange={(e) => setLicencaReason(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="ghost" onClick={() => setIsLicencaDialogOpen(false)}>Cancelar</Button>
+                      <Button onClick={handleSaveLicenca}>Salvar Licença</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                    <Select value={selectedLicencaMonth} onValueChange={setSelectedLicencaMonth}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Selecione o Mês" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {monthOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <Select value={selectedLicencaYear} onValueChange={setSelectedLicencaYear}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Selecione o Ano" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {yearOptions.map(year => (
+                                <SelectItem key={year} value={year}>{year}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                {isLoadingLicencas ? <p>Carregando licenças...</p> : (filteredLicencas && filteredLicencas.length > 0) ? (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Período</TableHead>
+                        <TableHead>Descrição</TableHead>
+                        <TableHead className="text-right">Ações</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredLicencas.map((licenca) => (
+                        <TableRow key={licenca.id}>
+                          <TableCell className="font-medium">{`${licenca.startDate} - ${licenca.endDate}`}</TableCell>
+                          <TableCell className="text-muted-foreground">{licenca.reason || 'Sem justificativa'}</TableCell>
+                          <TableCell className="text-right">
+                             <div className="flex items-center justify-end gap-2">
+                                <Button variant="ghost" size="icon" onClick={() => { /* Lógica de edição aqui */ }}>
+                                  <Edit className="h-5 w-5" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                      <Trash2 className="h-5 w-5 text-destructive" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Esta ação não pode ser desfeita. Isso excluirá permanentemente o registro de licença.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDeleteLicenca(licenca.id)}>
+                                        Excluir
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <p className="text-center text-muted-foreground py-4">Nenhuma licença registrada para este período.</p>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
           <TabsContent value="ferias" className="mt-8 md:mt-10">
             <p className="text-center text-muted-foreground">Conteúdo de Férias.</p>
@@ -609,4 +791,5 @@ export default function ServerProfilePage() {
   );
 }
  
+    
     
