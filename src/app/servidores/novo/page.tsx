@@ -16,6 +16,7 @@ import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useDoc, useFirestore, useMemoFirebase } from "@/firebase"
 import { collection, addDoc, doc, setDoc } from "firebase/firestore"
+import { cn } from "@/lib/utils"
 
 type ServerData = {
   id: string;
@@ -113,31 +114,31 @@ export default function NewServerPage() {
                 <TabsTrigger value="observacoes" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Observações</TabsTrigger>
             </TabsList>
         </div>
-        <div className="border border-t-0 rounded-b-lg p-6 flex-1 overflow-y-auto pb-24">
+        <div className="border border-t-0 rounded-b-lg p-6 flex-1 overflow-y-auto pb-24 bg-card">
           <TabsContent value="pessoais" className="mt-0">
             <div className="space-y-8">
-              <div className="space-y-6 bg-muted/30 p-4 rounded-lg">
+              <div className="space-y-6 p-4 rounded-lg">
                 <h2 className="text-lg font-semibold">Identificação</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="nome-completo">Nome Completo</Label>
-                    <Input id="nome-completo" placeholder="Ex: João da Silva" {...register("nomeCompleto")} />
+                    <Input id="nome-completo" placeholder="Ex: João da Silva" {...register("nomeCompleto")} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="nome-social">Nome Social</Label>
-                    <Input id="nome-social" placeholder="Ex: João" {...register("nomeSocial")} />
+                    <Input id="nome-social" placeholder="Ex: João" {...register("nomeSocial")} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="cpf">CPF</Label>
-                    <Input id="cpf" placeholder="000.000.000-00" {...register("cpf")} onChange={applyMask(maskCPF)} maxLength={14} />
+                    <Input id="cpf" placeholder="000.000.000-00" {...register("cpf")} onChange={applyMask(maskCPF)} maxLength={14} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="rg">RG</Label>
-                    <Input id="rg" placeholder="00.000.000-0" {...register("rg")} onChange={applyMask(maskRG)} maxLength={12} />
+                    <Input id="rg" placeholder="00.000.000-0" {...register("rg")} onChange={applyMask(maskRG)} maxLength={12} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="orgao-emissor">Órgão Emissor</Label>
-                    <Input id="orgao-emissor" placeholder="Ex: SSP/MS" {...register("orgaoEmissor")} />
+                    <Input id="orgao-emissor" placeholder="Ex: SSP/MS" {...register("orgaoEmissor")} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="possui-cnh">Possui CNH?</Label>
@@ -147,7 +148,7 @@ export default function NewServerPage() {
                         defaultValue="nao"
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                                <SelectTrigger id="possui-cnh">
+                                <SelectTrigger id="possui-cnh" className="bg-muted">
                                     <SelectValue placeholder="Selecione..." />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -162,7 +163,7 @@ export default function NewServerPage() {
                     <>
                       <div className="space-y-2">
                         <Label htmlFor="cnh-numero">Número do Registro CNH</Label>
-                        <Input id="cnh-numero" placeholder="00000000000" {...register("cnhNumero")} />
+                        <Input id="cnh-numero" placeholder="00000000000" {...register("cnhNumero")} className="bg-muted" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="cnh-categoria">Categoria CNH</Label>
@@ -171,7 +172,7 @@ export default function NewServerPage() {
                             control={control}
                             render={({ field }) => (
                                 <Select onValueChange={field.onChange} value={field.value}>
-                                  <SelectTrigger id="cnh-categoria">
+                                  <SelectTrigger id="cnh-categoria" className="bg-muted">
                                     <SelectValue placeholder="Selecione..." />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -198,7 +199,7 @@ export default function NewServerPage() {
                   )}
                   <div className="space-y-2 w-[90%] md:w-full">
                     <Label htmlFor="data-nascimento">Data de Nascimento</Label>
-                    <Input id="data-nascimento" type="text" placeholder="dd/mm/aaaa" {...register("dataNascimento")} onChange={applyMask(maskDate)} maxLength={10} />
+                    <Input id="data-nascimento" type="text" placeholder="dd/mm/aaaa" {...register("dataNascimento")} onChange={applyMask(maskDate)} maxLength={10} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="genero">Gênero</Label>
@@ -207,7 +208,7 @@ export default function NewServerPage() {
                         control={control}
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="genero">
+                              <SelectTrigger id="genero" className="bg-muted">
                                 <SelectValue placeholder="Selecione" />
                               </SelectTrigger>
                               <SelectContent>
@@ -224,7 +225,7 @@ export default function NewServerPage() {
                   {genero === 'outro' && (
                       <div className="space-y-2">
                           <Label htmlFor="outro-genero">Qual?</Label>
-                          <Input id="outro-genero" placeholder="Descreva seu gênero" {...register("outroGenero")} />
+                          <Input id="outro-genero" placeholder="Descreva seu gênero" {...register("outroGenero")} className="bg-muted" />
                       </div>
                   )}
                   <div className="space-y-2">
@@ -234,7 +235,7 @@ export default function NewServerPage() {
                         control={control}
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="raca-cor">
+                              <SelectTrigger id="raca-cor" className="bg-muted">
                                 <SelectValue placeholder="Selecione" />
                               </SelectTrigger>
                               <SelectContent>
@@ -255,7 +256,7 @@ export default function NewServerPage() {
                         control={control}
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="estado-civil">
+                              <SelectTrigger id="estado-civil" className="bg-muted">
                                 <SelectValue placeholder="Selecione" />
                               </SelectTrigger>
                               <SelectContent>
@@ -272,11 +273,11 @@ export default function NewServerPage() {
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="nacionalidade">Nacionalidade</Label>
-                    <Input id="nacionalidade" placeholder="Ex: Brasileiro(a)" {...register("nacionalidade")} />
+                    <Input id="nacionalidade" placeholder="Ex: Brasileiro(a)" {...register("nacionalidade")} className="bg-muted" />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="naturalidade">Naturalidade</Label>
-                    <Input id="naturalidade" placeholder="Ex: Campo Grande/MS" {...register("naturalidade")} />
+                    <Input id="naturalidade" placeholder="Ex: Campo Grande/MS" {...register("naturalidade")} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="pcd">É PCD?</Label>
@@ -286,7 +287,7 @@ export default function NewServerPage() {
                         defaultValue="nao"
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="pcd">
+                              <SelectTrigger id="pcd" className="bg-muted">
                                 <SelectValue placeholder="Selecione..." />
                               </SelectTrigger>
                               <SelectContent>
@@ -300,78 +301,78 @@ export default function NewServerPage() {
                   {isPCD === 'sim' && (
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="pcd-descricao">Descrição</Label>
-                      <Textarea id="pcd-descricao" placeholder="Descreva a deficiência..." {...register("pcdDescricao")} />
+                      <Textarea id="pcd-descricao" placeholder="Descreva a deficiência..." {...register("pcdDescricao")} className="bg-muted" />
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="space-y-6 bg-muted/30 p-4 rounded-lg">
+              <div className="space-y-6 p-4 rounded-lg">
                 <h2 className="text-lg font-semibold">Filiação</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                    <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="nome-mae">Nome da Mãe</Label>
-                    <Input id="nome-mae" placeholder="Ex: Maria da Silva" {...register("nomeMae")} />
+                    <Input id="nome-mae" placeholder="Ex: Maria da Silva" {...register("nomeMae")} className="bg-muted" />
                   </div>
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="nome-pai">Nome do Pai</Label>
-                    <Input id="nome-pai" placeholder="Ex: José da Silva" {...register("nomePai")} />
+                    <Input id="nome-pai" placeholder="Ex: José da Silva" {...register("nomePai")} className="bg-muted" />
                   </div>
                 </div>
               </div>
 
-               <div className="space-y-6 bg-muted/30 p-4 rounded-lg">
+               <div className="space-y-6 p-4 rounded-lg">
                 <h2 className="text-lg font-semibold">Contato</h2>
                 <div className="flex flex-col space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="telefone-principal">Telefone Principal</Label>
-                    <Input id="telefone-principal" type="tel" placeholder="(00) 00000-0000" {...register("telefonePrincipal")} onChange={applyMask(maskPhone)} maxLength={15} />
+                    <Input id="telefone-principal" type="tel" placeholder="(00) 00000-0000" {...register("telefonePrincipal")} onChange={applyMask(maskPhone)} maxLength={15} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="telefone-secundario">Telefone Secundário</Label>
-                    <Input id="telefone-secundario" type="tel" placeholder="(00) 00000-0000" {...register("telefoneSecundario")} onChange={applyMask(maskPhone)} maxLength={15} />
+                    <Input id="telefone-secundario" type="tel" placeholder="(00) 00000-0000" {...register("telefoneSecundario")} onChange={applyMask(maskPhone)} maxLength={15} className="bg-muted" />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="email-pessoal">E-mail Pessoal</Label>
-                    <Input id="email-pessoal" type="email" placeholder="exemplo@email.com" {...register("emailPessoal")} />
+                    <Input id="email-pessoal" type="email" placeholder="exemplo@email.com" {...register("emailPessoal")} className="bg-muted" />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="contato-emergencia-nome">Contato de Emergência (Nome)</Label>
-                    <Input id="contato-emergencia-nome" placeholder="Ex: Maria da Silva" {...register("contatoEmergenciaNome")} />
+                    <Input id="contato-emergencia-nome" placeholder="Ex: Maria da Silva" {...register("contatoEmergenciaNome")} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="contato-emergencia-telefone">Contato de Emergência (Telefone)</Label>
-                    <Input id="contato-emergencia-telefone" type="tel" placeholder="(00) 00000-0000" {...register("contatoEmergenciaTelefone")} onChange={applyMask(maskPhone)} maxLength={15} />
+                    <Input id="contato-emergencia-telefone" type="tel" placeholder="(00) 00000-0000" {...register("contatoEmergenciaTelefone")} onChange={applyMask(maskPhone)} maxLength={15} className="bg-muted" />
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-6 bg-muted/30 p-4 rounded-lg">
+              <div className="space-y-6 p-4 rounded-lg">
                 <h2 className="text-lg font-semibold">Endereço</h2>
                 <div className="flex flex-col space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="cep">CEP</Label>
-                    <Input id="cep" placeholder="00000-000" {...register("cep")} onChange={applyMask(maskCEP)} maxLength={9} />
+                    <Input id="cep" placeholder="00000-000" {...register("cep")} onChange={applyMask(maskCEP)} maxLength={9} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="logradouro">Logradouro</Label>
-                    <Input id="logradouro" placeholder="Ex: Rua das Flores" {...register("logradouro")} />
+                    <Input id="logradouro" placeholder="Ex: Rua das Flores" {...register("logradouro")} className="bg-muted" />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="numero">Número</Label>
-                    <Input id="numero" placeholder="Ex: 123" {...register("numero")} />
+                    <Input id="numero" placeholder="Ex: 123" {...register("numero")} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="complemento">Complemento</Label>
-                    <Input id="complemento" placeholder="Ex: Apto 4B" {...register("complemento")} />
+                    <Input id="complemento" placeholder="Ex: Apto 4B" {...register("complemento")} className="bg-muted" />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="bairro">Bairro</Label>
-                    <Input id="bairro" placeholder="Ex: Centro" {...register("bairro")} />
+                    <Input id="bairro" placeholder="Ex: Centro" {...register("bairro")} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="cidade">Cidade</Label>
-                    <Input id="cidade" placeholder="Ex: Campo Grande" {...register("cidade")} />
+                    <Input id="cidade" placeholder="Ex: Campo Grande" {...register("cidade")} className="bg-muted" />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="uf">UF</Label>
@@ -380,7 +381,7 @@ export default function NewServerPage() {
                         control={control}
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="uf">
+                              <SelectTrigger id="uf" className="bg-muted">
                                 <SelectValue placeholder="Selecione..." />
                               </SelectTrigger>
                               <SelectContent>
@@ -422,7 +423,7 @@ export default function NewServerPage() {
           </TabsContent>
           <TabsContent value="profissionais" className="mt-0">
             <div className="space-y-8">
-              <div className="space-y-6 bg-muted/30 p-4 rounded-lg">
+              <div className="space-y-6 p-4 rounded-lg">
                 <h2 className="text-lg font-semibold">Informações do Cargo</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 md:col-span-2">
@@ -432,7 +433,7 @@ export default function NewServerPage() {
                         control={control}
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="tipo-vinculo">
+                              <SelectTrigger id="tipo-vinculo" className="bg-muted">
                                 <SelectValue placeholder="Selecione o tipo de vínculo" />
                               </SelectTrigger>
                               <SelectContent>
@@ -449,20 +450,20 @@ export default function NewServerPage() {
                   {tipoVinculo === 'Efetivo' && (
                       <div className="space-y-2 md:col-span-2">
                           <Label htmlFor="matricula">Matrícula</Label>
-                          <Input id="matricula" placeholder="Digite a matrícula" {...register("matricula")} />
+                          <Input id="matricula" placeholder="Digite a matrícula" {...register("matricula")} className="bg-muted" />
                       </div>
                   )}
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="cargo">Cargo</Label>
-                    <Input id="cargo" placeholder="Ex: Desenvolvedor(a) Frontend" {...register("cargo")} />
+                    <Input id="cargo" placeholder="Ex: Desenvolvedor(a) Frontend" {...register("cargo")} className="bg-muted" />
                   </div>
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="funcao">Função</Label>
-                    <Input id="funcao" placeholder="Ex: Coordenador de Curso" {...register("funcao")} />
+                    <Input id="funcao" placeholder="Ex: Coordenador de Curso" {...register("funcao")} className="bg-muted" />
                   </div>
                   <div className="space-y-2 w-[90%] md:w-full">
                     <Label htmlFor="data-inicio">Data de Início</Label>
-                    <Input id="data-inicio" type="text" placeholder="dd/mm/aaaa" {...register("dataInicio")} onChange={applyMask(maskDate)} maxLength={10} />
+                    <Input id="data-inicio" type="text" placeholder="dd/mm/aaaa" {...register("dataInicio")} onChange={applyMask(maskDate)} maxLength={10} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="possui-dga">Possui DGA?</Label>
@@ -472,7 +473,7 @@ export default function NewServerPage() {
                         defaultValue="nao"
                         render={({ field }) => (
                            <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="possui-dga">
+                              <SelectTrigger id="possui-dga" className="bg-muted">
                                 <SelectValue placeholder="Selecione..." />
                               </SelectTrigger>
                               <SelectContent>
@@ -486,16 +487,16 @@ export default function NewServerPage() {
                   {watch('possuiDGA') === 'sim' && (
                       <div className="space-y-2 md:col-span-2">
                           <Label htmlFor="dga-descricao">Especificação DGA</Label>
-                          <Textarea id="dga-descricao" placeholder="Descreva o DGA..." {...register("especificacaoDGA")}/>
+                          <Textarea id="dga-descricao" placeholder="Descreva o DGA..." {...register("especificacaoDGA")} className="bg-muted" />
                       </div>
                   )}
                    <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="setor-lotacao">Setor / Lotação</Label>
-                    <Input id="setor-lotacao" placeholder="Ex: Tecnologia da Informação" {...register("setor")} />
+                    <Input id="setor-lotacao" placeholder="Ex: Tecnologia da Informação" {...register("setor")} className="bg-muted" />
                   </div>
                    <div className="space-y-2">
                     <Label htmlFor="ramal">Ramal</Label>
-                    <Input id="ramal" placeholder="Ex: 1234" {...register("ramal")} />
+                    <Input id="ramal" placeholder="Ex: 1234" {...register("ramal")} className="bg-muted" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="jornada">Jornada</Label>
@@ -504,7 +505,7 @@ export default function NewServerPage() {
                         control={control}
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="jornada">
+                              <SelectTrigger id="jornada" className="bg-muted">
                                 <SelectValue placeholder="Selecione..." />
                               </SelectTrigger>
                               <SelectContent>
@@ -524,7 +525,7 @@ export default function NewServerPage() {
                         control={control}
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="turno">
+                              <SelectTrigger id="turno" className="bg-muted">
                                 <SelectValue placeholder="Selecione..." />
                               </SelectTrigger>
                               <SelectContent>
@@ -541,7 +542,7 @@ export default function NewServerPage() {
                   {turno === 'outro' && (
                       <div className="space-y-2 md:col-span-2">
                           <Label htmlFor="outro-turno">Qual?</Label>
-                          <Textarea id="outro-turno" placeholder="Descreva o turno..." {...register("outroTurno")} />
+                          <Textarea id="outro-turno" placeholder="Descreva o turno..." {...register("outroTurno")} className="bg-muted" />
                       </div>
                   )}
                    <div className="space-y-2">
@@ -552,7 +553,7 @@ export default function NewServerPage() {
                         defaultValue="Ativo"
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="status">
+                              <SelectTrigger id="status" className="bg-muted">
                                 <SelectValue placeholder="Selecione o status" />
                               </SelectTrigger>
                               <SelectContent>
@@ -566,7 +567,7 @@ export default function NewServerPage() {
                   </div>
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="email-institucional">E-mail Institucional</Label>
-                    <Input id="email-institucional" type="email" placeholder="nome@workwise.com" {...register("emailInstitucional")} />
+                    <Input id="email-institucional" type="email" placeholder="nome@workwise.com" {...register("emailInstitucional")} className="bg-muted" />
                   </div>
                 </div>
               </div>
@@ -574,7 +575,7 @@ export default function NewServerPage() {
           </TabsContent>
           <TabsContent value="formacao" className="mt-0">
             <div className="space-y-8">
-              <div className="space-y-6 bg-muted/30 p-4 rounded-lg">
+              <div className="space-y-6 p-4 rounded-lg">
                 <h2 className="text-lg font-semibold">Formação Acadêmica</h2>
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="escolaridade">Escolaridade</Label>
@@ -583,7 +584,7 @@ export default function NewServerPage() {
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                            <SelectTrigger id="escolaridade">
+                            <SelectTrigger id="escolaridade" className="bg-muted">
                                 <SelectValue placeholder="Selecione o nível de..." />
                             </SelectTrigger>
                             <SelectContent>
@@ -600,7 +601,7 @@ export default function NewServerPage() {
               </div>
 
               {(escolaridade === 'ensino-fundamental' || escolaridade === 'ensino-medio') && (
-                <Card className="bg-muted/30 dark:bg-card border border-border">
+                <Card className="border border-border">
                   <CardHeader>
                     <CardTitle className="text-base">
                       {escolaridade === 'ensino-fundamental' ? 'Ensino Fundamental' : 'Ensino Médio'}
@@ -609,40 +610,40 @@ export default function NewServerPage() {
                   <CardContent className="space-y-4">
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="instituicao-ensino">Instituição de Ensino</Label>
-                      <Input id="instituicao-ensino" placeholder="Nome da escola" {...register("instituicaoEnsinoBasico")} />
+                      <Input id="instituicao-ensino" placeholder="Nome da escola" {...register("instituicaoEnsinoBasico")} className="bg-muted" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="ano-conclusao-ensino">Ano de Conclusão</Label>
-                      <Input id="ano-conclusao-ensino" placeholder="Ex: 2010" {...register("anoConclusaoEnsinoBasico")} />
+                      <Input id="ano-conclusao-ensino" placeholder="Ex: 2010" {...register("anoConclusaoEnsinoBasico")} className="bg-muted" />
                     </div>
                   </CardContent>
                 </Card>
               )}
 
               {(escolaridade === 'graduacao' || escolaridade === 'pos-graduacao') && (
-                <Card className="bg-muted/30 dark:bg-card border border-border">
+                <Card className="border border-border">
                   <CardHeader>
                     <CardTitle className="text-base">Graduação Base</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="curso-graduacao-base">Curso de Graduação</Label>
-                      <Input id="curso-graduacao-base" placeholder="Ex: Análise de Sistemas" {...register("cursoGraduacao")} />
+                      <Input id="curso-graduacao-base" placeholder="Ex: Análise de Sistemas" {...register("cursoGraduacao")} className="bg-muted" />
                     </div>
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="instituicao-graduacao">Instituição de Graduação</Label>
-                      <Input id="instituicao-graduacao" placeholder="Nome da universidade" {...register("instituicaoGraduacao")} />
+                      <Input id="instituicao-graduacao" placeholder="Nome da universidade" {...register("instituicaoGraduacao")} className="bg-muted" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="ano-conclusao-graduacao">Ano de Conclusão da Graduação</Label>
-                      <Input id="ano-conclusao-graduacao" placeholder="Ex: 2014" {...register("anoConclusaoGrad")} />
+                      <Input id="ano-conclusao-graduacao" placeholder="Ex: 2014" {...register("anoConclusaoGrad")} className="bg-muted" />
                     </div>
                   </CardContent>
                 </Card>
               )}
               
               {escolaridade === 'pos-graduacao' && (
-                <Card className="bg-muted/30 dark:bg-card border border-border">
+                <Card className="border border-border">
                   <CardHeader>
                     <CardTitle className="text-base">Pós-Graduação</CardTitle>
                   </CardHeader>
@@ -654,7 +655,7 @@ export default function NewServerPage() {
                           control={control}
                           render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                                <SelectTrigger id="tipo-pos-graduacao">
+                                <SelectTrigger id="tipo-pos-graduacao" className="bg-muted">
                                     <SelectValue placeholder="Selecione o tipo..." />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -670,14 +671,14 @@ export default function NewServerPage() {
                     </div>
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="curso-pos-graduacao">Curso de Pós-Graduação</Label>
-                      <Input id="curso-pos-graduacao" placeholder="Nome do curso" {...register("cursoPosGraduacao")} />
+                      <Input id="curso-pos-graduacao" placeholder="Nome do curso" {...register("cursoPosGraduacao")} className="bg-muted" />
                     </div>
                     <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="instituicao-pos-graduacao">Instituição de Pós-Graduação</Label>                      <Input id="instituicao-pos-graduacao" placeholder="Nome da instituição" {...register("instituicaoPosGraduacao")} />
+                      <Label htmlFor="instituicao-pos-graduacao">Instituição de Pós-Graduação</Label>                      <Input id="instituicao-pos-graduacao" placeholder="Nome da instituição" {...register("instituicaoPosGraduacao")} className="bg-muted" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="ano-conclusao-pos-graduacao">Ano de Conclusão da Pós-Graduação</Label>
-                      <Input id="ano-conclusao-pos-graduacao" placeholder="Ex: 2016" {...register("anoConclusaoPosGrad")} />
+                      <Input id="ano-conclusao-pos-graduacao" placeholder="Ex: 2016" {...register("anoConclusaoPosGrad")} className="bg-muted" />
                     </div>
                   </CardContent>
                 </Card>
@@ -686,11 +687,11 @@ export default function NewServerPage() {
             </div>
           </TabsContent>
           <TabsContent value="observacoes" className="mt-0 flex flex-col flex-1">
-             <div className="space-y-6 flex-1 bg-muted/30 p-4 rounded-lg">
+             <div className="space-y-6 flex-1 p-4 rounded-lg">
               <h2 className="text-lg font-semibold">Observações Gerais</h2>
               <div className="space-y-2">
                   <Label htmlFor="observacoes-text">Observações</Label>
-                  <Textarea id="observacoes-text" placeholder="Adicione qualquer observação relevante aqui..." rows={8} {...register("observacoes")} />
+                  <Textarea id="observacoes-text" placeholder="Adicione qualquer observação relevante aqui..." rows={8} {...register("observacoes")} className="bg-muted" />
               </div>
             </div>
             <div className="mt-auto pt-4">
