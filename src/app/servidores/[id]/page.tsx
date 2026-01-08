@@ -501,10 +501,10 @@ export default function ServerProfilePage() {
                           </div>
                        </div>
                       <div className="space-y-2">
-                        <Label htmlFor="falta-reason">Motivo (Opcional)</Label>
+                        <Label htmlFor="falta-reason">Descrição</Label>
                         <Textarea
                           id="falta-reason"
-                          placeholder="Descreva o motivo da falta..."
+                          placeholder="adicione uma descrição ou observação..."
                           value={faltaReason}
                           onChange={(e) => setFaltaReason(e.target.value)}
                         />
