@@ -73,38 +73,53 @@ export default function SettingsPage() {
   const handleSaveChanges = async () => {
     if (!auth.currentUser) return;
 
+    let profileUpdated = false;
+    let themeUpdated = false;
+
+    // Save profile changes (synced to account)
     try {
       if (name !== auth.currentUser.displayName) {
         await updateProfile(auth.currentUser, { displayName: name });
+        profileUpdated = true;
       }
-
-      localStorage.setItem('theme', selectedTheme);
-      setCurrentTheme(selectedTheme);
-
-      const root = window.document.documentElement;
-      root.classList.remove('light', 'dark');
-      if (selectedTheme === 'system') {
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        root.classList.add(systemTheme);
-      } else {
-        root.classList.add(selectedTheme);
-      }
-      
-      toast({
-        title: "Alterações salvas!",
-        description: "Suas configurações foram atualizadas.",
-      });
-
-      router.push('/');
-
     } catch (error) {
-      console.error('Erro ao salvar alterações:', error);
+      console.error('Erro ao atualizar perfil:', error);
        toast({
         variant: 'destructive',
         title: 'Erro',
-        description: 'Não foi possível salvar as alterações.',
+        description: 'Não foi possível salvar as alterações no perfil.',
       });
+      return; // Stop if profile update fails
     }
+
+    // Save theme changes (local to this browser)
+    if (selectedTheme !== currentTheme) {
+        localStorage.setItem('theme', selectedTheme);
+        setCurrentTheme(selectedTheme);
+        const root = window.document.documentElement;
+        root.classList.remove('light', 'dark');
+        if (selectedTheme === 'system') {
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            root.classList.add(systemTheme);
+        } else {
+            root.classList.add(selectedTheme);
+        }
+        themeUpdated = true;
+    }
+    
+    if(profileUpdated || themeUpdated) {
+        toast({
+            title: "Alterações salvas!",
+            description: "Suas configurações foram atualizadas.",
+        });
+    } else {
+         toast({
+            title: "Nenhuma alteração",
+            description: "Nenhuma nova configuração para salvar.",
+        });
+    }
+
+    router.push('/');
   };
 
   const handleLogout = async () => {
@@ -160,7 +175,7 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle>Tema</CardTitle>
               <CardDescription>
-                Personalize a aparência do aplicativo.
+                Personalize a aparência do aplicativo. Esta configuração é salva apenas neste navegador.
               </CardDescription>
             </CardHeader>
             <CardContent>
