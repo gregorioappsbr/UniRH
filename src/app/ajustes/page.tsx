@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LogOut, Settings, CalendarDays, Share, Trash2 } from 'lucide-react';
+import { useAuth } from '@/firebase';
+import { useRouter } from 'next/navigation';
 
 const events = [
   {
@@ -29,6 +31,18 @@ const events = [
 
 
 export default function SettingsPage() {
+  const auth = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      router.push('/login');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };
+
   return (
     <div className="p-4 space-y-6 flex flex-col flex-1 h-full">
       <header className="space-y-2 text-center">
@@ -159,7 +173,11 @@ export default function SettingsPage() {
         </TabsContent>
       </Tabs>
       <div className="space-y-4 mt-auto">
-        <Button variant="destructive" className="w-full bg-red-800/50 text-red-300 border border-red-700/50 hover:bg-red-800/70">
+        <Button 
+            variant="destructive" 
+            className="w-full bg-red-800/50 text-red-300 border border-red-700/50 hover:bg-red-800/70"
+            onClick={handleLogout}
+        >
           <LogOut className="mr-2 h-4 w-4" />
           Sair da Conta
         </Button>

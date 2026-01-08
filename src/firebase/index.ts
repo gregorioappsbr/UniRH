@@ -2,7 +2,7 @@
 
 import { firebaseConfig } from '@/firebase/config';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { Auth, getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore'
 
 // IMPORTANT: DO NOT MODIFY THIS FUNCTION
@@ -39,6 +39,17 @@ export function getSdks(firebaseApp: FirebaseApp) {
     firestore: getFirestore(firebaseApp)
   };
 }
+
+/** Initiate email/password sign-in. */
+export function initiateEmailSignIn(auth: Auth, email: string, password: string): Promise<any> {
+  return signInWithEmailAndPassword(auth, email, password);
+}
+
+/** Initiate email/password sign-up. */
+export function initiateEmailSignUp(auth: Auth, email: string, password: string): Promise<any> {
+  return createUserWithEmailAndPassword(auth, email, password);
+}
+
 
 export * from './provider';
 export * from './client-provider';

@@ -9,6 +9,8 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/firebase';
+import { useRouter } from 'next/navigation';
 
 const navItems = [
   { href: '/', label: 'Painel', icon: Home },
@@ -19,6 +21,17 @@ const navItems = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const auth = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      router.push('/login');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border/50 h-20 flex justify-around items-center z-50">
