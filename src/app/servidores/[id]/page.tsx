@@ -608,7 +608,7 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isFaltaDialogOpen} onOpenChange={setIsFaltaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" onClick={() => setEditingFalta(null)}>
+                    <Button size="sm" onClick={() => setEditingFalta(null)} className="bg-blue-500 hover:bg-blue-600 text-white">
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Falta
                     </Button>
@@ -663,16 +663,6 @@ export default function ServerProfilePage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 mb-4">
-                    <Select value={selectedFaltaMonth} onValueChange={setSelectedFaltaMonth}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Selecione o Mês" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {monthOptions.map(option => (
-                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
                     <Select value={selectedFaltaYear} onValueChange={setSelectedFaltaYear}>
                         <SelectTrigger>
                             <SelectValue placeholder="Selecione o Ano" />
@@ -680,6 +670,16 @@ export default function ServerProfilePage() {
                         <SelectContent>
                             {yearOptions.map(year => (
                                 <SelectItem key={year} value={year}>{year}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <Select value={selectedFaltaMonth} onValueChange={setSelectedFaltaMonth}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Selecione o Mês" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {monthOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
@@ -750,7 +750,7 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isLicencaDialogOpen} onOpenChange={setIsLicencaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" onClick={() => setEditingLicenca(null)}>
+                    <Button size="sm" onClick={() => setEditingLicenca(null)} className="bg-blue-500 hover:bg-blue-600 text-white">
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Licença
                     </Button>
@@ -827,6 +827,16 @@ export default function ServerProfilePage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 mb-4">
+                     <Select value={selectedLicencaYear} onValueChange={setSelectedLicencaYear}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Selecione o Ano" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {yearOptions.map(year => (
+                                <SelectItem key={year} value={year}>{year}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                     <Select value={selectedLicencaMonth} onValueChange={setSelectedLicencaMonth}>
                         <SelectTrigger>
                             <SelectValue placeholder="Selecione o Mês" />
@@ -834,16 +844,6 @@ export default function ServerProfilePage() {
                         <SelectContent>
                             {monthOptions.map(option => (
                                 <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <Select value={selectedLicencaYear} onValueChange={setSelectedLicencaYear}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Selecione o Ano" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {yearOptions.map(year => (
-                                <SelectItem key={year} value={year}>{year}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
@@ -862,10 +862,10 @@ export default function ServerProfilePage() {
                     <TableBody>
                       {filteredLicencas.map((licenca) => (
                         <TableRow key={licenca.id} className="flex flex-col md:table-row p-4 md:p-0 border-b last:border-b-0 md:border-b">
-                           <TableCell className="p-0 md:p-4">
+                           <TableCell className="p-0 md:p-4 font-medium">
                             <span className="md:hidden font-semibold">Tipo: </span>{licenca.type}
                           </TableCell>
-                          <TableCell className="font-medium p-0 md:p-4">
+                          <TableCell className="p-0 md:p-4">
                             <span className="md:hidden font-semibold">Período: </span>{`${licenca.startDate} - ${licenca.endDate}`}
                           </TableCell>
                           <TableCell className="text-muted-foreground p-0 md:p-4">
