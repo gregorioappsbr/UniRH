@@ -37,7 +37,7 @@ export default function ServerListPage() {
     return collection(firestore, 'servers');
   }, [firestore]);
 
-  const { data: servers = [], isLoading } = useCollection<any>(serversQuery);
+  const { data: servers, isLoading } = useCollection<any>(serversQuery);
 
   const [selectedServers, setSelectedServers] = useState<Record<string, boolean>>({});
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
@@ -54,7 +54,7 @@ export default function ServerListPage() {
     }
   }, [searchParams]);
 
-  const sortedServers = [...servers].sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
+  const sortedServers = (servers || []).sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
 
   const selectionCount = Object.values(selectedServers).filter(Boolean).length;
 
@@ -271,7 +271,7 @@ export default function ServerListPage() {
   };
 
   const getAllSelectedServersDetails = (forWhatsApp: boolean = false) => {
-    return servers
+    return (servers || [])
       .filter(server => selectedServers[server.id])
       .map(server => getSelectedServersDetails(server, forWhatsApp))
       .join('\n\n---\n\n');
@@ -332,7 +332,7 @@ export default function ServerListPage() {
   };
 
 const handleExportPDF = async () => {
-    const selected = servers.filter(server => selectedServers[server.id]);
+    const selected = (servers || []).filter(server => selectedServers[server.id]);
     if (selected.length === 0) return;
 
     try {

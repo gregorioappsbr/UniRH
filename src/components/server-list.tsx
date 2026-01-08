@@ -33,9 +33,9 @@ export function ServerList() {
         return collection(firestore, 'servers');
     }, [firestore]);
 
-    const { data: servers = [], isLoading } = useCollection<any>(serversQuery);
+    const { data: servers, isLoading } = useCollection<any>(serversQuery);
 
-    const recentServers = [...servers]
+    const recentServers = (servers || [])
       .sort((a, b) => b.id.localeCompare(a.id)) // Assuming a timestamp-based ID or similar for "recent"
       .slice(0, 5);
 
