@@ -67,8 +67,14 @@ export default function SettingsPage() {
   // Effect to set user data once loaded
   useEffect(() => {
     if (user) {
-      setName(user.displayName || 'Mirna');
-      setEmail(user.email || 'mirna.almeida@uems.br');
+      if (user.email === 'litencarv@uems.br') {
+        setName('Lilian Tenório');
+      } else if (user.email === 'mirna.almeida@uems.br') {
+        setName('Mirna Almeida');
+      } else {
+        setName(user.displayName || '');
+      }
+      setEmail(user.email || '');
     }
   }, [user]);
 
@@ -331,3 +337,5 @@ export default function SettingsPage() {
       </div>
     </div>
   );
+
+    
