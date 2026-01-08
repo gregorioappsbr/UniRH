@@ -1,3 +1,4 @@
+
 'use client'
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -66,7 +67,7 @@ export default function NewServerPage() {
                 });
             } else {
                 const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
-                const newServer = { ...data, initials, rating: 10 };
+                const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
                 await addDoc(collection(firestore, 'servers'), newServer);
                 toast({
                     title: "Servidor adicionado!",
@@ -115,7 +116,7 @@ export default function NewServerPage() {
         <div className="border border-t-0 rounded-b-lg p-6 flex-1 overflow-y-auto pb-24">
           <TabsContent value="pessoais" className="mt-0">
             <div className="space-y-8">
-              <div className="space-y-6">
+              <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Identificação</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 md:col-span-2">
@@ -305,7 +306,7 @@ export default function NewServerPage() {
                 </div>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Filiação</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                    <div className="space-y-2 md:col-span-2">
@@ -319,7 +320,7 @@ export default function NewServerPage() {
                 </div>
               </div>
 
-               <div className="space-y-6">
+               <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Contato</h2>
                 <div className="flex flex-col space-y-4">
                   <div className="space-y-2">
@@ -345,7 +346,7 @@ export default function NewServerPage() {
                 </div>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Endereço</h2>
                 <div className="flex flex-col space-y-4">
                   <div className="space-y-2">
@@ -421,7 +422,7 @@ export default function NewServerPage() {
           </TabsContent>
           <TabsContent value="profissionais" className="mt-0">
             <div className="space-y-8">
-              <div className="space-y-6">
+              <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Informações do Cargo</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 md:col-span-2">
@@ -548,6 +549,7 @@ export default function NewServerPage() {
                     <Controller
                         name="status"
                         control={control}
+                        defaultValue="Ativo"
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
                               <SelectTrigger id="status">
@@ -572,7 +574,7 @@ export default function NewServerPage() {
           </TabsContent>
           <TabsContent value="formacao" className="mt-0">
             <div className="space-y-8">
-              <div className="space-y-6">
+              <div className="space-y-6 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
                 <h2 className="text-lg font-semibold">Formação Acadêmica</h2>
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="escolaridade">Escolaridade</Label>
@@ -684,7 +686,7 @@ export default function NewServerPage() {
             </div>
           </TabsContent>
           <TabsContent value="observacoes" className="mt-0 flex flex-col flex-1">
-             <div className="space-y-6 flex-1">
+             <div className="space-y-6 flex-1 bg-card p-4 rounded-lg dark:bg-transparent dark:p-0">
               <h2 className="text-lg font-semibold">Observações Gerais</h2>
               <div className="space-y-2">
                   <Label htmlFor="observacoes-text">Observações</Label>
@@ -703,3 +705,5 @@ export default function NewServerPage() {
     </form>
   )
 }
+
+    
