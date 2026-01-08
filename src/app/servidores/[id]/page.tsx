@@ -19,8 +19,8 @@ import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useParams } from 'next/navigation';
 import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
-import { doc, collection, addDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
-import { useState, useMemo } from 'react';
+import { doc, collection, addDoc, deleteDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
@@ -116,6 +116,7 @@ export default function ServerProfilePage() {
     const [faltaAno, setFaltaAno] = useState('');
     const [selectedFaltaYear, setSelectedFaltaYear] = useState<string>(new Date().getFullYear().toString());
     const [selectedFaltaMonth, setSelectedFaltaMonth] = useState<string>((new Date().getMonth() + 1).toString());
+    const [editingFalta, setEditingFalta] = useState<Falta | null>(null);
 
     // State for Licenças
     const [isLicencaDialogOpen, setIsLicencaDialogOpen] = useState(false);
@@ -129,6 +130,7 @@ export default function ServerProfilePage() {
     const [licencaEndDia, setLicencaEndDia] = useState('');
     const [licencaEndMes, setLicencaEndMes] = useState('');
     const [licencaEndAno, setLicencaEndAno] = useState('');
+    const [editingLicenca, setEditingLicenca] = useState<Licenca | null>(null);
 
     const serverRef = useMemoFirebase(() => {
         if (!firestore || !id) return null;
@@ -148,6 +150,63 @@ export default function ServerProfilePage() {
     const { data: server, isLoading: isLoadingServer } = useDoc<Server>(serverRef);
     const { data: faltas, isLoading: isLoadingFaltas } = useCollection<Falta>(faltasQuery);
     const { data: licencas, isLoading: isLoadingLicencas } = useCollection<Licenca>(licencasQuery);
+
+    const resetFaltaForm = () => {
+        setFaltaDia('');
+        setFaltaMes('');
+        setFaltaAno('');
+        setFaltaReason('');
+        setEditingFalta(null);
+    };
+
+    const resetLicencaForm = () => {
+        setLicencaStartDia('');
+        setLicencaStartMes('');
+        setLicencaStartAno('');
+        setLicencaEndDia('');
+        setLicencaEndMes('');
+        setLicencaEndAno('');
+        setLicencaReason('');
+        setLicencaType('');
+        setEditingLicenca(null);
+    };
+
+    useEffect(() => {
+        if (isFaltaDialogOpen) {
+            if (editingFalta) {
+                const [day, month, year] = editingFalta.date.split('/');
+                setFaltaDia(day);
+                setFaltaMes(month);
+                setFaltaAno(year);
+                setFaltaReason(editingFalta.reason);
+            } else {
+                resetFaltaForm();
+            }
+        } else {
+            resetFaltaForm();
+        }
+    }, [isFaltaDialogOpen, editingFalta]);
+
+    useEffect(() => {
+        if (isLicencaDialogOpen) {
+            if (editingLicenca) {
+                const [startDay, startMonth, startYear] = editingLicenca.startDate.split('/');
+                const [endDay, endMonth, endYear] = editingLicenca.endDate.split('/');
+                setLicencaStartDia(startDay);
+                setLicencaStartMes(startMonth);
+                setLicencaStartAno(startYear);
+                setLicencaEndDia(endDay);
+                setLicencaEndMes(endMonth);
+                setLicencaEndAno(endYear);
+                setLicencaType(editingLicenca.type);
+                setLicencaReason(editingLicenca.reason);
+            } else {
+                resetLicencaForm();
+            }
+        } else {
+            resetLicencaForm();
+        }
+    }, [isLicencaDialogOpen, editingLicenca]);
     
     const handleSaveFalta = async () => {
         const dia = parseInt(faltaDia, 10);
@@ -160,23 +219,23 @@ export default function ServerProfilePage() {
         }
 
         const dataCompleta = `${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${ano}`;
+        const faltaPayload = { date: dataCompleta, reason: faltaReason, updatedAt: serverTimestamp() };
 
         try {
-            const faltasCollectionRef = collection(firestore, 'servers', id as string, 'faltas');
-            await addDoc(faltasCollectionRef, {
-                date: dataCompleta,
-                reason: faltaReason,
-                createdAt: serverTimestamp(),
-            });
-            toast({ title: 'Sucesso', description: 'Falta registrada com sucesso.' });
+             if (editingFalta) {
+                const faltaDocRef = doc(firestore, 'servers', id as string, 'faltas', editingFalta.id);
+                await setDoc(faltaDocRef, faltaPayload, { merge: true });
+                toast({ title: 'Sucesso', description: 'Falta atualizada com sucesso.' });
+            } else {
+                const faltasCollectionRef = collection(firestore, 'servers', id as string, 'faltas');
+                await addDoc(faltasCollectionRef, { ...faltaPayload, createdAt: serverTimestamp() });
+                toast({ title: 'Sucesso', description: 'Falta registrada com sucesso.' });
+            }
+            
             setIsFaltaDialogOpen(false);
-            setFaltaDia('');
-            setFaltaMes('');
-            setFaltaAno('');
-            setFaltaReason('');
         } catch (error) {
-            console.error("Erro ao registrar falta:", error);
-            toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível registrar a falta.' });
+            console.error("Erro ao salvar falta:", error);
+            toast({ variant: 'destructive', title: 'Erro', description: `Não foi possível ${editingFalta ? 'atualizar' : 'registrar'} a falta.` });
         }
     };
 
@@ -212,28 +271,28 @@ export default function ServerProfilePage() {
         const licencaEndDate = `${String(endDia).padStart(2, '0')}/${String(endMes).padStart(2, '0')}/${endAno}`;
         const finalReason = licencaType === 'outro' ? licencaReason : licencaReason;
 
+        const licencaPayload = {
+            startDate: licencaStartDate,
+            endDate: licencaEndDate,
+            type: licencaType,
+            reason: finalReason,
+            updatedAt: serverTimestamp(),
+        };
+
         try {
-            const licencasCollectionRef = collection(firestore, 'servers', id as string, 'licencas');
-            await addDoc(licencasCollectionRef, {
-                startDate: licencaStartDate,
-                endDate: licencaEndDate,
-                type: licencaType,
-                reason: finalReason,
-                createdAt: serverTimestamp(),
-            });
-            toast({ title: 'Sucesso', description: 'Licença registrada com sucesso.' });
+            if (editingLicenca) {
+                const licencaDocRef = doc(firestore, 'servers', id as string, 'licencas', editingLicenca.id);
+                await setDoc(licencaDocRef, licencaPayload, { merge: true });
+                toast({ title: 'Sucesso', description: 'Licença atualizada com sucesso.' });
+            } else {
+                const licencasCollectionRef = collection(firestore, 'servers', id as string, 'licencas');
+                await addDoc(licencasCollectionRef, { ...licencaPayload, createdAt: serverTimestamp() });
+                toast({ title: 'Sucesso', description: 'Licença registrada com sucesso.' });
+            }
             setIsLicencaDialogOpen(false);
-            setLicencaStartDia('');
-            setLicencaStartMes('');
-            setLicencaStartAno('');
-            setLicencaEndDia('');
-            setLicencaEndMes('');
-            setLicencaEndAno('');
-            setLicencaReason('');
-            setLicencaType('');
         } catch (error) {
             console.error("Erro ao registrar licença:", error);
-            toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível registrar a licença.' });
+            toast({ variant: 'destructive', title: 'Erro', description: `Não foi possível ${editingLicenca ? 'atualizar' : 'registrar'} a licença.` });
         }
     };
 
@@ -549,14 +608,14 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isFaltaDialogOpen} onOpenChange={setIsFaltaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => setEditingFalta(null)}>
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Falta
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
-                      <DialogTitle>Registrar Nova Falta</DialogTitle>
+                      <DialogTitle>{editingFalta ? 'Editar Falta' : 'Registrar Nova Falta'}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                        <div className="space-y-2">
@@ -597,7 +656,7 @@ export default function ServerProfilePage() {
                     </div>
                     <DialogFooter>
                       <Button variant="ghost" onClick={() => setIsFaltaDialogOpen(false)}>Cancelar</Button>
-                      <Button onClick={handleSaveFalta}>Salvar Falta</Button>
+                      <Button onClick={handleSaveFalta}>Salvar</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -642,7 +701,7 @@ export default function ServerProfilePage() {
                           <TableCell className="text-muted-foreground">{falta.reason || 'Sem justificativa'}</TableCell>
                           <TableCell className="text-right">
                              <div className="flex items-center justify-end gap-2">
-                                <Button variant="ghost" size="icon" onClick={() => { /* Lógica de edição aqui */ }}>
+                                <Button variant="ghost" size="icon" onClick={() => { setEditingFalta(falta); setIsFaltaDialogOpen(true); }}>
                                   <Edit className="h-5 w-5" />
                                 </Button>
                                 <AlertDialog>
@@ -687,14 +746,14 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isLicencaDialogOpen} onOpenChange={setIsLicencaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => setEditingLicenca(null)}>
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Licença
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
-                      <DialogTitle>Registrar Nova Licença</DialogTitle>
+                      <DialogTitle>{editingLicenca ? 'Editar Licença' : 'Registrar Nova Licença'}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                        <div className="space-y-2">
@@ -757,7 +816,7 @@ export default function ServerProfilePage() {
                     </div>
                     <DialogFooter>
                       <Button variant="ghost" onClick={() => setIsLicencaDialogOpen(false)}>Cancelar</Button>
-                      <Button onClick={handleSaveLicenca}>Salvar Licença</Button>
+                      <Button onClick={handleSaveLicenca}>Salvar</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -804,7 +863,7 @@ export default function ServerProfilePage() {
                           <TableCell className="text-muted-foreground">{licenca.reason || '-'}</TableCell>
                           <TableCell className="text-right">
                              <div className="flex items-center justify-end gap-2">
-                                <Button variant="ghost" size="icon" onClick={() => { /* Lógica de edição aqui */ }}>
+                                <Button variant="ghost" size="icon" onClick={() => { setEditingLicenca(licenca); setIsLicencaDialogOpen(true); }}>
                                   <Edit className="h-5 w-5" />
                                 </Button>
                                 <AlertDialog>
@@ -857,3 +916,4 @@ export default function ServerProfilePage() {
     
 
     
+
