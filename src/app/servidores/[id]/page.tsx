@@ -62,7 +62,7 @@ type Server = {
     possuiDGA?: string;
     especificacaoDGA?: string;
     ramal?: string;
-running     jornada?: string;
+    jornada?: string;
     turno?: string;
     outroTurno?: string;
     escolaridade?: string;
