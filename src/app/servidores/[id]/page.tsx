@@ -504,7 +504,7 @@ export default function ServerProfilePage() {
                         <Label htmlFor="falta-reason">Descrição</Label>
                         <Textarea
                           id="falta-reason"
-                          placeholder="adicione uma descrição ou observação..."
+                          placeholder="Adicione uma descrição ou observação..."
                           value={faltaReason}
                           onChange={(e) => setFaltaReason(e.target.value)}
                         />
