@@ -642,12 +642,14 @@ const handleExportPDF = async () => {
               </div>
               <div className="space-y-4 p-4">
                 {filteredServers.map((server) => (
-                   <div 
+                  <div 
                       key={server.id}
                       className="flex items-start gap-4 border-b pb-4 last:border-b-0"
                     >
                     <div 
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
                       className="flex items-center h-full pt-1"
                     >
                         <Checkbox
@@ -659,7 +661,14 @@ const handleExportPDF = async () => {
                     </div>
                      <div 
                         className="flex-1 cursor-pointer"
-                        onClick={() => router.push(`/servidores/${server.id}`)}
+                        onClick={(e) => {
+                            const target = e.target as HTMLElement;
+                            if (target.closest('a[href^="https://wa.me"]')) {
+                                e.stopPropagation();
+                                return;
+                            }
+                            router.push(`/servidores/${server.id}`);
+                        }}
                      >
                       <div className="flex items-start gap-4">
                           <div className="flex flex-col items-center gap-2">
@@ -688,14 +697,14 @@ const handleExportPDF = async () => {
                                 <span>{server.funcao}</span>
                               </div>
                             )}
+                            {server.telefonePrincipal && (
+                                <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-2 text-base text-foreground hover:text-primary" onClick={(e) => e.stopPropagation()}>
+                                  <WhatsAppIcon className="h-4 w-4" />
+                                  <span>{server.telefonePrincipal}</span>
+                                </a>
+                              )}
                           </div>
                       </div>
-                      {server.telefonePrincipal && (
-                          <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-2 text-base text-foreground hover:text-primary" onClick={(e) => e.stopPropagation()}>
-                            <WhatsAppIcon className="h-4 w-4" />
-                            <span>{server.telefonePrincipal}</span>
-                          </a>
-                        )}
                     </div>
                   </div>
                 ))}
@@ -705,7 +714,7 @@ const handleExportPDF = async () => {
              <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[50px]">
+                    <TableHead className="w-[50px]" onClick={(e) => e.stopPropagation()}>
                       <Checkbox
                         id="select-all-desktop"
                         checked={allSelected}
