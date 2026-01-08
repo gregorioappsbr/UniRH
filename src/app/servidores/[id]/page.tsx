@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle, FileText, Users, ScrollText } from 'lucide-react';
@@ -19,8 +19,6 @@ import { useParams } from 'next/navigation';
 import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
 import { doc, collection, addDoc } from 'firebase/firestore';
 import { useState } from 'react';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
 
 // Define a type for the server data
@@ -107,8 +105,10 @@ export default function ServerProfilePage() {
     const { toast } = useToast();
 
     const [isFaltaDialogOpen, setIsFaltaDialogOpen] = useState(false);
-    const [faltaDate, setFaltaDate] = useState<Date | undefined>(new Date());
     const [faltaReason, setFaltaReason] = useState('');
+    const [faltaDia, setFaltaDia] = useState('');
+    const [faltaMes, setFaltaMes] = useState('');
+    const [faltaAno, setFaltaAno] = useState('');
 
     const serverRef = useMemoFirebase(() => {
         if (!firestore || !id) return null;
@@ -130,20 +130,28 @@ export default function ServerProfilePage() {
     const { data: licencas, isLoading: isLoadingLicencas } = useCollection<Licenca>(licencasQuery);
     
     const handleSaveFalta = async () => {
-        if (!firestore || !id || !faltaDate) {
-            toast({ variant: 'destructive', title: 'Erro', description: 'Dados inválidos para salvar a falta.' });
+        const dia = parseInt(faltaDia, 10);
+        const mes = parseInt(faltaMes, 10);
+        const ano = parseInt(faltaAno, 10);
+
+        if (!firestore || !id || !dia || !mes || !ano || dia > 31 || mes > 12 || ano < 2000) {
+            toast({ variant: 'destructive', title: 'Erro', description: 'Data inválida. Por favor, verifique os campos.' });
             return;
         }
+
+        const dataCompleta = `${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${ano}`;
 
         try {
             const faltasCollectionRef = collection(firestore, 'servers', id as string, 'faltas');
             await addDoc(faltasCollectionRef, {
-                date: format(faltaDate, 'dd/MM/yyyy'),
+                date: dataCompleta,
                 reason: faltaReason,
             });
             toast({ title: 'Sucesso', description: 'Falta registrada com sucesso.' });
             setIsFaltaDialogOpen(false);
-            setFaltaDate(new Date());
+            setFaltaDia('');
+            setFaltaMes('');
+            setFaltaAno('');
             setFaltaReason('');
         } catch (error) {
             console.error("Erro ao registrar falta:", error);
@@ -423,16 +431,32 @@ export default function ServerProfilePage() {
                       <DialogTitle>Registrar Nova Falta</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
-                      <div className="space-y-2 flex flex-col items-center">
-                        <Label>Data da Falta</Label>
-                        <Calendar
-                          mode="single"
-                          selected={faltaDate}
-                          onSelect={setFaltaDate}
-                          className="rounded-md border"
-                          locale={ptBR}
-                        />
-                      </div>
+                       <div className="space-y-2">
+                          <Label>Data da Falta</Label>
+                          <div className="grid grid-cols-3 gap-2">
+                            <Input
+                              type="number"
+                              placeholder="Dia"
+                              value={faltaDia}
+                              onChange={(e) => setFaltaDia(e.target.value)}
+                              maxLength={2}
+                            />
+                             <Input
+                              type="number"
+                              placeholder="Mês"
+                              value={faltaMes}
+                              onChange={(e) => setFaltaMes(e.target.value)}
+                              maxLength={2}
+                            />
+                             <Input
+                              type="number"
+                              placeholder="Ano"
+                              value={faltaAno}
+                              onChange={(e) => setFaltaAno(e.target.value)}
+                              maxLength={4}
+                            />
+                          </div>
+                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="falta-reason">Motivo (Opcional)</Label>
                         <Textarea
@@ -484,5 +508,3 @@ export default function ServerProfilePage() {
   );
 }
  
-
-    
