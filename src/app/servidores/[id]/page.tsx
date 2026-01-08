@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -17,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useParams } from 'next/navigation';
 import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
-import { doc, collection, addDoc } from 'firebase/firestore';
+import { doc, collection, addDoc, deleteDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -157,6 +158,18 @@ export default function ServerProfilePage() {
             console.error("Erro ao registrar falta:", error);
             toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível registrar a falta.' });
         }
+    };
+
+    const handleDeleteFalta = async (faltaId: string) => {
+      if (!firestore || !id || !faltaId) return;
+      try {
+        const faltaDocRef = doc(firestore, 'servers', id as string, 'faltas', faltaId);
+        await deleteDoc(faltaDocRef);
+        toast({ title: 'Sucesso', description: 'Falta removida com sucesso.' });
+      } catch (error) {
+        console.error("Erro ao remover falta:", error);
+        toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível remover a falta.' });
+      }
     };
 
 
@@ -480,11 +493,34 @@ export default function ServerProfilePage() {
                   <div key={falta.id} className="flex items-center justify-between p-4 rounded-lg bg-background">
                     <div>
                       <p className="font-medium">{falta.date}</p>
-                      <p className="text-sm text-muted-foreground">{falta.reason}</p>
+                      <p className="text-sm text-muted-foreground">{falta.reason || 'Sem justificativa'}</p>
                     </div>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="h-5 w-5" />
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon" onClick={() => { /* Lógica de edição aqui */ }}>
+                        <Edit className="h-5 w-5" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <Trash2 className="h-5 w-5 text-destructive" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Esta ação não pode ser desfeita. Isso excluirá permanentemente o registro de falta.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDeleteFalta(falta.id)}>
+                              Excluir
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
                   </div>
                   ))
                 ) : (
@@ -508,3 +544,5 @@ export default function ServerProfilePage() {
   );
 }
  
+
+    
