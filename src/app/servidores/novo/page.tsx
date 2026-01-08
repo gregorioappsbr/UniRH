@@ -7,47 +7,79 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { X } from "lucide-react"
+import { X, Save } from "lucide-react"
 import Link from "next/link"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useForm, Controller } from "react-hook-form";
 import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
-import { useRouter } from "next/navigation"
-import { useFirestore } from "@/firebase"
-import { collection, addDoc } from "firebase/firestore"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useDoc, useFirestore, useMemoFirebase } from "@/firebase"
+import { collection, addDoc, doc, setDoc } from "firebase/firestore"
+
+type ServerData = {
+  id: string;
+  // Add all fields from your form
+  [key: string]: any;
+};
 
 export default function NewServerPage() {
-    const { register, handleSubmit, watch, control } = useForm();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { toast } = useToast();
     const firestore = useFirestore();
+
+    const serverId = searchParams.get('id');
+    const isEditing = Boolean(serverId);
+
+    const serverRef = useMemoFirebase(() => {
+        if (!firestore || !serverId) return null;
+        return doc(firestore, 'servers', serverId);
+    }, [firestore, serverId]);
+
+    const { data: serverData, isLoading: isLoadingServer } = useDoc<ServerData>(serverRef);
+
+    const { register, handleSubmit, watch, control, reset } = useForm();
     
-    const possuiCNH = watch('possuiCNH', 'nao');
-    const genero = watch('genero', '');
-    const isPCD = watch('isPCD', 'nao');
-    const tipoVinculo = watch('vinculo', '');
-    const turno = watch('turno', '');
-    const escolaridade = watch('escolaridade', '');
+    useEffect(() => {
+        if (isEditing && serverData) {
+            reset(serverData);
+        }
+    }, [isEditing, serverData, reset]);
+
+    const possuiCNH = watch('possuiCNH', serverData?.possuiCNH || 'nao');
+    const genero = watch('genero', serverData?.genero || '');
+    const isPCD = watch('isPCD', serverData?.isPCD || 'nao');
+    const tipoVinculo = watch('vinculo', serverData?.vinculo || '');
+    const turno = watch('turno', serverData?.turno || '');
+    const escolaridade = watch('escolaridade', serverData?.escolaridade || '');
 
     const onSubmit = async (data: any) => {
         if (!firestore) return;
 
-        const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
-        const newServer = { ...data, initials, rating: 10 };
-
         try {
-          await addDoc(collection(firestore, 'servers'), newServer);
-          toast({
-              title: "Servidor adicionado!",
-              description: "O novo servidor foi adicionado com sucesso.",
-          });
-          router.push('/servidores');
+            if (isEditing && serverId) {
+                const docRef = doc(firestore, 'servers', serverId);
+                await setDoc(docRef, data, { merge: true });
+                 toast({
+                    title: "Servidor atualizado!",
+                    description: "Os dados do servidor foram atualizados com sucesso.",
+                });
+            } else {
+                const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
+                const newServer = { ...data, initials, rating: 10 };
+                await addDoc(collection(firestore, 'servers'), newServer);
+                toast({
+                    title: "Servidor adicionado!",
+                    description: "O novo servidor foi adicionado com sucesso.",
+                });
+            }
+            router.push('/servidores');
         } catch (error) {
-          console.error("Erro ao adicionar servidor:", error);
+          console.error("Erro ao salvar servidor:", error);
           toast({
               variant: "destructive",
-              title: "Erro ao adicionar",
-              description: "Não foi possível adicionar o novo servidor.",
+              title: `Erro ao ${isEditing ? 'atualizar' : 'adicionar'}`,
+              description: `Não foi possível ${isEditing ? 'atualizar' : 'adicionar'} o servidor.`,
           });
         }
     };
@@ -56,10 +88,14 @@ export default function NewServerPage() {
       e.target.value = masker(e.target.value);
     };
 
+    if (isEditing && isLoadingServer) {
+        return <div className="p-4 text-center">Carregando dados do servidor...</div>;
+    }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="p-4 h-full flex flex-col">
       <header className="relative flex items-center justify-center mb-4">
-        <h1 className="text-3xl font-bold">Novo Servidor</h1>
+        <h1 className="text-3xl font-bold">{isEditing ? 'Editar Servidor' : 'Novo Servidor'}</h1>
         <Button variant="ghost" size="icon" asChild className="absolute right-0 top-1/2 -translate-y-1/2">
           <Link href="/servidores">
             <X className="h-5 w-5" />
@@ -656,7 +692,10 @@ export default function NewServerPage() {
               </div>
             </div>
             <div className="mt-auto pt-4">
-                <Button type="submit" className="w-full">Adicionar Servidor</Button>
+                 <Button type="submit" className="w-full">
+                    <Save className="mr-2 h-4 w-4" />
+                    {isEditing ? 'Salvar Alterações' : 'Adicionar Servidor'}
+                </Button>
             </div>
           </TabsContent>
         </div>

@@ -320,9 +320,11 @@ export default function ServerProfilePage() {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline">
-              <Edit className="h-4 w-4 mr-2" />
-              Editar Perfil
+            <Button variant="outline" asChild>
+              <Link href={`/servidores/novo?id=${id}`}>
+                <Edit className="h-4 w-4 mr-2" />
+                Editar Perfil
+              </Link>
             </Button>
             <Button variant="destructive">
               <Trash2 className="h-4 w-4 mr-2" />
@@ -365,9 +367,6 @@ export default function ServerProfilePage() {
                 </AccordionItem>
               ))}
             </Accordion>
-            <div className="mt-auto pt-4">
-              <Button className="w-full">Salvar Alterações</Button>
-            </div>
           </TabsContent>
           <TabsContent value="faltas" className="mt-8 flex flex-col flex-1 md:mt-10">
             <Card className="bg-card">
