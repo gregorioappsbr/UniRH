@@ -8,11 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle, FileText, Users, ScrollText, CalendarIcon } from 'lucide-react';
+import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle, FileText, Users, ScrollText } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -419,36 +418,20 @@ export default function ServerProfilePage() {
                       Adicionar Falta
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle>Registrar Nova Falta</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
-                      <div className="space-y-2">
+                      <div className="space-y-2 flex flex-col items-center">
                         <Label>Data da Falta</Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full justify-start text-left font-normal",
-                                !faltaDate && "text-muted-foreground"
-                              )}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {faltaDate ? format(faltaDate, "PPP", { locale: ptBR }) : <span>Escolha uma data</span>}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
-                              selected={faltaDate}
-                              onSelect={setFaltaDate}
-                              initialFocus
-                              locale={ptBR}
-                            />
-                          </PopoverContent>
-                        </Popover>
+                        <Calendar
+                          mode="single"
+                          selected={faltaDate}
+                          onSelect={setFaltaDate}
+                          className="rounded-md border"
+                          locale={ptBR}
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="falta-reason">Motivo (Opcional)</Label>
@@ -501,3 +484,5 @@ export default function ServerProfilePage() {
   );
 }
  
+
+    
