@@ -121,7 +121,7 @@ export default function ServerProfilePage() {
     const fichaItems = server ? [
       {
         icon: User,
-        label: "Identificação",
+        label: "Dados Pessoais",
         content: [
           { label: "Nome Completo", value: server.nomeCompleto },
           { label: "Nome Social", value: server.nomeSocial },
