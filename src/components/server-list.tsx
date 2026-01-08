@@ -158,7 +158,7 @@ export function ServerList() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex-1 space-y-2">
+                    <div className="flex-1 space-y-1">
                       <p className="font-semibold">{server.nomeCompleto}</p>
                       <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
                        {server.funcao && (

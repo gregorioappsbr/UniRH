@@ -78,7 +78,7 @@ export default function ServerListPage() {
         setVinculoFilters(prev => [...prev, capitalizedVinculo]);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, vinculoFilters]);
 
   const selectionCount = Object.values(selectedServers).filter(Boolean).length;
 
@@ -644,7 +644,7 @@ const handleExportPDF = async () => {
                 {filteredServers.map((server) => (
                    <div 
                       key={server.id}
-                      className="flex items-start gap-4 pb-4 border-b last:border-b-0 cursor-pointer"
+                      className="flex items-start gap-4 border-b pb-4 last:border-b-0 cursor-pointer"
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (
@@ -681,7 +681,7 @@ const handleExportPDF = async () => {
                           </div>
                         </div>
                       </div>
-                      <div className="flex-1 space-y-2">
+                      <div className="flex-1 space-y-1">
                         <p className="font-semibold">{server.nomeCompleto}</p>
                         <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
                         {server.funcao && (
