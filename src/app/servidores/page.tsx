@@ -19,7 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import { jsPDF } from "jspdf";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, deleteDoc, doc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, query } from 'firebase/firestore';
 
 
 const statusOptions = ['Ativo', 'Inativo', 'Licença'];
@@ -39,10 +39,35 @@ export default function ServerListPage() {
   }, [firestore]);
 
   const { data: servers, isLoading } = useCollection<any>(serversQuery);
-
+  
+  const [serversWithRatings, setServersWithRatings] = useState<any[]>([]);
   const [selectedServers, setSelectedServers] = useState<Record<string, boolean>>({});
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [vinculoFilters, setVinculoFilters] = useState<string[]>([]);
+  
+  useEffect(() => {
+    const calculateRatings = async () => {
+      if (!servers || !firestore) return;
+      
+      const serversData = await Promise.all(
+        servers.map(async (server) => {
+          const faltasQuery = query(collection(firestore, 'servers', server.id, 'faltas'));
+          const licencasQuery = query(collection(firestore, 'servers', server.id, 'licencas'));
+          const [faltasSnapshot, licencasSnapshot] = await Promise.all([
+            getDocs(faltasQuery),
+            getDocs(licencasQuery),
+          ]);
+          const calculatedRating = 10 - (faltasSnapshot.size * 1) - (licencasSnapshot.size * 0.5);
+          return { ...server, calculatedRating };
+        })
+      );
+
+      const sortedServers = serversData.sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
+      setServersWithRatings(sortedServers);
+    };
+
+    calculateRatings();
+  }, [servers, firestore]);
 
   useEffect(() => {
     const vinculoQuery = searchParams.get('vinculo');
@@ -54,8 +79,6 @@ export default function ServerListPage() {
       }
     }
   }, [searchParams]);
-
-  const sortedServers = (servers || []).sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
 
   const selectionCount = Object.values(selectedServers).filter(Boolean).length;
 
@@ -93,7 +116,7 @@ export default function ServerListPage() {
     setVinculoFilters([]);
   };
 
-  const filteredServers = sortedServers.filter(server => {
+  const filteredServers = serversWithRatings.filter(server => {
     const statusMatch = statusFilters.length === 0 || statusFilters.includes(server.status);
     const vinculoMatch = vinculoFilters.length === 0 || vinculoFilters.includes(server.vinculo);
     return statusMatch && vinculoMatch;
@@ -144,7 +167,7 @@ export default function ServerListPage() {
     }
   };
 
-  const getSelectedServersDetails = (server: (typeof servers)[0], forWhatsApp: boolean = false) => {
+  const getSelectedServersDetails = (server: (typeof serversWithRatings)[0], forWhatsApp: boolean = false) => {
     if (forWhatsApp) {
         const underline = '--------------------';
         let details = `*FICHA COMPLETA - ${server.nomeCompleto.toUpperCase()}*\n${underline}\n\n`;
@@ -652,9 +675,9 @@ const handleExportPDF = async () => {
                               {server.status}
                             </Badge>
                           )}
-                          <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
+                          <div className={cn("flex items-center text-xs", getRatingClass(server.calculatedRating))}>
                             <Award className="w-3 h-3 mr-1 fill-current" />
-                            <span>Nota: {server.rating}</span>
+                            <span>Nota: {server.calculatedRating.toFixed(1)}</span>
                           </div>
                         </div>
                       </div>
@@ -739,9 +762,9 @@ const handleExportPDF = async () => {
                               {getStatusIcon(server.status)}
                               {server.status}
                           </Badge>
-                           <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
+                           <div className={cn("flex items-center text-xs", getRatingClass(server.calculatedRating))}>
                               <Award className="w-3 h-3 mr-1 fill-current" />
-                              <span>Nota: {server.rating}</span>
+                              <span>Nota: {server.calculatedRating.toFixed(1)}</span>
                           </div>
                         </div>
                       </TableCell>

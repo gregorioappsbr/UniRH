@@ -20,13 +20,25 @@ import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { collection, getDocs, query } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 
+type Server = {
+  id: string;
+  initials: string;
+  nomeCompleto: string;
+  emailInstitucional: string;
+  status: string;
+  rating: number;
+  funcao: string;
+  telefonePrincipal: string;
+};
 
 export function ServerList() {
     const isMobile = useIsMobile();
     const router = useRouter();
     const firestore = useFirestore();
+    const [serversWithRatings, setServersWithRatings] = useState<any[]>([]);
 
     const serversQuery = useMemoFirebase(() => {
         if (!firestore) return null;
@@ -35,9 +47,32 @@ export function ServerList() {
 
     const { data: servers, isLoading } = useCollection<any>(serversQuery);
 
-    const recentServers = (servers || [])
-      .sort((a, b) => b.id.localeCompare(a.id)) // Assuming a timestamp-based ID or similar for "recent"
-      .slice(0, 5);
+    useEffect(() => {
+      const calculateRatings = async () => {
+        if (!servers || !firestore) return;
+        
+        const serversData = await Promise.all(
+          servers.map(async (server) => {
+            const faltasQuery = query(collection(firestore, 'servers', server.id, 'faltas'));
+            const licencasQuery = query(collection(firestore, 'servers', server.id, 'licencas'));
+            const [faltasSnapshot, licencasSnapshot] = await Promise.all([
+              getDocs(faltasQuery),
+              getDocs(licencasQuery),
+            ]);
+            const calculatedRating = 10 - (faltasSnapshot.size * 1) - (licencasSnapshot.size * 0.5);
+            return { ...server, calculatedRating };
+          })
+        );
+        
+        const recentServers = serversData
+            .sort((a, b) => b.id.localeCompare(a.id))
+            .slice(0, 5);
+
+        setServersWithRatings(recentServers);
+      };
+
+      calculateRatings();
+    }, [servers, firestore]);
 
     const getRatingClass = (rating: number) => {
         if (rating >= 8) return 'text-green-400';
@@ -94,7 +129,7 @@ export function ServerList() {
             <p className="text-center">Carregando...</p>
         ) : isMobile ? (
              <div className="space-y-4">
-                {recentServers.map((server) => (
+                {serversWithRatings.map((server) => (
                   <div
                     key={server.id}
                     className="flex items-start gap-4 border-b pb-4 last:border-b-0 cursor-pointer"
@@ -117,9 +152,9 @@ export function ServerList() {
                             {server.status}
                           </Badge>
                         )}
-                        <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
+                        <div className={cn("flex items-center text-xs", getRatingClass(server.calculatedRating))}>
                             <Award className="w-3 h-3 mr-1 fill-current" />
-                            <span>Nota: {server.rating}</span>
+                            <span>Nota: {server.calculatedRating.toFixed(1)}</span>
                         </div>
                       </div>
                     </div>
@@ -154,7 +189,7 @@ export function ServerList() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {recentServers.map((server) => (
+                  {serversWithRatings.map((server) => (
                     <TableRow
                       key={server.id}
                       className="cursor-pointer"
@@ -184,9 +219,9 @@ export function ServerList() {
                           </Badge>
                       </TableCell>
                       <TableCell>
-                         <div className={cn("flex items-center", getRatingClass(server.rating))}>
+                         <div className={cn("flex items-center", getRatingClass(server.calculatedRating))}>
                             <Award className="w-3 h-3 mr-1 fill-current" />
-                            <span>{server.rating}</span>
+                            <span>{server.calculatedRating.toFixed(1)}</span>
                           </div>
                       </TableCell>
                       <TableCell>
