@@ -106,8 +106,8 @@ export default function NewServerPage() {
       </header>
 
       <Tabs defaultValue="pessoais" className="w-full flex-1 flex flex-col overflow-hidden">
-          <div className="border rounded-t-lg sticky top-0 bg-background z-10">
-            <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
+          <div className="sticky top-0 bg-background z-10">
+            <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4 border">
                 <TabsTrigger value="pessoais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Pessoais</TabsTrigger>
                 <TabsTrigger value="profissionais" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Dados Profissionais</TabsTrigger>
                 <TabsTrigger value="formacao" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Formação</TabsTrigger>
