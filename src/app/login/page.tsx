@@ -33,7 +33,14 @@ export default function LoginPage() {
       let description = 'Credenciais inválidas. Verifique seu e-mail e senha.';
       if (error.code === 'auth/network-request-failed') {
         description = 'Erro de rede. Verifique sua conexão com a internet.';
+      } else if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') {
+        description = 'O e-mail informado não foi encontrado.';
+      } else if (error.code === 'auth/wrong-password') {
+        description = 'A senha está incorreta.';
+      } else if (error.code === 'auth/invalid-credential') {
+        description = 'As credenciais fornecidas são inválidas ou não existem. Verifique se o usuário foi cadastrado no Firebase.';
       }
+      
       toast({
         variant: 'destructive',
         title: 'Erro de login',
