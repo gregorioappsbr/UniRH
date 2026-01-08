@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -243,86 +241,83 @@ export default function ServerProfilePage() {
         </CardContent>
       </Card>
       
-      <Tabs defaultValue="ficha" className="w-full flex-1 flex flex-col">
-        <div className="border dark:border-white/80 rounded-md">
-          <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
-            <TabsTrigger value="ficha" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Ficha</TabsTrigger>
-            <TabsTrigger value="faltas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Faltas</TabsTrigger>
-            <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground w-1/2 md:w_auto flex-grow">Licenças</TabsTrigger>
-            <TabsTrigger value="ferias" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Férias</TabsTrigger>
-          </TabsList>
-        </div>
-        <TabsContent value="ficha" className="mt-8 flex-1 flex flex-col md:mt-10">
-          <Accordion type="single" collapsible className="w-full space-y-2">
-            {fichaItems.map((item, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="bg-card border-border dark:border-white/80 border rounded-lg">
-                <AccordionTrigger className="p-4 hover:no-underline">
-                  <div className="flex items-center gap-3">
-                    <item.icon className="h-5 w-5 text-primary" />
-                    <span className="font-semibold">{item.label}</span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="p-4 pt-0">
-                  <div className="space-y-2">
-                    {item.content.map((detail, detailIndex) => detail.value && (
-                      <div key={detailIndex} className="flex justify-between items-center text-sm p-2 bg-background rounded-md">
-                        <span className="font-semibold text-muted-foreground">{detail.label}:</span>
-                        <span className="text-right text-foreground">{detail.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-          <div className="mt-auto pt-4">
-            <Button className="w-full">Salvar Alterações</Button>
+      {server && (
+        <Tabs defaultValue="ficha" className="w-full flex-1 flex flex-col">
+          <div className="border dark:border-white/80 rounded-md">
+            <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
+              <TabsTrigger value="ficha" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Ficha</TabsTrigger>
+              <TabsTrigger value="faltas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Faltas</TabsTrigger>
+              <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground w-1/2 md:w_auto flex-grow">Licenças</TabsTrigger>
+              <TabsTrigger value="ferias" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Férias</TabsTrigger>
+            </TabsList>
           </div>
-        </TabsContent>
-        <TabsContent value="faltas" className="mt-8 flex flex-col flex-1 md:mt-10">
-           <Card className="bg-card">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div className="flex items-center gap-2">
-                <CalendarX className="h-6 w-6 text-primary" />
-                <CardTitle className="text-lg">Faltas</CardTitle>
-              </div>
-              <Button variant="outline" size="sm">
-                <PlusCircle className="h-4 w-4 mr-2" />
-                Adicionar Falta
-              </Button>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {faltas.map((falta, index) => (
-                <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-background">
-                  <div>
-                    <p className="font-medium">{falta.date}</p>
-                    <p className="text-sm text-muted-foreground">{falta.reason}</p>
-                  </div>
-                  <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="h-5 w-5" />
-                  </Button>
-                </div>
+          <TabsContent value="ficha" className="mt-8 flex-1 flex flex-col md:mt-10">
+            <Accordion type="single" collapsible className="w-full space-y-2">
+              {fichaItems.map((item, index) => (
+                <AccordionItem key={index} value={`item-${index}`} className="bg-card border-border dark:border-white/80 border rounded-lg">
+                  <AccordionTrigger className="p-4 hover:no-underline">
+                    <div className="flex items-center gap-3">
+                      <item.icon className="h-5 w-5 text-primary" />
+                      <span className="font-semibold">{item.label}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="p-4 pt-0">
+                    <div className="space-y-2">
+                      {item.content.map((detail, detailIndex) => detail.value && (
+                        <div key={detailIndex} className="flex justify-between items-center text-sm p-2 bg-card rounded-md">
+                          <span className="font-semibold text-muted-foreground">{detail.label}:</span>
+                          <span className="text-right text-foreground">{detail.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
               ))}
-            </CardContent>
-          </Card>
-          <div className="mt-auto pt-4">
-            <Button className="w-full">Salvar Alterações</Button>
-          </div>
-        </TabsContent>
-        <TabsContent value="licencas" className="mt-8 md:mt-10">
-          <p className="text-center text-muted-foreground">Conteúdo de Licenças.</p>
-        </TabsContent>
-        <TabsContent value="ferias" className="mt-8 md:mt-10">
-          <p className="text-center text-muted-foreground">Conteúdo de Férias.</p>
-        </TabsContent>
-      </Tabs>
+            </Accordion>
+            <div className="mt-auto pt-4">
+              <Button className="w-full">Salvar Alterações</Button>
+            </div>
+          </TabsContent>
+          <TabsContent value="faltas" className="mt-8 flex flex-col flex-1 md:mt-10">
+            <Card className="bg-card">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CalendarX className="h-6 w-6 text-primary" />
+                  <CardTitle className="text-lg">Faltas</CardTitle>
+                </div>
+                <Button variant="outline" size="sm">
+                  <PlusCircle className="h-4 w-4 mr-2" />
+                  Adicionar Falta
+                </Button>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {faltas.map((falta, index) => (
+                  <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-background">
+                    <div>
+                      <p className="font-medium">{falta.date}</p>
+                      <p className="text-sm text-muted-foreground">{falta.reason}</p>
+                    </div>
+                    <Button variant="ghost" size="icon">
+                      <MoreHorizontal className="h-5 w-5" />
+                    </Button>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+            <div className="mt-auto pt-4">
+              <Button className="w-full">Salvar Alterações</Button>
+            </div>
+          </TabsContent>
+          <TabsContent value="licencas" className="mt-8 md:mt-10">
+            <p className="text-center text-muted-foreground">Conteúdo de Licenças.</p>
+          </TabsContent>
+          <TabsContent value="ferias" className="mt-8 md:mt-10">
+            <p className="text-center text-muted-foreground">Conteúdo de Férias.</p>
+          </TabsContent>
+        </Tabs>
+      )}
     </div>
   );
 }
 
     
-
-    
-
-    
-
