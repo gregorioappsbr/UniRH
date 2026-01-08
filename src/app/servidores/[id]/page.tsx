@@ -7,13 +7,22 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle, FileText, Users, ScrollText } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle, FileText, Users, ScrollText, CalendarIcon } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useParams } from 'next/navigation';
 import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
-import { doc, collection } from 'firebase/firestore';
+import { doc, collection, addDoc } from 'firebase/firestore';
+import { useState } from 'react';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { useToast } from '@/hooks/use-toast';
 
 // Define a type for the server data
 type Server = {
@@ -96,6 +105,11 @@ export default function ServerProfilePage() {
     const params = useParams();
     const { id } = params;
     const firestore = useFirestore();
+    const { toast } = useToast();
+
+    const [isFaltaDialogOpen, setIsFaltaDialogOpen] = useState(false);
+    const [faltaDate, setFaltaDate] = useState<Date | undefined>(new Date());
+    const [faltaReason, setFaltaReason] = useState('');
 
     const serverRef = useMemoFirebase(() => {
         if (!firestore || !id) return null;
@@ -115,6 +129,29 @@ export default function ServerProfilePage() {
     const { data: server, isLoading: isLoadingServer } = useDoc<Server>(serverRef);
     const { data: faltas, isLoading: isLoadingFaltas } = useCollection<Falta>(faltasQuery);
     const { data: licencas, isLoading: isLoadingLicencas } = useCollection<Licenca>(licencasQuery);
+    
+    const handleSaveFalta = async () => {
+        if (!firestore || !id || !faltaDate) {
+            toast({ variant: 'destructive', title: 'Erro', description: 'Dados inválidos para salvar a falta.' });
+            return;
+        }
+
+        try {
+            const faltasCollectionRef = collection(firestore, 'servers', id as string, 'faltas');
+            await addDoc(faltasCollectionRef, {
+                date: format(faltaDate, 'dd/MM/yyyy'),
+                reason: faltaReason,
+            });
+            toast({ title: 'Sucesso', description: 'Falta registrada com sucesso.' });
+            setIsFaltaDialogOpen(false);
+            setFaltaDate(new Date());
+            setFaltaReason('');
+        } catch (error) {
+            console.error("Erro ao registrar falta:", error);
+            toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível registrar a falta.' });
+        }
+    };
+
 
     const calculatedRating = 10 - ((faltas?.length ?? 0) * 1) - ((licencas?.length ?? 0) * 0.5);
 
@@ -375,10 +412,60 @@ export default function ServerProfilePage() {
                   <CalendarX className="h-6 w-6 text-primary" />
                   <CardTitle className="text-lg">Faltas</CardTitle>
                 </div>
-                <Button variant="outline" size="sm">
-                  <PlusCircle className="h-4 w-4 mr-2" />
-                  Adicionar Falta
-                </Button>
+                 <Dialog open={isFaltaDialogOpen} onOpenChange={setIsFaltaDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <PlusCircle className="h-4 w-4 mr-2" />
+                      Adicionar Falta
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Registrar Nova Falta</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <Label>Data da Falta</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !faltaDate && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {faltaDate ? format(faltaDate, "PPP", { locale: ptBR }) : <span>Escolha uma data</span>}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={faltaDate}
+                              onSelect={setFaltaDate}
+                              initialFocus
+                              locale={ptBR}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="falta-reason">Motivo (Opcional)</Label>
+                        <Textarea
+                          id="falta-reason"
+                          placeholder="Descreva o motivo da falta..."
+                          value={faltaReason}
+                          onChange={(e) => setFaltaReason(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="ghost" onClick={() => setIsFaltaDialogOpen(false)}>Cancelar</Button>
+                      <Button onClick={handleSaveFalta}>Salvar Falta</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </CardHeader>
               <CardContent className="space-y-4">
                 {isLoadingFaltas ? <p>Carregando faltas...</p> : (faltas && faltas.length > 0) ? (
