@@ -232,15 +232,15 @@ export default function ServerProfilePage() {
     ] : [];
 
   const getRatingClass = (rating: number) => {
-    if (rating >= 8) return 'text-green-400 border-green-400';
-    if (rating >= 4) return 'text-yellow-400 border-yellow-400';
-    return 'text-red-400 border-red-400';
+    if (rating >= 8) return 'text-green-600 border-green-500 dark:text-green-400 dark:border-green-400';
+    if (rating >= 4) return 'text-yellow-600 border-yellow-500 dark:text-yellow-400 dark:border-yellow-400';
+    return 'text-red-600 border-red-500 dark:text-red-400 dark:border-red-400';
   };
 
   const getStatusClass = (status: string) => {
-    if (status === 'Ativo') return 'bg-green-500/20 text-green-400 border-green-500/50';
-    if (status === 'Licença') return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
-    return 'bg-red-500/20 text-red-400 border-red-500/50';
+    if (status === 'Ativo') return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-500/20 dark:text-green-400 dark:border-green-500/50';
+    if (status === 'Licença') return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/20 dark:text-yellow-400 dark:border-yellow-500/50';
+    return 'bg-red-100 text-red-700 border-red-200 dark:bg-red-500/20 dark:text-red-400 dark:border-red-500/50';
   };
 
   const getStatusIcon = (status: string) => {
@@ -293,7 +293,7 @@ export default function ServerProfilePage() {
                 {getStatusIcon(server.status)}
                 {server.status}
               </Badge>
-              <Badge variant="outline" className={cn(getRatingClass(calculatedRating))}>
+              <Badge variant="outline" className={cn("font-semibold", getRatingClass(calculatedRating))}>
                 <Award className="h-3 w-3 mr-1" />
                 Nota: {calculatedRating.toFixed(1)}
               </Badge>
@@ -413,5 +413,3 @@ export default function ServerProfilePage() {
     </div>
   );
 }
-
-    
