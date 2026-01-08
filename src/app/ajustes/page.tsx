@@ -47,13 +47,7 @@ export default function SettingsPage() {
   const [currentTheme, setCurrentTheme] = useState<Theme>('dark');
   const [selectedTheme, setSelectedTheme] = useState<Theme>('dark');
 
-  useEffect(() => {
-    if (user) {
-      setName(user.displayName || 'Mirna');
-      setEmail(user.email || 'mirna.almeida@uems.br');
-    }
-  }, [user]);
-
+  // Effect to apply theme on initial load from localStorage
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') as Theme | null;
     const initialTheme = storedTheme || 'dark';
@@ -70,13 +64,21 @@ export default function SettingsPage() {
     }
   }, []);
 
+  // Effect to set user data once loaded
+  useEffect(() => {
+    if (user) {
+      setName(user.displayName || 'Mirna');
+      setEmail(user.email || 'mirna.almeida@uems.br');
+    }
+  }, [user]);
+
   const handleSaveChanges = async () => {
     if (!auth.currentUser) return;
 
     let profileUpdated = false;
     let themeUpdated = false;
 
-    // Save profile changes (synced to account)
+    // --- Save Profile Changes (synced to Firebase Auth account) ---
     try {
       if (name !== auth.currentUser.displayName) {
         await updateProfile(auth.currentUser, { displayName: name });
@@ -89,28 +91,49 @@ export default function SettingsPage() {
         title: 'Erro',
         description: 'Não foi possível salvar as alterações no perfil.',
       });
-      return; // Stop if profile update fails
+      // We don't return here, so theme changes can still be attempted.
     }
 
-    // Save theme changes (local to this browser)
+    // --- Save Theme Changes (local to this browser only) ---
     if (selectedTheme !== currentTheme) {
-        localStorage.setItem('theme', selectedTheme);
-        setCurrentTheme(selectedTheme);
-        const root = window.document.documentElement;
-        root.classList.remove('light', 'dark');
-        if (selectedTheme === 'system') {
-            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            root.classList.add(systemTheme);
-        } else {
-            root.classList.add(selectedTheme);
+        try {
+            localStorage.setItem('theme', selectedTheme);
+            setCurrentTheme(selectedTheme);
+            
+            const root = window.document.documentElement;
+            root.classList.remove('light', 'dark');
+            if (selectedTheme === 'system') {
+                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                root.classList.add(systemTheme);
+            } else {
+                root.classList.add(selectedTheme);
+            }
+            themeUpdated = true;
+        } catch (error) {
+             console.error('Erro ao salvar tema:', error);
+             toast({
+                variant: 'destructive',
+                title: 'Erro',
+                description: 'Não foi possível salvar o tema neste navegador.',
+            });
         }
-        themeUpdated = true;
     }
     
-    if(profileUpdated || themeUpdated) {
+    // --- Show feedback toast ---
+    if (profileUpdated && themeUpdated) {
         toast({
             title: "Alterações salvas!",
-            description: "Suas configurações foram atualizadas.",
+            description: "Seu perfil e tema foram atualizados.",
+        });
+    } else if (profileUpdated) {
+        toast({
+            title: "Perfil atualizado!",
+            description: "Suas informações de perfil foram salvas.",
+        });
+    } else if (themeUpdated) {
+        toast({
+            title: "Tema atualizado!",
+            description: "Sua preferência de tema foi salva neste navegador.",
         });
     } else {
          toast({
@@ -118,8 +141,6 @@ export default function SettingsPage() {
             description: "Nenhuma nova configuração para salvar.",
         });
     }
-
-    router.push('/');
   };
 
   const handleLogout = async () => {
@@ -310,5 +331,3 @@ export default function SettingsPage() {
       </div>
     </div>
   );
-
-    
