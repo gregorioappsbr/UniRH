@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -11,7 +12,6 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
 import { doc, collection } from 'firebase/firestore';
 
