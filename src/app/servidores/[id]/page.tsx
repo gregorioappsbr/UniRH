@@ -210,7 +210,7 @@ export default function ServerProfilePage() {
         
         const licencaStartDate = `${String(startDia).padStart(2, '0')}/${String(startMes).padStart(2, '0')}/${startAno}`;
         const licencaEndDate = `${String(endDia).padStart(2, '0')}/${String(endMes).padStart(2, '0')}/${endAno}`;
-        const finalReason = licencaType === 'outro' ? licencaReason : licencaType;
+        const finalReason = licencaType === 'outro' ? licencaReason : licencaReason;
 
         try {
             const licencasCollectionRef = collection(firestore, 'servers', id as string, 'licencas');
@@ -791,6 +791,7 @@ export default function ServerProfilePage() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Período</TableHead>
+                        <TableHead>Tipo</TableHead>
                         <TableHead>Descrição</TableHead>
                         <TableHead className="text-right">Ações</TableHead>
                       </TableRow>
@@ -799,7 +800,8 @@ export default function ServerProfilePage() {
                       {filteredLicencas.map((licenca) => (
                         <TableRow key={licenca.id}>
                           <TableCell className="font-medium">{`${licenca.startDate} - ${licenca.endDate}`}</TableCell>
-                          <TableCell className="text-muted-foreground">{licenca.reason || licenca.type}</TableCell>
+                          <TableCell>{licenca.type}</TableCell>
+                          <TableCell className="text-muted-foreground">{licenca.reason || '-'}</TableCell>
                           <TableCell className="text-right">
                              <div className="flex items-center justify-end gap-2">
                                 <Button variant="ghost" size="icon" onClick={() => { /* Lógica de edição aqui */ }}>
