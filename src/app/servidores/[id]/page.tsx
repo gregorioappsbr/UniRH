@@ -106,7 +106,6 @@ type Feria = {
   startDate: string;
   endDate: string;
   periodoAquisitivo: string;
-  reason: string;
 };
 
 type FeriasPeriodo = {
@@ -150,7 +149,6 @@ export default function ServerProfilePage() {
 
     // State for Ferias
     const [isFeriaDialogOpen, setIsFeriaDialogOpen] = useState(false);
-    const [feriaReason, setFeriaReason] = useState('');
     const [feriaPeriodoAquisitivo, setFeriaPeriodoAquisitivo] = useState('');
     const [selectedFeriaYear, setSelectedFeriaYear] = useState<string>(new Date().getFullYear().toString());
     const [editingFeria, setEditingFeria] = useState<Feria | null>(null);
@@ -208,7 +206,6 @@ export default function ServerProfilePage() {
 
     const resetFeriaForm = () => {
         setFeriasPeriodos([{ startDia: '', startMes: '', startAno: '', endDia: '', endMes: '', endAno: '' }]);
-        setFeriaReason('');
         setFeriaPeriodoAquisitivo('');
         setFeriasParcelamento('30d');
         setEditingFeria(null);
@@ -261,7 +258,6 @@ export default function ServerProfilePage() {
                     endDia: endDay, endMes: endMonth, endAno: endYear
                 }]);
                 setFeriaPeriodoAquisitivo(editingFeria.periodoAquisitivo);
-                setFeriaReason(editingFeria.reason);
                 setFeriasParcelamento('edit'); // Special mode for editing
             } else {
                 resetFeriaForm();
@@ -548,7 +544,23 @@ export default function ServerProfilePage() {
     ];
 
 
-    const calculatedRating = 10 - ((faltas?.length ?? 0) * 1) - ((licencas?.length ?? 0) * 0.5);
+    const calculatedRating = useMemo(() => {
+      const currentMonth = new Date().getMonth() + 1;
+      const currentYear = new Date().getFullYear();
+
+      const faltasThisMonth = (faltas ?? []).filter(f => {
+        const [, month, year] = f.date.split('/');
+        return parseInt(month, 10) === currentMonth && parseInt(year, 10) === currentYear;
+      }).length;
+
+      const licencasThisMonth = (licencas ?? []).filter(l => {
+        const [, month, year] = l.startDate.split('/');
+        return parseInt(month, 10) === currentMonth && parseInt(year, 10) === currentYear;
+      }).length;
+
+      return 10 - (faltasThisMonth * 1) - (licencasThisMonth * 0.5);
+    }, [faltas, licencas]);
+
 
     const fichaItems = server ? [
       {
@@ -1233,7 +1245,6 @@ export default function ServerProfilePage() {
                                 <TableRow>
                                     <TableHead>Período Aquisitivo</TableHead>
                                     <TableHead>Período de Gozo</TableHead>
-                                    <TableHead>Observações</TableHead>
                                     <TableHead className="text-right">Ações</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -1245,9 +1256,6 @@ export default function ServerProfilePage() {
                                         </TableCell>
                                         <TableCell className="p-0 md:p-4">
                                             <span className="md:hidden font-semibold">Período de Gozo: </span>{`${feria.startDate} - ${feria.endDate}`}
-                                        </TableCell>
-                                        <TableCell className="text-muted-foreground p-0 md:p-4">
-                                          <span className="md:hidden font-semibold text-foreground">Observações: </span>{feria.reason || '-'}
                                         </TableCell>
                                         <TableCell className="p-0 md:p-4 mt-2 md:mt-0 text-right">
                                             <div className="flex items-center justify-end gap-2">
@@ -1307,3 +1315,6 @@ export default function ServerProfilePage() {
     
 
 
+
+
+    

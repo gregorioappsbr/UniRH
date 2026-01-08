@@ -21,7 +21,7 @@ import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, getDocs, query } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 type Server = {
   id: string;
@@ -51,15 +51,32 @@ export function ServerList() {
       const calculateRatings = async () => {
         if (!servers || !firestore) return;
         
+        const currentMonth = new Date().getMonth() + 1;
+        const currentYear = new Date().getFullYear();
+
         const serversData = await Promise.all(
           servers.map(async (server) => {
             const faltasQuery = query(collection(firestore, 'servers', server.id, 'faltas'));
             const licencasQuery = query(collection(firestore, 'servers', server.id, 'licencas'));
+
             const [faltasSnapshot, licencasSnapshot] = await Promise.all([
-              getDocs(faltasQuery),
-              getDocs(licencasQuery),
+                getDocs(faltasQuery),
+                getDocs(licencasQuery),
             ]);
-            const calculatedRating = 10 - (faltasSnapshot.size * 1) - (licencasSnapshot.size * 0.5);
+
+            const faltasThisMonth = faltasSnapshot.docs.filter(doc => {
+                const data = doc.data();
+                const [, month, year] = data.date.split('/');
+                return parseInt(month, 10) === currentMonth && parseInt(year, 10) === currentYear;
+            }).length;
+
+            const licencasThisMonth = licencasSnapshot.docs.filter(doc => {
+                const data = doc.data();
+                const [, month, year] = data.startDate.split('/');
+                return parseInt(month, 10) === currentMonth && parseInt(year, 10) === currentYear;
+            }).length;
+
+            const calculatedRating = 10 - (faltasThisMonth * 1) - (licencasThisMonth * 0.5);
             return { ...server, calculatedRating };
           })
         );
@@ -253,3 +270,5 @@ export function ServerList() {
     </Card>
   );
 }
+
+    
