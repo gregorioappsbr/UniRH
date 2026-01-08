@@ -644,26 +644,25 @@ const handleExportPDF = async () => {
                 {filteredServers.map((server) => (
                    <div 
                       key={server.id}
-                      className="flex items-start gap-4 border-b pb-4 last:border-b-0 cursor-pointer"
-                      onClick={(e) => {
-                        const target = e.target as HTMLElement;
-                        if (
-                          target.closest('a') ||
-                          target.closest('input[type="checkbox"]') ||
-                          (target.parentElement && target.parentElement.id === `server-${server.id}`)
-                        ) {
-                          return;
-                        }
-                        router.push(`/servidores/${server.id}`);
-                      }}
+                      className="flex items-start gap-4 border-b pb-4 last:border-b-0"
                     >
                     <Checkbox
                       id={`server-${server.id}`}
                       checked={selectedServers[server.id] || false}
                       onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
                       className="mt-1"
+                      aria-label={`Selecionar ${server.nomeCompleto}`}
                     />
-                     <div className="flex-1">
+                     <div 
+                        className="flex-1 cursor-pointer"
+                        onClick={(e) => {
+                            const target = e.target as HTMLElement;
+                            if (target.closest('a')) {
+                                return;
+                            }
+                            router.push(`/servidores/${server.id}`);
+                        }}
+                     >
                       <div className="flex flex-col items-center gap-2 float-left mr-4">
                         <Avatar className="h-12 w-12">
                           <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
@@ -742,6 +741,7 @@ const handleExportPDF = async () => {
                         <div className="flex items-center gap-3">
                           <Checkbox
                             id={`server-desktop-${server.id}`}
+                            aria-label={`Selecionar ${server.nomeCompleto}`}
                             checked={selectedServers[server.id] || false}
                             onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
                           />
