@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle } from 'lucide-react';
+import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User, Heart, Home, Briefcase, GraduationCap, Info, CalendarX, PlusCircle, MoreHorizontal, KeyRound, AlertCircle, MinusCircle, FileText, ScrollText } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -31,8 +31,12 @@ type Server = {
     cpf?: string;
     rg?: string;
     orgaoEmissor?: string;
+    possuiCNH?: string;
+    cnhNumero?: string;
+    cnhCategoria?: string;
     dataNascimento?: string;
     genero?: string;
+    outroGenero?: string;
     corRaca?: string;
     estadoCivil?: string;
     nacionalidade?: string;
@@ -52,10 +56,25 @@ type Server = {
     bairro?: string;
     cidade?: string;
     uf?: string;
+    matricula?: string;
     funcao?: string;
     dataInicio?: string;
-    jornada?: string;
+    possuiDGA?: string;
+    especificacaoDGA?: string;
+    ramal?: string;
+running     jornada?: string;
     turno?: string;
+    outroTurno?: string;
+    escolaridade?: string;
+    instituicaoEnsinoBasico?: string;
+    anoConclusaoEnsinoBasico?: string;
+    cursoGraduacao?: string;
+    instituicaoGraduacao?: string;
+    anoConclusaoGrad?: string;
+    tipoPosGraduacao?: string;
+    cursoPosGraduacao?: string;
+    instituicaoPosGraduacao?: string;
+    anoConclusaoPosGrad?: string;
     observacoes?: string;
 };
 
@@ -99,65 +118,118 @@ export default function ServerProfilePage() {
 
     const calculatedRating = 10 - ((faltas?.length ?? 0) * 1) - ((licencas?.length ?? 0) * 0.5);
 
-  const fichaItems = server ? [
-    { 
-      icon: User, 
-      label: "Dados Pessoais", 
-      content: [
-        { label: "Nome Social", value: server.nomeSocial },
-        { label: "CPF", value: server.cpf },
-        { label: "RG", value: server.rg },
-        { label: "Órgão Emissor", value: server.orgaoEmissor },
-        { label: "Data de Nascimento", value: server.dataNascimento },
-        { label: "Gênero", value: server.genero },
-        { label: "Cor/Raça", value: server.corRaca },
-        { label: "Estado Civil", value: server.estadoCivil },
-        { label: "Nacionalidade", value: server.nacionalidade },
-        { label: "Naturalidade", value: server.naturalidade },
-        { label: "PCD", value: server.isPCD === 'sim' ? `Sim - ${server.pcdDescricao}` : 'Não' },
-      ]
-    },
-    { 
-      icon: WhatsAppIcon, 
-      label: "Contato", 
-      content: [
-        { label: "Telefone Principal", value: server.telefonePrincipal },
-        { label: "Telefone Secundário", value: server.telefoneSecundario },
-        { label: "Email Pessoal", value: server.emailPessoal },
-      ]
-    },
-    { 
-      icon: Heart, 
-      label: "Contato de Emergência", 
-      content: [
-        { label: "Nome", value: server.contatoEmergenciaNome },
-        { label: "Telefone", value: server.contatoEmergenciaTelefone },
-      ]
-    },
-    { 
-      icon: Home, 
-      label: "Endereço", 
-      content: [
-        { label: "CEP", value: server.cep },
-        { label: "Logradouro", value: `${server.logradouro || ''}, Nº ${server.numero || ''}` },
-        { label: "Complemento", value: server.complemento },
-        { label: "Bairro", value: server.bairro },
-        { label: "Cidade/UF", value: `${server.cidade || ''}/${server.uf || ''}` },
-      ]
-    },
-    { 
-      icon: Briefcase, 
-      label: "Dados Profissionais", 
-      content: [
-        { label: "Função", value: server.funcao },
-        { label: "Data de Início", value: server.dataInicio },
-        { label: "Jornada", value: server.jornada },
-        { label: "Turno", value: server.turno },
-      ]
-    },
-    { icon: GraduationCap, label: "Formação", content: [{ label: "Em breve", value: "Conteúdo de Formação." }] },
-    { icon: Info, label: "Observações", content: [{ label: "Observação", value: server.observacoes || 'Nenhuma observação.' }] },
-  ] : [];
+    const fichaItems = server ? [
+      {
+        icon: User,
+        label: "Identificação",
+        content: [
+          { label: "Nome Completo", value: server.nomeCompleto },
+          { label: "Nome Social", value: server.nomeSocial },
+          { label: "CPF", value: server.cpf },
+          { label: "RG", value: server.rg },
+          { label: "Órgão Emissor", value: server.orgaoEmissor },
+          { label: "Possui CNH?", value: server.possuiCNH },
+          ...(server.possuiCNH === 'sim' ? [
+            { label: "Número CNH", value: server.cnhNumero },
+            { label: "Categoria CNH", value: server.cnhCategoria }
+          ] : []),
+          { label: "Data de Nascimento", value: server.dataNascimento },
+          { label: "Gênero", value: server.genero === 'outro' ? server.outroGenero : server.genero },
+          { label: "Cor/Raça", value: server.corRaca },
+          { label: "Estado Civil", value: server.estadoCivil },
+          { label: "Nacionalidade", value: server.nacionalidade },
+          { label: "Naturalidade", value: server.naturalidade },
+          { label: "É PCD?", value: server.isPCD },
+          ...(server.isPCD === 'sim' ? [{ label: "Descrição PCD", value: server.pcdDescricao }] : []),
+        ]
+      },
+      {
+        icon: Users,
+        label: "Filiação",
+        content: [
+          { label: "Nome da Mãe", value: server.nomeMae },
+          { label: "Nome do Pai", value: server.nomePai },
+        ]
+      },
+      {
+        icon: WhatsAppIcon,
+        label: "Contato",
+        content: [
+          { label: "Telefone Principal", value: server.telefonePrincipal },
+          { label: "Telefone Secundário", value: server.telefoneSecundario },
+          { label: "Email Pessoal", value: server.emailPessoal },
+        ]
+      },
+      {
+        icon: Heart,
+        label: "Contato de Emergência",
+        content: [
+          { label: "Nome", value: server.contatoEmergenciaNome },
+          { label: "Telefone", value: server.contatoEmergenciaTelefone },
+        ]
+      },
+      {
+        icon: Home,
+        label: "Endereço",
+        content: [
+          { label: "CEP", value: server.cep },
+          { label: "Logradouro", value: server.logradouro },
+          { label: "Número", value: server.numero },
+          { label: "Complemento", value: server.complemento },
+          { label: "Bairro", value: server.bairro },
+          { label: "Cidade", value: server.cidade },
+          { label: "UF", value: server.uf },
+        ]
+      },
+      {
+        icon: Briefcase,
+        label: "Dados Profissionais",
+        content: [
+          { label: "Vínculo", value: server.vinculo },
+          ...(server.vinculo === 'Efetivo' ? [{ label: "Matrícula", value: server.matricula }] : []),
+          { label: "Cargo", value: server.cargo },
+          { label: "Função", value: server.funcao },
+          { label: "Data de Início", value: server.dataInicio },
+          { label: "Possui DGA?", value: server.possuiDGA },
+          ...(server.possuiDGA === 'sim' ? [{ label: "Especificação DGA", value: server.especificacaoDGA }] : []),
+          { label: "Setor / Lotação", value: server.setor },
+          { label: "Ramal", value: server.ramal },
+          { label: "Jornada", value: server.jornada },
+          { label: "Turno", value: server.turno === 'outro' ? server.outroTurno : server.turno },
+          { label: "Status", value: server.status },
+          { label: "Email Institucional", value: server.emailInstitucional },
+        ]
+      },
+      {
+        icon: GraduationCap,
+        label: "Formação",
+        content: [
+            { label: "Escolaridade", value: server.escolaridade },
+            ...(server.escolaridade === 'ensino-fundamental' || server.escolaridade === 'ensino-medio' ? [
+                { label: "Instituição de Ensino", value: server.instituicaoEnsinoBasico },
+                { label: "Ano de Conclusão", value: server.anoConclusaoEnsinoBasico }
+            ] : []),
+            ...(server.escolaridade === 'graduacao' || server.escolaridade === 'pos-graduacao' ? [
+                { label: "Curso de Graduação", value: server.cursoGraduacao },
+                { label: "Instituição de Graduação", value: server.instituicaoGraduacao },
+                { label: "Ano de Conclusão da Graduação", value: server.anoConclusaoGrad }
+            ] : []),
+            ...(server.escolaridade === 'pos-graduacao' ? [
+                { label: "Tipo de Pós-Graduação", value: server.tipoPosGraduacao },
+                { label: "Curso de Pós-Graduação", value: server.cursoPosGraduacao },
+                { label: "Instituição de Pós-Graduação", value: server.instituicaoPosGraduacao },
+                { label: "Ano de Conclusão da Pós-Graduação", value: server.anoConclusaoPosGrad }
+            ] : []),
+        ]
+      },
+      {
+        icon: FileText,
+        label: "Observações",
+        content: [
+          { label: "Observações Gerais", value: server.observacoes },
+        ]
+      },
+    ] : [];
 
   const getRatingClass = (rating: number) => {
     if (rating >= 8) return 'text-green-400 border-green-400';
@@ -282,7 +354,7 @@ export default function ServerProfilePage() {
                   </AccordionTrigger>
                   <AccordionContent className="p-4 pt-0">
                     <div className="space-y-2">
-                      {item.content.map((detail, detailIndex) => detail.value && (
+                      {item.content.map((detail, detailIndex) => (detail.value || detail.value === 'Não') && (
                         <div key={detailIndex} className="flex justify-between items-center text-sm p-2 bg-background dark:bg-muted/30 rounded-md">
                           <span className="font-semibold text-muted-foreground">{detail.label}:</span>
                           <span className="text-right text-foreground">{detail.value}</span>
@@ -342,3 +414,5 @@ export default function ServerProfilePage() {
     </div>
   );
 }
+
+    
