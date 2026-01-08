@@ -1,8 +1,9 @@
 
+
 'use client';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -85,6 +86,7 @@ type Server = {
     instituicaoPosGraduacao?: string;
     anoConclusaoPosGrad?: string;
     observacoes?: string;
+    avatarUrl?: string;
 };
 
 type Falta = {
@@ -724,6 +726,7 @@ export default function ServerProfilePage() {
         <CardContent className="p-6 space-y-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <Avatar className="h-24 w-24">
+              <AvatarImage src={server.avatarUrl} />
               <AvatarFallback className="text-4xl">
                 {server.initials}
               </AvatarFallback>

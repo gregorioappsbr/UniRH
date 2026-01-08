@@ -9,7 +9,7 @@ import {
   CardTitle,
   CardFooter,
 } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog, PenTool, GraduationCap, ArrowUpRight } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -32,6 +32,7 @@ type Server = {
   rating: number;
   funcao: string;
   telefonePrincipal: string;
+  avatarUrl?: string;
 };
 
 export function ServerList() {
@@ -160,6 +161,7 @@ export function ServerList() {
                   >
                     <div className="flex flex-col items-center gap-2">
                       <Avatar className="h-12 w-12">
+                        <AvatarImage src={server.avatarUrl} />
                         <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                       </Avatar>
                        <div className="flex flex-col items-center gap-1">
@@ -221,6 +223,7 @@ export function ServerList() {
                       <TableCell>
                         <div className="flex items-center gap-3">
                             <Avatar className="h-12 w-12">
+                                <AvatarImage src={server.avatarUrl} />
                                 <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                             </Avatar>
                             <div>

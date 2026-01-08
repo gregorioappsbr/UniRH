@@ -4,7 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown } from 'lucide-react';
 import Link from 'next/link';
@@ -690,6 +690,7 @@ const handleExportPDF = async () => {
                       <div className="flex items-start gap-4">
                           <div className="flex flex-col items-center gap-2">
                             <Avatar className="h-12 w-12">
+                              <AvatarImage src={server.avatarUrl} />
                               <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col items-center gap-1">
@@ -765,6 +766,7 @@ const handleExportPDF = async () => {
                       <TableCell>
                         <div className="flex items-center gap-3">
                               <Avatar className="h-12 w-12">
+                                  <AvatarImage src={server.avatarUrl} />
                                   <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                               </Avatar>
                               <div>

@@ -17,6 +17,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useDoc, useFirestore, useMemoFirebase } from "@/firebase"
 import { collection, addDoc, doc, setDoc } from "firebase/firestore"
 import { cn } from "@/lib/utils"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 type ServerData = {
   id: string;
@@ -40,11 +41,15 @@ export default function NewServerPage() {
 
     const { data: serverData, isLoading: isLoadingServer } = useDoc<ServerData>(serverRef);
 
-    const { register, handleSubmit, watch, control, reset } = useForm();
-    
+    const { register, handleSubmit, watch, control, reset, setValue, formState: { defaultValues } } = useForm();
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
     useEffect(() => {
         if (isEditing && serverData) {
             reset(serverData);
+            if (serverData.avatarUrl) {
+                setAvatarPreview(serverData.avatarUrl);
+            }
         }
     }, [isEditing, serverData, reset]);
 
@@ -54,6 +59,21 @@ export default function NewServerPage() {
     const tipoVinculo = watch('vinculo', serverData?.vinculo || '');
     const turno = watch('turno', serverData?.turno || '');
     const escolaridade = watch('escolaridade', serverData?.escolaridade || '');
+    const currentAvatarUrl = watch('avatarUrl', serverData?.avatarUrl || null);
+
+     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          setAvatarPreview(result);
+          setValue('avatarUrl', result);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
 
     const onSubmit = async (data: any) => {
         if (!firestore) return;
@@ -118,7 +138,25 @@ export default function NewServerPage() {
           <TabsContent value="pessoais" className="mt-0">
             <div className="space-y-8">
               <div className="space-y-6 p-4 rounded-lg">
-                <h2 className="text-lg font-semibold">Identificação</h2>
+                 <h2 className="text-lg font-semibold">Identificação</h2>
+                 <div className="flex items-center gap-4">
+                    <Avatar className="h-20 w-20">
+                      <AvatarImage src={avatarPreview || currentAvatarUrl} />
+                      <AvatarFallback className="text-2xl">
+                          {watch('nomeCompleto')?.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() || '?'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="space-y-2 flex-1">
+                      <Label htmlFor="avatar-upload">Foto de Perfil</Label>
+                      <Input 
+                        id="avatar-upload" 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleAvatarChange}
+                        className="bg-muted file:text-foreground" 
+                      />
+                    </div>
+                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="nome-completo">Nome Completo</Label>
