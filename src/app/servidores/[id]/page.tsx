@@ -238,9 +238,9 @@ export default function ServerProfilePage() {
   };
 
   const getStatusClass = (status: string) => {
-    if (status === 'Ativo') return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-500/20 dark:text-green-400 dark:border-green-500/50';
-    if (status === 'Licença') return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/20 dark:text-yellow-400 dark:border-yellow-500/50';
-    return 'bg-red-100 text-red-700 border-red-200 dark:bg-red-500/20 dark:text-red-400 dark:border-red-500/50';
+    if (status === 'Ativo') return 'bg-green-100 text-green-800 border-green-300 dark:bg-green-500/20 dark:text-green-400 dark:border-green-500/50';
+    if (status === 'Licença') return 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-500/20 dark:text-yellow-400 dark:border-yellow-500/50';
+    return 'bg-red-100 text-red-800 border-red-300 dark:bg-red-500/20 dark:text-red-400 dark:border-red-500/50';
   };
 
   const getStatusIcon = (status: string) => {
@@ -289,7 +289,7 @@ export default function ServerProfilePage() {
               <p className="text-muted-foreground">{server.cargo}</p>
             </div>
             <div className="flex gap-2">
-              <Badge className={cn(getStatusClass(server.status))}>
+              <Badge className={cn("font-semibold", getStatusClass(server.status))}>
                 {getStatusIcon(server.status)}
                 {server.status}
               </Badge>
@@ -356,7 +356,7 @@ export default function ServerProfilePage() {
                   </AccordionTrigger>
                   <AccordionContent className="p-4 pt-0">
                     <div className="space-y-2">
-                      {item.content.map((detail, detailIndex) => (detail.value || detail.value === 'Não') && (
+                      {item.content.map((detail, detailIndex) => (detail.value) && (
                         <div key={detailIndex} className="flex justify-between items-center text-sm p-2 bg-background dark:bg-muted/30 rounded-md">
                           <span className="font-semibold text-muted-foreground">{detail.label}:</span>
                           <span className="text-right text-foreground">{detail.value}</span>
@@ -413,3 +413,5 @@ export default function ServerProfilePage() {
     </div>
   );
 }
+
+    
