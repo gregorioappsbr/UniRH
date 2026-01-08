@@ -500,5 +500,4 @@ export default function ServerProfilePage() {
     </div>
   );
 }
-
-    
+ 
