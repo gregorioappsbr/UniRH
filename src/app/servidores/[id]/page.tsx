@@ -267,13 +267,13 @@ export default function ServerProfilePage() {
 
   return (
     <div className="p-4 space-y-4 flex flex-col flex-1 h-full">
-      <header className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/servidores">
-            <ArrowLeft />
+      <header className="flex items-center">
+        <Button variant="ghost" asChild className="text-foreground hover:text-primary p-2">
+          <Link href="/servidores" className="flex items-center gap-2 text-lg">
+            <ArrowLeft className="h-5 w-5" />
+            <span className="font-bold">Voltar</span>
           </Link>
         </Button>
-        <h1 className="text-xl font-bold">Voltar</h1>
       </header>
 
       <Card className="bg-card text-card-foreground">
@@ -413,3 +413,5 @@ export default function ServerProfilePage() {
     </div>
   );
 }
+
+    
