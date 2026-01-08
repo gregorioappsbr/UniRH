@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LogOut, Settings, CalendarDays, Share, Trash2, Sun, Moon, Laptop } from 'lucide-react';
 import { useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 const events = [
   {
@@ -29,10 +31,37 @@ const events = [
   },
 ];
 
+type Theme = "light" | "dark" | "system";
 
 export default function SettingsPage() {
   const auth = useAuth();
   const router = useRouter();
+  const [theme, setTheme] = useState<Theme>('dark');
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme') as Theme | null;
+    if (storedTheme) {
+      setTheme(storedTheme);
+    } else {
+       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+       setTheme(systemTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+
+    if (theme === 'system') {
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.classList.add(systemTheme);
+       root.style.colorScheme = systemTheme;
+    } else {
+      root.classList.add(theme);
+      root.style.colorScheme = theme;
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   const handleLogout = async () => {
     try {
@@ -88,15 +117,15 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-2">
-                <Button variant="outline" className="flex items-center gap-2">
+                <Button variant={theme === 'light' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setTheme('light')}>
                   <Sun className="h-4 w-4" />
                   Claro
                 </Button>
-                <Button variant="default" className="flex items-center gap-2">
+                <Button variant={theme === 'dark' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setTheme('dark')}>
                   <Moon className="h-4 w-4" />
                   Escuro
                 </Button>
-                <Button variant="outline" className="bg-cyan-500/20 text-cyan-400 border-cyan-500/50 flex items-center gap-2">
+                <Button variant={theme === 'system' ? 'default' : 'outline'} className="flex items-center gap-2" onClick={() => setTheme('system')}>
                   <Laptop className="h-4 w-4" />
                   Sistema
                 </Button>
@@ -184,7 +213,7 @@ export default function SettingsPage() {
       <div className="space-y-4 mt-auto">
         <Button 
             variant="destructive" 
-            className="w-full bg-red-800/50 text-red-300 border border-red-700/50 hover:bg-red-800/70"
+            className="w-full"
             onClick={handleLogout}
         >
           <LogOut className="mr-2 h-4 w-4" />
