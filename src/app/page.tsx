@@ -57,7 +57,7 @@ export default function Home() {
   return (
     <div className="p-4 space-y-6">
       <Header />
-      <Accordion type="single" collapsible className="w-full" defaultValue="item-1">
+      <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="item-1" className="border-none">
           <Card className="bg-card">
             <AccordionTrigger className="w-full hover:no-underline p-4">
