@@ -646,56 +646,56 @@ const handleExportPDF = async () => {
                       key={server.id}
                       className="flex items-start gap-4 border-b pb-4 last:border-b-0"
                     >
-                    <Checkbox
-                      id={`server-${server.id}`}
-                      checked={selectedServers[server.id] || false}
-                      onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
-                      className="mt-1"
-                      aria-label={`Selecionar ${server.nomeCompleto}`}
-                    />
+                    <div 
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center h-full pt-1"
+                    >
+                        <Checkbox
+                          id={`server-${server.id}`}
+                          checked={selectedServers[server.id] || false}
+                          onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
+                          aria-label={`Selecionar ${server.nomeCompleto}`}
+                        />
+                    </div>
                      <div 
                         className="flex-1 cursor-pointer"
-                        onClick={(e) => {
-                            const target = e.target as HTMLElement;
-                            if (target.closest('a')) {
-                                return;
-                            }
-                            router.push(`/servidores/${server.id}`);
-                        }}
+                        onClick={() => router.push(`/servidores/${server.id}`)}
                      >
-                      <div className="flex flex-col items-center gap-2 float-left mr-4">
-                        <Avatar className="h-12 w-12">
-                          <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col items-center gap-1">
-                          {server.status && (
-                            <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
-                              {getStatusIcon(server.status)}
-                              {server.status}
-                            </Badge>
-                          )}
-                          <div className={cn("flex items-center text-xs", getRatingClass(server.calculatedRating))}>
-                            <Award className="w-3 h-3 mr-1 fill-current" />
-                            <span>Nota: {server.calculatedRating.toFixed(1)}</span>
+                      <div className="flex items-start gap-4">
+                          <div className="flex flex-col items-center gap-2">
+                            <Avatar className="h-12 w-12">
+                              <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col items-center gap-1">
+                              {server.status && (
+                                <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
+                                  {getStatusIcon(server.status)}
+                                  {server.status}
+                                </Badge>
+                              )}
+                              <div className={cn("flex items-center text-xs", getRatingClass(server.calculatedRating))}>
+                                <Award className="w-3 h-3 mr-1 fill-current" />
+                                <span>Nota: {server.calculatedRating.toFixed(1)}</span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
+                          <div className="flex-1 space-y-1">
+                            <p className="font-semibold">{server.nomeCompleto}</p>
+                            <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
+                            {server.funcao && (
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                {getFuncaoIcon(server.funcao)}
+                                <span>{server.funcao}</span>
+                              </div>
+                            )}
+                          </div>
                       </div>
-                      <div className="flex-1 space-y-1">
-                        <p className="font-semibold">{server.nomeCompleto}</p>
-                        <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
-                        {server.funcao && (
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            {getFuncaoIcon(server.funcao)}
-                            <span>{server.funcao}</span>
-                          </div>
-                        )}
-                        {server.telefonePrincipal && (
-                          <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
+                      {server.telefonePrincipal && (
+                          <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-2 text-base text-foreground hover:text-primary" onClick={(e) => e.stopPropagation()}>
                             <WhatsAppIcon className="h-4 w-4" />
                             <span>{server.telefonePrincipal}</span>
                           </a>
                         )}
-                      </div>
                     </div>
                   </div>
                 ))}
@@ -705,16 +705,16 @@ const handleExportPDF = async () => {
              <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-[50px]">
+                      <Checkbox
+                        id="select-all-desktop"
+                        checked={allSelected}
+                        onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
+                        aria-label="Selecionar todos"
+                      />
+                    </TableHead>
                     <TableHead className="w-[350px]">
-                      <div className="flex items-center gap-4">
-                        <Checkbox
-                          id="select-all-desktop"
-                          checked={allSelected}
-                          onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
-                          aria-label="Selecionar todos"
-                        />
-                        <span>Servidor</span>
-                      </div>
+                      Servidor
                     </TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Função</TableHead>
@@ -726,26 +726,18 @@ const handleExportPDF = async () => {
                     <TableRow 
                       key={server.id} 
                       className="cursor-pointer"
-                      onClick={(e) => {
-                         const target = e.target as HTMLElement;
-                         if (
-                          target.closest('input[type="checkbox"]') ||
-                          target.closest('a')
-                        ) {
-                          return;
-                        }
-                        router.push(`/servidores/${server.id}`);
-                      }}
+                      onClick={() => router.push(`/servidores/${server.id}`)}
                     >
-                      <TableCell>
-                        <div className="flex items-center gap-3">
+                      <TableCell onClick={(e) => e.stopPropagation()}>
                           <Checkbox
                             id={`server-desktop-${server.id}`}
                             aria-label={`Selecionar ${server.nomeCompleto}`}
                             checked={selectedServers[server.id] || false}
                             onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
                           />
-                          <div className="flex items-center gap-3">
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
                               <Avatar className="h-12 w-12">
                                   <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                               </Avatar>
@@ -754,7 +746,6 @@ const handleExportPDF = async () => {
                                   <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
                               </div>
                           </div>
-                        </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-1">
@@ -775,7 +766,7 @@ const handleExportPDF = async () => {
                         </div>
                       </TableCell>
                        <TableCell className="text-right pr-8 whitespace-nowrap">
-                         <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary justify-end">
+                         <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary justify-end" onClick={(e) => e.stopPropagation()}>
                             <WhatsAppIcon className="h-4 w-4" />
                             <span>{server.telefonePrincipal}</span>
                         </a>
