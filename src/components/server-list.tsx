@@ -117,12 +117,10 @@ export function ServerList() {
                             {server.status}
                           </Badge>
                         )}
-                        {server.rating && (
-                          <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
+                        <div className={cn("flex items-center text-xs", getRatingClass(server.rating))}>
                             <Award className="w-3 h-3 mr-1 fill-current" />
                             <span>Nota: {server.rating}</span>
-                          </div>
-                        )}
+                        </div>
                       </div>
                     </div>
                     <div className="flex-1 space-y-2">

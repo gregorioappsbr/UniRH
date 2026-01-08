@@ -12,8 +12,8 @@ import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
+import { doc, collection } from 'firebase/firestore';
 
 // Define a type for the server data
 type Server = {
@@ -59,6 +59,19 @@ type Server = {
     observacoes?: string;
 };
 
+type Falta = {
+  id: string;
+  date: string;
+  reason: string;
+}
+
+type Licenca = {
+  id: string;
+  startDate: string;
+  endDate: string;
+  reason: string;
+}
+
 
 export default function ServerProfilePage() {
     const params = useParams();
@@ -69,8 +82,22 @@ export default function ServerProfilePage() {
         if (!firestore || !id) return null;
         return doc(firestore, 'servers', id as string);
     }, [firestore, id]);
+    
+    const faltasQuery = useMemoFirebase(() => {
+        if (!firestore || !id) return null;
+        return collection(firestore, 'servers', id as string, 'faltas');
+    }, [firestore, id]);
 
-    const { data: server, isLoading } = useDoc<Server>(serverRef);
+    const licencasQuery = useMemoFirebase(() => {
+        if (!firestore || !id) return null;
+        return collection(firestore, 'servers', id as string, 'licencas');
+    }, [firestore, id]);
+
+    const { data: server, isLoading: isLoadingServer } = useDoc<Server>(serverRef);
+    const { data: faltas, isLoading: isLoadingFaltas } = useCollection<Falta>(faltasQuery);
+    const { data: licencas, isLoading: isLoadingLicencas } = useCollection<Licenca>(licencasQuery);
+
+    const calculatedRating = 10 - ((faltas?.length ?? 0) * 1) - ((licencas?.length ?? 0) * 0.5);
 
   const fichaItems = server ? [
     { 
@@ -132,13 +159,6 @@ export default function ServerProfilePage() {
     { icon: Info, label: "Observações", content: [{ label: "Observação", value: server.observacoes || 'Nenhuma observação.' }] },
   ] : [];
 
-  const faltas = [
-    {
-      date: '19 de fevereiro de 2024',
-      reason: 'Assuntos pessoais',
-    }
-  ];
-
   const getRatingClass = (rating: number) => {
     if (rating >= 8) return 'text-green-400 border-green-400';
     if (rating >= 4) return 'text-yellow-400 border-yellow-400';
@@ -162,6 +182,8 @@ export default function ServerProfilePage() {
     const justNumbers = phone.replace(/\D/g, '');
     return `https://wa.me/55${justNumbers}`;
   }
+
+  const isLoading = isLoadingServer || isLoadingFaltas || isLoadingLicencas;
 
   if (isLoading) {
     return <div className="p-4 text-center">Carregando...</div>;
@@ -199,9 +221,9 @@ export default function ServerProfilePage() {
                 {getStatusIcon(server.status)}
                 {server.status}
               </Badge>
-              <Badge variant="outline" className={cn(getRatingClass(server.rating))}>
+              <Badge variant="outline" className={cn(getRatingClass(calculatedRating))}>
                 <Award className="h-3 w-3 mr-1" />
-                Nota: {server.rating.toFixed(1)}
+                Nota: {calculatedRating.toFixed(1)}
               </Badge>
             </div>
           </div>
@@ -288,8 +310,9 @@ export default function ServerProfilePage() {
                 </Button>
               </CardHeader>
               <CardContent className="space-y-4">
-                {faltas.map((falta, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-background">
+                {isLoadingFaltas ? <p>Carregando faltas...</p> : (faltas && faltas.length > 0) ? (
+                  faltas.map((falta) => (
+                  <div key={falta.id} className="flex items-center justify-between p-4 rounded-lg bg-background">
                     <div>
                       <p className="font-medium">{falta.date}</p>
                       <p className="text-sm text-muted-foreground">{falta.reason}</p>
@@ -298,7 +321,10 @@ export default function ServerProfilePage() {
                       <MoreHorizontal className="h-5 w-5" />
                     </Button>
                   </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="text-center text-muted-foreground">Nenhuma falta registrada.</p>
+                )}
               </CardContent>
             </Card>
             <div className="mt-auto pt-4">

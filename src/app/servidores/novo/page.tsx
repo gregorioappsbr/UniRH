@@ -33,7 +33,7 @@ export default function NewServerPage() {
         if (!firestore) return;
 
         const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
-        const newServer = { ...data, initials, rating: Math.floor(Math.random() * 5) + 5 };
+        const newServer = { ...data, initials, rating: 10 };
 
         try {
           await addDoc(collection(firestore, 'servers'), newServer);
