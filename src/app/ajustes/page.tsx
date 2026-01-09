@@ -270,7 +270,7 @@ export default function SettingsPage() {
               <CardDescription>Visualize faltas, licenças e férias de todos os servidores.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-               <div className="grid grid-cols-2 gap-4">
+               <div className="grid grid-cols-3 gap-4">
                  <Select value={view} onValueChange={setView}>
                   <SelectTrigger>
                     <SelectValue placeholder="Visualização" />
@@ -290,8 +290,7 @@ export default function SettingsPage() {
                     <SelectItem value="2024">2024</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-              <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                <Select value={selectedMonth} onValueChange={setSelectedMonth}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o Mês" />
                   </SelectTrigger>
@@ -310,6 +309,7 @@ export default function SettingsPage() {
                     <SelectItem value="12">Dezembro</SelectItem>
                   </SelectContent>
               </Select>
+              </div>
                <Select value={selectedServer} onValueChange={setSelectedServer}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o Servidor" />
