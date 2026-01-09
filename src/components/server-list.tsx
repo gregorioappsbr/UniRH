@@ -136,7 +136,7 @@ export function ServerList() {
 
 
   return (
-    <Card className="bg-card">
+    <Card>
       <CardHeader className="text-center">
         <CardTitle className="md:text-3xl">Servidores Recentes</CardTitle>
         <CardDescription className="md:text-base">
