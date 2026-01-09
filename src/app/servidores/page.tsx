@@ -225,7 +225,7 @@ export default function ServerListPage() {
   const formatName = (name: string): string => {
     if (!name) return '';
     const parts = name.split(' ');
-    if (parts.length > 2) {
+    if (parts.length > 3) {
       return `${parts[0]} ${parts.slice(1, -1).map(p => `${p.charAt(0)}.`).join(' ')} ${parts[parts.length - 1]}`;
     }
     return name;
