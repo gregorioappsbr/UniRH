@@ -847,7 +847,7 @@ export default function ServerProfilePage() {
                               value={faltaDia}
                               onChange={(e) => setFaltaDia(e.target.value)}
                               maxLength={2}
-                              className="bg-black/20 border-white/20 placeholder:text-white/60"
+                              className="bg-black/40 border-white/20 placeholder:text-white/60"
                             />
                              <Input
                               type="number"
@@ -855,7 +855,7 @@ export default function ServerProfilePage() {
                               value={faltaMes}
                               onChange={(e) => setFaltaMes(e.target.value)}
                               maxLength={2}
-                              className="bg-black/20 border-white/20 placeholder:text-white/60"
+                              className="bg-black/40 border-white/20 placeholder:text-white/60"
                             />
                              <Input
                               type="number"
@@ -863,7 +863,7 @@ export default function ServerProfilePage() {
                               value={faltaAno}
                               onChange={(e) => setFaltaAno(e.target.value)}
                               maxLength={4}
-                              className="bg-black/20 border-white/20 placeholder:text-white/60"
+                              className="bg-black/40 border-white/20 placeholder:text-white/60"
                             />
                           </div>
                        </div>
@@ -874,7 +874,7 @@ export default function ServerProfilePage() {
                           placeholder="Adicione uma descrição ou observação..."
                           value={faltaReason}
                           onChange={(e) => setFaltaReason(e.target.value)}
-                          className="bg-black/20 border-white/20 placeholder:text-white/60"
+                          className="bg-black/40 border-white/20 placeholder:text-white/60"
                         />
                       </div>
                     </div>
@@ -987,7 +987,7 @@ export default function ServerProfilePage() {
                        <div className="space-y-2">
                             <Label htmlFor="licenca-type">Tipo de Licença</Label>
                             <Select value={licencaType} onValueChange={setLicencaType}>
-                                <SelectTrigger id="licenca-type" className="bg-black/20 border-white/20">
+                                <SelectTrigger id="licenca-type" className="bg-black/40 border-white/20">
                                     <SelectValue placeholder="Selecione o tipo..." />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -1011,24 +1011,24 @@ export default function ServerProfilePage() {
                                     placeholder="Descreva o tipo de licença..."
                                     value={licencaReason}
                                     onChange={(e) => setLicencaReason(e.target.value)}
-                                    className="bg-black/20 border-white/20 placeholder:text-white/60"
+                                    className="bg-black/40 border-white/20 placeholder:text-white/60"
                                 />
                             </div>
                         )}
                         <div className="space-y-2">
                             <Label>Data de Início</Label>
                             <div className="grid grid-cols-3 gap-2">
-                                <Input type="number" placeholder="Dia" value={licencaStartDia} onChange={(e) => setLicencaStartDia(e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60" />
-                                <Input type="number" placeholder="Mês" value={licencaStartMes} onChange={(e) => setLicencaStartMes(e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60" />
-                                <Input type="number" placeholder="Ano" value={licencaStartAno} onChange={(e) => setLicencaStartAno(e.target.value)} maxLength={4} className="bg-black/20 border-white/20 placeholder:text-white/60" />
+                                <Input type="number" placeholder="Dia" value={licencaStartDia} onChange={(e) => setLicencaStartDia(e.target.value)} maxLength={2} className="bg-black/40 border-white/20 placeholder:text-white/60" />
+                                <Input type="number" placeholder="Mês" value={licencaStartMes} onChange={(e) => setLicencaStartMes(e.target.value)} maxLength={2} className="bg-black/40 border-white/20 placeholder:text-white/60" />
+                                <Input type="number" placeholder="Ano" value={licencaStartAno} onChange={(e) => setLicencaStartAno(e.target.value)} maxLength={4} className="bg-black/40 border-white/20 placeholder:text-white/60" />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label>Data de Fim</Label>
                             <div className="grid grid-cols-3 gap-2">
-                                <Input type="number" placeholder="Dia" value={licencaEndDia} onChange={(e) => setLicencaEndDia(e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60" />
-                                <Input type="number" placeholder="Mês" value={licencaEndMes} onChange={(e) => setLicencaEndMes(e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60" />
-                                <Input type="number" placeholder="Ano" value={licencaEndAno} onChange={(e) => setLicencaEndAno(e.target.value)} maxLength={4} className="bg-black/20 border-white/20 placeholder:text-white/60" />
+                                <Input type="number" placeholder="Dia" value={licencaEndDia} onChange={(e) => setLicencaEndDia(e.target.value)} maxLength={2} className="bg-black/40 border-white/20 placeholder:text-white/60" />
+                                <Input type="number" placeholder="Mês" value={licencaEndMes} onChange={(e) => setLicencaEndMes(e.target.value)} maxLength={2} className="bg-black/40 border-white/20 placeholder:text-white/60" />
+                                <Input type="number" placeholder="Ano" value={licencaEndAno} onChange={(e) => setLicencaEndAno(e.target.value)} maxLength={4} className="bg-black/40 border-white/20 placeholder:text-white/60" />
                             </div>
                         </div>
                        {licencaType !== 'outro' && (
@@ -1039,7 +1039,7 @@ export default function ServerProfilePage() {
                             placeholder="Adicione uma descrição ou observação..."
                             value={licencaReason}
                             onChange={(e) => setLicencaReason(e.target.value)}
-                            className="bg-black/20 border-white/20 placeholder:text-white/60"
+                            className="bg-black/40 border-white/20 placeholder:text-white/60"
                             />
                         </div>
                        )}
@@ -1162,14 +1162,14 @@ export default function ServerProfilePage() {
                                       value={feriaPeriodoAquisitivo}
                                       onChange={(e) => setFeriaPeriodoAquisitivo(e.target.value)}
                                       disabled={!!editingFeria}
-                                      className="bg-black/20 border-white/20 placeholder:text-white/60"
+                                      className="bg-black/40 border-white/20 placeholder:text-white/60"
                                     />
                                 </div>
                                 { !editingFeria &&
                                   <div className="space-y-2">
                                       <Label htmlFor="ferias-parcelamento">Parcelamento de Férias</Label>
                                       <Select value={feriasParcelamento} onValueChange={setFeriasParcelamento}>
-                                          <SelectTrigger id="ferias-parcelamento" className="bg-black/20 border-white/20">
+                                          <SelectTrigger id="ferias-parcelamento" className="bg-black/40 border-white/20">
                                               <SelectValue placeholder="Selecione o parcelamento..." />
                                           </SelectTrigger>
                                           <SelectContent>
@@ -1199,17 +1199,17 @@ export default function ServerProfilePage() {
                                         <div className="space-y-2">
                                             <Label className="text-xs">Data de Início</Label>
                                             <div className="grid grid-cols-3 gap-2">
-                                                <Input type="number" placeholder="Dia" value={periodo.startDia} onChange={(e) => handleFeriasPeriodoChange(index, 'startDia', e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
-                                                <Input type="number" placeholder="Mês" value={periodo.startMes} onChange={(e) => handleFeriasPeriodoChange(index, 'startMes', e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
-                                                <Input type="number" placeholder="Ano" value={periodo.startAno} onChange={(e) => handleFeriasPeriodoChange(index, 'startAno', e.target.value)} maxLength={4} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
+                                                <Input type="number" placeholder="Dia" value={periodo.startDia} onChange={(e) => handleFeriasPeriodoChange(index, 'startDia', e.target.value)} maxLength={2} className="bg-black/40 border-white/20 placeholder:text-white/60"/>
+                                                <Input type="number" placeholder="Mês" value={periodo.startMes} onChange={(e) => handleFeriasPeriodoChange(index, 'startMes', e.target.value)} maxLength={2} className="bg-black/40 border-white/20 placeholder:text-white/60"/>
+                                                <Input type="number" placeholder="Ano" value={periodo.startAno} onChange={(e) => handleFeriasPeriodoChange(index, 'startAno', e.target.value)} maxLength={4} className="bg-black/40 border-white/20 placeholder:text-white/60"/>
                                             </div>
                                         </div>
                                         <div className="space-y-2">
                                             <Label className="text-xs">Data de Fim</Label>
                                             <div className="grid grid-cols-3 gap-2">
-                                                <Input type="number" placeholder="Dia" value={periodo.endDia} onChange={(e) => handleFeriasPeriodoChange(index, 'endDia', e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
-                                                <Input type="number" placeholder="Mês" value={periodo.endMes} onChange={(e) => handleFeriasPeriodoChange(index, 'endMes', e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
-                                                <Input type="number" placeholder="Ano" value={periodo.endAno} onChange={(e) => handleFeriasPeriodoChange(index, 'endAno', e.target.value)} maxLength={4} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
+                                                <Input type="number" placeholder="Dia" value={periodo.endDia} onChange={(e) => handleFeriasPeriodoChange(index, 'endDia', e.target.value)} maxLength={2} className="bg-black/40 border-white/20 placeholder:text-white/60"/>
+                                                <Input type="number" placeholder="Mês" value={periodo.endMes} onChange={(e) => handleFeriasPeriodoChange(index, 'endMes', e.target.value)} maxLength={2} className="bg-black/40 border-white/20 placeholder:text-white/60"/>
+                                                <Input type="number" placeholder="Ano" value={periodo.endAno} onChange={(e) => handleFeriasPeriodoChange(index, 'endAno', e.target.value)} maxLength={4} className="bg-black/40 border-white/20 placeholder:text-white/60"/>
                                             </div>
                                         </div>
                                     </div>
@@ -1332,6 +1332,7 @@ export default function ServerProfilePage() {
 
 
     
+
 
 
 
