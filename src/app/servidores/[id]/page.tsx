@@ -725,12 +725,14 @@ export default function ServerProfilePage() {
       <Card className="bg-card text-card-foreground">
         <CardContent className="p-6 space-y-6">
           <div className="flex flex-col items-center space-y-4 text-center">
-            <Avatar className="h-24 w-24">
-              <AvatarImage src={server.avatarUrl} />
-              <AvatarFallback className="text-4xl">
-                {server.initials}
-              </AvatarFallback>
-            </Avatar>
+            <Link href={`/servidores/novo?id=${id}`}>
+              <Avatar className="h-24 w-24 cursor-pointer">
+                <AvatarImage src={server.avatarUrl} />
+                <AvatarFallback className="text-4xl">
+                  {server.initials}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
             <div>
               <h2 className="text-2xl font-bold">{server.nomeCompleto}</h2>
               <p className="text-muted-foreground">{server.cargo}</p>
