@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useEffect, useState, useMemo } from 'react';
+import React, 'useEffect', useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -577,6 +577,7 @@ const handleExportPDF = async () => {
      if (isMobile) {
         if (selectionCount > 0) {
             e.stopPropagation();
+            e.preventDefault();
             handleSelectServer(serverId, !selectedServers[serverId]);
         } else {
             router.push(`/servidores/${serverId}`);
@@ -665,12 +666,8 @@ const handleExportPDF = async () => {
             
             {isMobile && selectionCount === 0 && (
                  <Button variant="outline" onClick={() => {
-                    if (filteredServers.length > 0) {
-                        if (selectionCount > 0) {
-                            setSelectedServers({});
-                        } else {
-                            handleSelectServer(filteredServers[0].id, true);
-                        }
+                    if (filteredServers.length > 0 && selectionCount === 0) {
+                        handleSelectServer(filteredServers[0].id, true);
                     }
                 }}>
                     <CheckSquare className="mr-2 h-4 w-4" />
@@ -761,7 +758,7 @@ const handleExportPDF = async () => {
                     </div>
                     <div className="flex-1 space-y-1 overflow-hidden">
                       <p className="font-semibold whitespace-nowrap">{nomeCompleto(server.nomeCompleto)}</p>
-                      <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
+                      <p className="text-sm text-muted-foreground break-words">{server.emailInstitucional}</p>
                       {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           {getFuncaoIcon(server.funcao)}
@@ -804,6 +801,10 @@ const handleExportPDF = async () => {
                       key={server.id} 
                       className={cn("cursor-pointer", getServerColor(server, index))}
                       onClick={(e) => {
+                          const target = e.target as HTMLElement;
+                          if (target.tagName.toLowerCase() === 'a' || target.closest('a')) {
+                              return;
+                          }
                           if (selectionCount > 0) {
                             e.stopPropagation();
                             handleSelectServer(server.id, !selectedServers[server.id]);
