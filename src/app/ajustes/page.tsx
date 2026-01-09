@@ -49,6 +49,10 @@ export default function SettingsPage() {
   const [selectedTheme, setSelectedTheme] = useState<Theme>('dark');
   const [selectedServer, setSelectedServer] = useState('todos');
 
+  const [view, setView] = useState('mensal');
+  const [selectedYear, setSelectedYear] = useState('2026');
+  const [selectedMonth, setSelectedMonth] = useState('');
+
   const serversQuery = useMemoFirebase(() => {
     if (!firestore) return null;
     return collection(firestore, 'servers');
@@ -69,6 +73,8 @@ export default function SettingsPage() {
     if (storedTheme) {
       setSelectedTheme(storedTheme);
     }
+    // Set current month as default for the filter
+    setSelectedMonth((new Date().getMonth() + 1).toString());
   }, []);
 
   // Effect to set user data once loaded
@@ -265,7 +271,7 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
                <div className="grid grid-cols-2 gap-4">
-                 <Select>
+                 <Select value={view} onValueChange={setView}>
                   <SelectTrigger>
                     <SelectValue placeholder="Visualização" />
                   </SelectTrigger>
@@ -274,7 +280,7 @@ export default function SettingsPage() {
                     <SelectItem value="anual">Anual</SelectItem>
                   </SelectContent>
                 </Select>
-                 <Select>
+                 <Select value={selectedYear} onValueChange={setSelectedYear}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o Ano" />
                   </SelectTrigger>
@@ -285,23 +291,23 @@ export default function SettingsPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <Select>
+              <Select value={selectedMonth} onValueChange={setSelectedMonth}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o Mês" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="janeiro">Janeiro</SelectItem>
-                    <SelectItem value="fevereiro">Fevereiro</SelectItem>
-                    <SelectItem value="marco">Março</SelectItem>
-                    <SelectItem value="abril">Abril</SelectItem>
-                    <SelectItem value="maio">Maio</SelectItem>
-                    <SelectItem value="junho">Junho</SelectItem>
-                    <SelectItem value="julho">Julho</SelectItem>
-                    <SelectItem value="agosto">Agosto</SelectItem>
-                    <SelectItem value="setembro">Setembro</SelectItem>
-                    <SelectItem value="outubro">Outubro</SelectItem>
-                    <SelectItem value="novembro">Novembro</SelectItem>
-                    <SelectItem value="dezembro">Dezembro</SelectItem>
+                    <SelectItem value="1">Janeiro</SelectItem>
+                    <SelectItem value="2">Fevereiro</SelectItem>
+                    <SelectItem value="3">Março</SelectItem>
+                    <SelectItem value="4">Abril</SelectItem>
+                    <SelectItem value="5">Maio</SelectItem>
+                    <SelectItem value="6">Junho</SelectItem>
+                    <SelectItem value="7">Julho</SelectItem>
+                    <SelectItem value="8">Agosto</SelectItem>
+                    <SelectItem value="9">Setembro</SelectItem>
+                    <SelectItem value="10">Outubro</SelectItem>
+                    <SelectItem value="11">Novembro</SelectItem>
+                    <SelectItem value="12">Dezembro</SelectItem>
                   </SelectContent>
               </Select>
                <Select value={selectedServer} onValueChange={setSelectedServer}>
