@@ -9,33 +9,27 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LogOut, Settings, CalendarDays, Share, Trash2, Sun, Moon, Laptop, Save } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { LogOut, Settings, CalendarDays, Share, Sun, Moon, Laptop, Save, FileText, Copy, FileDown } from 'lucide-react';
 import { useUser, useAuth, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { updateProfile } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { collection } from 'firebase/firestore';
-
-const staticEvents = [
-  {
-    servidor: "Ana Silva",
-    tipo: "Férias",
-    periodo: "30/06/2024 a 14/07/2024",
-  },
-  {
-    servidor: "Bruno Costa",
-    tipo: "Licença (Paternidade)",
-    periodo: "09/07/2024 a 14/07/2024",
-  },
-  {
-    servidor: "Carla Dias",
-    tipo: "Falta",
-    periodo: "19/07/2024",
-  },
-];
+import { collection, getDocs, query } from 'firebase/firestore';
+import type { jsPDF } from "jspdf";
+import 'jspdf-autotable';
+import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 
 type Theme = "light" | "dark" | "system";
+
+type EventRecord = {
+  servidor: string;
+  tipo: 'Férias' | 'Licença' | 'Falta';
+  periodo: string;
+  startDate: Date;
+  endDate: Date;
+};
 
 export default function SettingsPage() {
   const { user, isUserLoading } = useUser();
@@ -47,11 +41,14 @@ export default function SettingsPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [selectedTheme, setSelectedTheme] = useState<Theme>('dark');
-  const [selectedServer, setSelectedServer] = useState('todos');
+  
+  const [allEvents, setAllEvents] = useState<EventRecord[]>([]);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(true);
 
   const [view, setView] = useState('mensal');
   const [selectedYear, setSelectedYear] = useState('2026');
   const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedServer, setSelectedServer] = useState('todos');
 
   const serversQuery = useMemoFirebase(() => {
     if (!firestore) return null;
@@ -59,26 +56,15 @@ export default function SettingsPage() {
   }, [firestore]);
 
   const { data: servers, isLoading: isLoadingServers } = useCollection<any>(serversQuery);
-
-  const displayedEvents = useMemo(() => {
-    if (selectedServer === 'todos') {
-      return staticEvents;
-    }
-    return staticEvents.filter(event => event.servidor === selectedServer);
-  }, [selectedServer]);
-
-  // Effect to load current theme preference from localStorage on component mount
+  
+  // Effect to set user data and initial theme from localStorage
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') as Theme | null;
     if (storedTheme) {
       setSelectedTheme(storedTheme);
     }
-    // Set current month as default for the filter
     setSelectedMonth((new Date().getMonth() + 1).toString());
-  }, []);
-
-  // Effect to set user data once loaded
-  useEffect(() => {
+    
     if (user) {
       if (user.email === 'litencarv@uems.br') {
         setName('Lilian Tenório');
@@ -91,13 +77,87 @@ export default function SettingsPage() {
     }
   }, [user]);
 
+  // Effect to fetch all events from all servers
+  useEffect(() => {
+    const fetchAllEvents = async () => {
+      if (!firestore || !servers) return;
+      
+      setIsLoadingEvents(true);
+      const events: EventRecord[] = [];
+      
+      for (const server of servers) {
+        const serverId = server.id;
+        const serverName = server.nomeCompleto;
+
+        // Fetch Faltas
+        const faltasQuery = query(collection(firestore, 'servers', serverId, 'faltas'));
+        const faltasSnapshot = await getDocs(faltasQuery);
+        faltasSnapshot.forEach(doc => {
+          const data = doc.data();
+          const [day, month, year] = data.date.split('/');
+          const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+          events.push({ servidor: serverName, tipo: 'Falta', periodo: data.date, startDate: date, endDate: date });
+        });
+        
+        // Fetch Licenças
+        const licencasQuery = query(collection(firestore, 'servers', serverId, 'licencas'));
+        const licencasSnapshot = await getDocs(licencasQuery);
+        licencasSnapshot.forEach(doc => {
+          const data = doc.data();
+          const [startDay, startMonth, startYear] = data.startDate.split('/');
+          const [endDay, endMonth, endYear] = data.endDate.split('/');
+          const startDate = new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
+          const endDate = new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay));
+          events.push({ servidor: serverName, tipo: 'Licença', periodo: `${data.startDate} a ${data.endDate}`, startDate, endDate });
+        });
+        
+        // Fetch Férias
+        const feriasQuery = query(collection(firestore, 'servers', serverId, 'ferias'));
+        const feriasSnapshot = await getDocs(feriasQuery);
+        feriasSnapshot.forEach(doc => {
+          const data = doc.data();
+          const [startDay, startMonth, startYear] = data.startDate.split('/');
+          const [endDay, endMonth, endYear] = data.endDate.split('/');
+          const startDate = new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
+          const endDate = new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay));
+          events.push({ servidor: serverName, tipo: 'Férias', periodo: `${data.startDate} a ${data.endDate}`, startDate, endDate });
+        });
+      }
+      
+      setAllEvents(events.sort((a,b) => a.startDate.getTime() - b.startDate.getTime()));
+      setIsLoadingEvents(false);
+    };
+
+    if(servers) fetchAllEvents();
+  }, [firestore, servers]);
+
+  const displayedEvents = useMemo(() => {
+    let filtered = allEvents;
+    
+    // Filter by server
+    if (selectedServer !== 'todos') {
+      filtered = filtered.filter(event => event.servidor === selectedServer);
+    }
+    
+    // Filter by date
+    if (view === 'mensal') {
+      filtered = filtered.filter(event => 
+        event.startDate.getFullYear().toString() === selectedYear &&
+        (event.startDate.getMonth() + 1).toString() === selectedMonth
+      );
+    } else { // anual
+       filtered = filtered.filter(event => event.startDate.getFullYear().toString() === selectedYear);
+    }
+
+    return filtered;
+  }, [allEvents, selectedServer, view, selectedYear, selectedMonth]);
+
   const handleSaveChanges = async () => {
     if (!auth.currentUser) return;
 
     let profileUpdated = false;
     let themeUpdated = false;
 
-    // --- Save Profile Changes (synced to Firebase Auth account) ---
     try {
       if (name !== auth.currentUser.displayName) {
         await updateProfile(auth.currentUser, { displayName: name });
@@ -110,10 +170,8 @@ export default function SettingsPage() {
         title: 'Erro',
         description: 'Não foi possível salvar as alterações no perfil.',
       });
-      // We don't return here, so theme changes can still be attempted.
     }
 
-    // --- Save Theme Changes (local to this browser only) ---
     const currentTheme = localStorage.getItem('theme') || 'dark';
     if (selectedTheme !== currentTheme) {
         try {
@@ -139,7 +197,6 @@ export default function SettingsPage() {
         }
     }
     
-    // --- Show feedback toast ---
     if (profileUpdated && themeUpdated) {
         toast({
             title: "Alterações salvas!",
@@ -171,6 +228,78 @@ export default function SettingsPage() {
       router.push('/login');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
+    }
+  };
+
+  const getEventsAsText = () => {
+    if (displayedEvents.length === 0) return "Nenhum evento para exibir.";
+    
+    const title = `Relatório de Eventos - ${view === 'anual' ? `Ano ${selectedYear}` : `${selectedMonth}/${selectedYear}`}${selectedServer !== 'todos' ? ` - ${selectedServer}` : ''}`;
+    
+    const header = "Servidor | Tipo | Período\n------------------------------------\n";
+    const body = displayedEvents.map(e => `${e.servidor} | ${e.tipo} | ${e.periodo}`).join('\n');
+    return `${title}\n\n${header}${body}`;
+  };
+
+  const handleShare = async () => {
+    const textToShare = getEventsAsText();
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Relatório de Eventos', text: textToShare });
+      } catch (error) { console.error('Erro ao compartilhar', error); }
+    } else {
+      handleCopy();
+      toast({ title: 'Copiado!', description: 'Seu navegador não suporta compartilhamento. O conteúdo foi copiado.' });
+    }
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(getEventsAsText()).then(() => {
+      toast({ title: 'Copiado!', description: 'O relatório foi copiado para a área de transferência.' });
+    }).catch(err => {
+      toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível copiar o relatório.' });
+    });
+  };
+
+  const handleShareWhatsApp = () => {
+    const encodedText = encodeURIComponent(getEventsAsText());
+    window.open(`https://api.whatsapp.com/send?text=${encodedText}`, '_blank');
+  };
+
+  const handleExportPDF = async () => {
+    if (displayedEvents.length === 0) {
+      toast({ variant: "destructive", title: "Nenhum dado", description: "Não há eventos para exportar no período selecionado." });
+      return;
+    }
+
+    try {
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF();
+      
+      const title = `Relatório de Eventos - ${view === 'anual' ? `Ano ${selectedYear}` : `${selectedMonth}/${selectedYear}`}`;
+      const subtitle = selectedServer !== 'todos' ? selectedServer : 'Todos os Servidores';
+
+      doc.setFontSize(18);
+      doc.text(title, 14, 22);
+      doc.setFontSize(12);
+      doc.text(subtitle, 14, 30);
+
+      (doc as any).autoTable({
+        startY: 35,
+        head: [['Servidor', 'Tipo', 'Período']],
+        body: displayedEvents.map(e => [e.servidor, e.tipo, e.periodo]),
+        theme: 'striped',
+        headStyles: { fillColor: [30, 144, 255] }, // Azul (cor primária)
+      });
+      
+      doc.save(`relatorio_eventos_${view}_${selectedYear}.pdf`);
+    } catch(error) {
+       console.error('Erro ao exportar PDF', error);
+       toast({
+          variant: 'destructive',
+          title: 'Erro ao exportar',
+          description: 'Não foi possível exportar o relatório como PDF.',
+        });
     }
   };
   
@@ -267,7 +396,7 @@ export default function SettingsPage() {
                   <CalendarDays className="h-6 w-6 text-primary" />
                   <CardTitle>Registros de Eventos</CardTitle>
               </div>
-              <CardDescription>Visualize faltas, licenças e férias de todos os servidores.</CardDescription>
+              <CardDescription>Visualize e exporte faltas, licenças e férias de todos os servidores.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                <div className="grid grid-cols-3 gap-4">
@@ -290,7 +419,7 @@ export default function SettingsPage() {
                     <SelectItem value="2024">2024</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                <Select value={selectedMonth} onValueChange={setSelectedMonth} disabled={view === 'anual'}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o Mês" />
                   </SelectTrigger>
@@ -321,28 +450,56 @@ export default function SettingsPage() {
                     ))}
                   </SelectContent>
               </Select>
-              <div className="grid grid-cols-2 gap-4">
-                <Button className="bg-green-500 hover:bg-green-600 text-white"><Share className="mr-2 h-4 w-4" />Partilhar</Button>
-                <Button variant="destructive"><Trash2 className="mr-2 h-4 w-4" />Excluir Vi...</Button>
-              </div>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Servidor</TableHead>
-                    <TableHead>Tipo</TableHead>
-                    <TableHead>Período</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {displayedEvents.map((event, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">{event.servidor}</TableCell>
-                      <TableCell>{event.tipo}</TableCell>
-                      <TableCell>{event.periodo}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+               <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="w-full" variant="outline">
+                    <Share className="mr-2 h-4 w-4 text-primary" />
+                    Exportar / Compartilhar
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
+                   <DropdownMenuItem onClick={handleExportPDF}>
+                    <FileDown className="mr-2 h-4 w-4" />
+                    <span>Exportar como PDF</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleShareWhatsApp}>
+                    <WhatsAppIcon className="mr-2 h-4 w-4" />
+                    <span>Compartilhar no WhatsApp</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleCopy}>
+                    <Copy className="mr-2 h-4 w-4" />
+                    <span>Copiar Texto</span>
+                  </DropdownMenuItem>
+                   <DropdownMenuItem onClick={handleShare}>
+                    <FileText className="mr-2 h-4 w-4" />
+                    <span>Outras Opções</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              { isLoadingEvents ? <p className="text-center">Carregando eventos...</p> : 
+                (displayedEvents.length > 0 ? (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Servidor</TableHead>
+                        <TableHead>Tipo</TableHead>
+                        <TableHead>Período</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {displayedEvents.map((event, index) => (
+                        <TableRow key={index}>
+                          <TableCell className="font-medium">{event.servidor}</TableCell>
+                          <TableCell>{event.tipo}</TableCell>
+                          <TableCell>{event.periodo}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <p className="text-center text-muted-foreground py-4">Nenhum evento encontrado para os filtros selecionados.</p>
+                ))
+              }
             </CardContent>
           </Card>
         </TabsContent>
