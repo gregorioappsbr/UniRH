@@ -89,10 +89,9 @@ export function ServerList() {
         );
         
         const recentServers = serversData
-            .sort((a, b) => b.id.localeCompare(a.id)) // To get recent ones, assuming higher ID is newer
-            .slice(0, 5)
-            .sort((a,b) => a.nomeCompleto.localeCompare(b.nomeCompleto)); // Then sort alphabetically for display
-
+            .sort((a, b) => (b.id ?? '').localeCompare(a.id ?? '')) // To get recent ones, assuming higher ID is newer
+            .slice(0, 5);
+            
         setServersWithRatings(recentServers);
       };
 
