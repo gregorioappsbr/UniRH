@@ -1,29 +1,30 @@
 
+
 const feminineColors = [
-    'bg-rose-200 dark:bg-rose-800',
-    'bg-fuchsia-200 dark:bg-fuchsia-800',
-    'bg-pink-200 dark:bg-pink-800',
-    'bg-violet-200 dark:bg-violet-800',
-    'bg-red-200 dark:bg-red-800',
-    'bg-orange-200 dark:bg-orange-800',
-    'bg-amber-200 dark:bg-amber-800',
+    'bg-pink-500',
+    'bg-fuchsia-500',
+    'bg-rose-500',
+    'bg-violet-500',
+    'bg-red-500',
+    'bg-orange-500',
+    'bg-amber-500',
 ];
 
 const masculineColors = [
-    'bg-sky-200 dark:bg-sky-800',
-    'bg-blue-200 dark:bg-blue-800',
-    'bg-cyan-200 dark:bg-cyan-800',
-    'bg-teal-200 dark:bg-teal-800',
-    'bg-emerald-200 dark:bg-emerald-800',
-    'bg-green-200 dark:bg-green-800',
-    'bg-indigo-200 dark:bg-indigo-800',
+    'bg-sky-500',
+    'bg-blue-500',
+    'bg-cyan-500',
+    'bg-teal-500',
+    'bg-emerald-500',
+    'bg-green-500',
+    'bg-indigo-500',
 ];
 
 const neutralColors = [
-    'bg-lime-200 dark:bg-lime-800',
-    'bg-gray-200 dark:bg-gray-800',
-    'bg-slate-200 dark:bg-slate-800',
-    'bg-stone-200 dark:bg-stone-800',
+    'bg-lime-500',
+    'bg-gray-500',
+    'bg-slate-500',
+    'bg-stone-500',
 ];
 
 export const getServerColor = (server: any, index: number) => {
