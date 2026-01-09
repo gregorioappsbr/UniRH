@@ -25,14 +25,31 @@ import { collection, deleteDoc, doc, getDocs, query } from 'firebase/firestore';
 const statusOptions = ['Ativo', 'Inativo', 'Licença'];
 const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comissionado'];
 
-const serverColors = [
+const feminineColors = [
   'bg-rose-200/50 dark:bg-rose-500/20',
   'bg-pink-200/50 dark:bg-pink-500/20',
   'bg-fuchsia-200/50 dark:bg-fuchsia-500/20',
-  'bg-rose-100/50 dark:bg-rose-400/20',
-  'bg-pink-100/50 dark:bg-pink-400/20',
-  'bg-fuchsia-100/50 dark:bg-fuchsia-400/20',
+  'bg-purple-200/50 dark:bg-purple-500/20',
+  'bg-violet-200/50 dark:bg-violet-500/20',
 ];
+
+const masculineColors = [
+  'bg-blue-200/50 dark:bg-blue-500/20',
+  'bg-green-200/50 dark:bg-green-500/20',
+  'bg-cyan-200/50 dark:bg-cyan-500/20',
+  'bg-teal-200/50 dark:bg-teal-500/20',
+  'bg-indigo-200/50 dark:bg-indigo-500/20',
+];
+
+const neutralColors = [
+  'bg-yellow-200/50 dark:bg-yellow-500/20',
+  'bg-orange-200/50 dark:bg-orange-500/20',
+  'bg-amber-200/50 dark:bg-amber-500/20',
+  'bg-lime-200/50 dark:bg-lime-500/20',
+  'bg-sky-200/50 dark:bg-sky-500/20',
+];
+
+const allColors = [...feminineColors, ...masculineColors, ...neutralColors];
 
 
 export default function ServerListPage() {
@@ -54,6 +71,18 @@ export default function ServerListPage() {
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [vinculoFilters, setVinculoFilters] = useState<string[]>([]);
   
+  const getServerColor = (server: any, index: number) => {
+    const gender = server.genero?.toLowerCase();
+    switch (gender) {
+      case 'feminino':
+        return feminineColors[index % feminineColors.length];
+      case 'masculino':
+        return masculineColors[index % masculineColors.length];
+      default: // nao-binario, outro, nao-informar
+        return allColors[index % allColors.length];
+    }
+  };
+
   useEffect(() => {
     const calculateRatings = async () => {
       if (!servers || !firestore) return;
@@ -670,7 +699,7 @@ const handleExportPDF = async () => {
                 {filteredServers.map((server, index) => (
                   <div 
                       key={server.id}
-                      className={cn("flex items-start gap-4 border-b pb-4 last:border-b-0 p-4 rounded-lg", serverColors[index % serverColors.length])}
+                      className={cn("flex items-start gap-4 border-b pb-4 last:border-b-0 p-4 rounded-lg", getServerColor(server, index))}
                     >
                     <div 
                       onClick={(e) => {
@@ -761,7 +790,7 @@ const handleExportPDF = async () => {
                   {filteredServers.map((server, index) => (
                     <TableRow 
                       key={server.id} 
-                      className={cn("cursor-pointer", serverColors[index % serverColors.length])}
+                      className={cn("cursor-pointer", getServerColor(server, index))}
                       onClick={() => router.push(`/servidores/${server.id}`)}
                     >
                       <TableCell onClick={(e) => e.stopPropagation()}>
@@ -818,10 +847,3 @@ const handleExportPDF = async () => {
     </div>
   );
 }
-
-    
-
-    
-    
-
-    
