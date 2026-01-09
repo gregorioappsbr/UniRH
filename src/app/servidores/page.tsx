@@ -560,6 +560,12 @@ const handleExportPDF = async () => {
     }
   };
 
+  const formatName = (name: string): string => {
+    if (!name) return '';
+    const parts = name.split(' ');
+    return name;
+  };
+
 
   return (
     <div className="p-4 space-y-4">
@@ -683,43 +689,30 @@ const handleExportPDF = async () => {
         <CardContent className="p-0">
           {isLoading && <p className="text-center p-4">Carregando servidores...</p>}
           {!isLoading && isMobile ? (
-            <>
-              <div className="flex items-center p-4 border-b">
-                <Checkbox
-                  id="select-all"
-                  checked={allSelected}
-                  onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
-                  aria-label="Selecionar todos"
-                />
-                <label htmlFor="select-all" className="ml-4 font-medium text-sm">
-                  Servidor
-                </label>
-              </div>
-              <div className="space-y-4 p-4">
+             <div className="space-y-4 p-4">
                 {filteredServers.map((server, index) => (
                   <div
                     key={server.id}
                     className={cn(
-                      "flex items-start gap-4 border-b pb-4 last:border-b-0 p-4 rounded-lg",
-                      getServerColor(server, index)
+                      "flex items-start gap-4 border-b pb-4 last:border-b-0 p-4 rounded-lg cursor-pointer transition-all",
+                      getServerColor(server, index),
+                      selectedServers[server.id] && 'border-primary ring-2 ring-primary'
                     )}
-                     onClick={(e) => {
-                        const target = e.target as HTMLElement;
-                        if (target.closest('a[href^="https://wa.me"]') || target.closest('input[type=checkbox]')) {
+                    onClick={(e) => {
+                      const target = e.target as HTMLElement;
+                      if (target.closest('a[href^="https://wa.me"]')) {
                           e.stopPropagation();
                           return;
-                        }
-                        router.push(`/servidores/${server.id}`);
-                      }}
+                      }
+                      if (selectionCount > 0) {
+                          handleSelectServer(server.id, !selectedServers[server.id]);
+                      } else {
+                          router.push(`/servidores/${server.id}`);
+                      }
+                    }}
+                    onLongPress={() => handleSelectServer(server.id, !selectedServers[server.id])}
                   >
                     <div className="flex flex-col items-center justify-start gap-2 pt-1">
-                       <Checkbox
-                        id={`server-${server.id}`}
-                        checked={selectedServers[server.id] || false}
-                        onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
-                        aria-label={`Selecionar ${server.nomeCompleto}`}
-                        onClick={(e) => e.stopPropagation()}
-                      />
                       <Avatar className="h-12 w-12 mt-2">
                          <AvatarImage src={server.avatarUrl} />
                          <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
@@ -737,9 +730,9 @@ const handleExportPDF = async () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex-1 space-y-1 cursor-pointer">
-                      <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
-                      <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
+                    <div className="flex-1 space-y-1">
+                      <p className="font-semibold">{formatName(server.nomeCompleto)}</p>
+                      <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
                       {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           {getFuncaoIcon(server.funcao)}
@@ -756,12 +749,11 @@ const handleExportPDF = async () => {
                   </div>
                 ))}
               </div>
-            </>
           ) : (
              <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[50px]" onClick={(e) => e.stopPropagation()}>
+                    <TableHead className="w-[50px]">
                       <Checkbox
                         id="select-all-desktop"
                         checked={allSelected}
@@ -799,7 +791,7 @@ const handleExportPDF = async () => {
                                   <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                               </Avatar>
                               <div>
-                                  <p className="font-semibold">{server.nomeCompleto}</p>
+                                  <p className="font-semibold">{formatName(server.nomeCompleto)}</p>
                                   <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
                               </div>
                           </div>
@@ -838,3 +830,5 @@ const handleExportPDF = async () => {
     </div>
   );
 }
+
+    
