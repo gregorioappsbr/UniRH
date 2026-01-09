@@ -1,26 +1,26 @@
 
 const feminineColors = [
-  'bg-rose-200 dark:bg-rose-800/20',
-  'bg-pink-200 dark:bg-pink-800/20',
-  'bg-fuchsia-200 dark:bg-fuchsia-800/20',
-  'bg-purple-200 dark:bg-purple-800/20',
-  'bg-violet-200 dark:bg-violet-800/20',
+  'bg-rose-200 dark:bg-rose-900',
+  'bg-pink-200 dark:bg-pink-900',
+  'bg-fuchsia-200 dark:bg-fuchsia-900',
+  'bg-purple-200 dark:bg-purple-900',
+  'bg-violet-200 dark:bg-violet-900',
 ];
 
 const masculineColors = [
-  'bg-blue-200 dark:bg-blue-800/20',
-  'bg-green-200 dark:bg-green-800/20',
-  'bg-cyan-200 dark:bg-cyan-800/20',
-  'bg-teal-200 dark:bg-teal-800/20',
-  'bg-indigo-200 dark:bg-indigo-800/20',
+  'bg-blue-200 dark:bg-blue-900',
+  'bg-green-200 dark:bg-green-900',
+  'bg-cyan-200 dark:bg-cyan-900',
+  'bg-teal-200 dark:bg-teal-900',
+  'bg-indigo-200 dark:bg-indigo-900',
 ];
 
 const neutralColors = [
-  'bg-yellow-200 dark:bg-yellow-800/20',
-  'bg-orange-200 dark:bg-orange-800/20',
-  'bg-amber-200 dark:bg-amber-800/20',
-  'bg-lime-200 dark:bg-lime-800/20',
-  'bg-sky-200 dark:bg-sky-800/20',
+  'bg-yellow-200 dark:bg-yellow-900',
+  'bg-orange-200 dark:bg-orange-900',
+  'bg-amber-200 dark:bg-amber-900',
+  'bg-lime-200 dark:bg-lime-900',
+  'bg-sky-200 dark:bg-sky-900',
 ];
 
 const allColors = [...feminineColors, ...masculineColors, ...neutralColors];
