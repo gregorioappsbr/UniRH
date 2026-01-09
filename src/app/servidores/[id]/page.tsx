@@ -724,7 +724,7 @@ export default function ServerProfilePage() {
         </Button>
       </header>
 
-      <Card className={cn("text-card-foreground", color)}>
+      <Card className={cn("text-white", color)}>
         <CardContent className="p-6 space-y-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <Link href={`/servidores/novo?id=${id}`}>
@@ -737,14 +737,14 @@ export default function ServerProfilePage() {
             </Link>
             <div>
               <h2 className="text-2xl font-bold">{server.nomeCompleto}</h2>
-              <p className="text-muted-foreground">{server.cargo}</p>
+              <p className="text-white/80">{server.cargo}</p>
             </div>
             <div className="flex gap-2">
-              <Badge className={cn("font-semibold", getStatusClass(server.status))}>
+              <Badge className={cn("font-semibold text-white border-white/50", color)}>
                 {getStatusIcon(server.status)}
                 {server.status}
               </Badge>
-              <Badge variant="outline" className={cn("font-semibold", getRatingClass(calculatedRating))}>
+              <Badge variant="outline" className={cn("font-semibold text-white border-white/50", getRatingClass(calculatedRating))}>
                 <Award className="h-3 w-3 mr-1" />
                 Nota: {calculatedRating.toFixed(1)}
               </Badge>
@@ -753,31 +753,31 @@ export default function ServerProfilePage() {
 
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <Mail className="h-5 w-5 text-muted-foreground" />
+              <Mail className="h-5 w-5 text-white/80" />
               <span className="text-sm">{server.emailInstitucional}</span>
             </div>
-            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base text-foreground hover:text-primary">
-              <WhatsAppIcon className="h-5 w-5 text-muted-foreground" />
+            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base text-white hover:text-white/80">
+              <WhatsAppIcon className="h-5 w-5 text-white/80" />
               <span className="text-base">{server.telefonePrincipal}</span>
             </a>
             <div className="flex items-center gap-4">
-              <Type className="h-5 w-5 text-muted-foreground" />
+              <Type className="h-5 w-5 text-white/80" />
               <span className="text-sm">{server.vinculo}</span>
             </div>
             <div className="flex items-center gap-4">
-              <Building className="h-5 w-5 text-muted-foreground" />
+              <Building className="h-5 w-5 text-white/80" />
               <span className="text-sm">{server.setor}</span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline" asChild>
+            <Button variant="outline" asChild className="bg-white/10 hover:bg-white/20 border-white/20 text-white">
               <Link href={`/servidores/novo?id=${id}`}>
                 <Edit className="h-4 w-4 mr-2" />
                 Editar Perfil
               </Link>
             </Button>
-            <Button variant="destructive">
+            <Button variant="destructive" className="bg-red-500/80 hover:bg-red-500">
               <Trash2 className="h-4 w-4 mr-2" />
               Excluir
             </Button>
@@ -799,18 +799,18 @@ export default function ServerProfilePage() {
             <Accordion type="single" collapsible className="w-full space-y-2">
               {fichaItems.map((item, index) => (
                 <AccordionItem key={index} value={`item-${index}`} className={cn("border-border dark:border-white/80 border rounded-lg", color)}>
-                  <AccordionTrigger className="p-4 hover:no-underline">
+                  <AccordionTrigger className="p-4 hover:no-underline text-white">
                     <div className="flex items-center gap-3">
-                      <item.icon className="h-5 w-5 text-primary" />
+                      <item.icon className="h-5 w-5 text-white" />
                       <span className="font-semibold">{item.label}</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="p-4 pt-0">
                     <div className="space-y-2">
                       {item.content.map((detail, detailIndex) => (detail.value) && (
-                        <div key={detailIndex} className="flex justify-between items-center text-sm p-2 bg-background dark:bg-muted/30 rounded-md">
-                          <span className="font-semibold text-muted-foreground">{detail.label}:</span>
-                          <span className="text-right text-foreground">{detail.value}</span>
+                        <div key={detailIndex} className="flex justify-between items-center text-sm p-2 bg-black/20 rounded-md">
+                          <span className="font-semibold text-white/80">{detail.label}:</span>
+                          <span className="text-right text-white">{detail.value}</span>
                         </div>
                       ))}
                     </div>
@@ -820,20 +820,20 @@ export default function ServerProfilePage() {
             </Accordion>
           </TabsContent>
           <TabsContent value="faltas" className="mt-8 flex flex-col flex-1 md:mt-10">
-            <Card className={cn(color)}>
+            <Card className={cn(color, "text-white")}>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <CalendarX className="h-6 w-6 text-primary" />
+                  <CalendarX className="h-6 w-6 text-white" />
                   <CardTitle className="text-lg">Faltas</CardTitle>
                 </div>
                  <Dialog open={isFaltaDialogOpen} onOpenChange={setIsFaltaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" onClick={() => setEditingFalta(null)} className={cn("text-white", color.replace('dark:bg', 'dark:hover:bg').replace('bg-', 'hover:bg-'))}>
+                    <Button size="sm" onClick={() => setEditingFalta(null)} className={"bg-white/10 hover:bg-white/20 border-white/20 text-white"}>
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Falta
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className={cn("sm:max-w-md", color)}>
+                  <DialogContent className={cn("sm:max-w-md", color, "text-white")}>
                     <DialogHeader>
                       <DialogTitle>{editingFalta ? 'Editar Falta' : 'Registrar Nova Falta'}</DialogTitle>
                     </DialogHeader>
@@ -847,6 +847,7 @@ export default function ServerProfilePage() {
                               value={faltaDia}
                               onChange={(e) => setFaltaDia(e.target.value)}
                               maxLength={2}
+                              className="bg-black/20 border-white/20 placeholder:text-white/60"
                             />
                              <Input
                               type="number"
@@ -854,6 +855,7 @@ export default function ServerProfilePage() {
                               value={faltaMes}
                               onChange={(e) => setFaltaMes(e.target.value)}
                               maxLength={2}
+                              className="bg-black/20 border-white/20 placeholder:text-white/60"
                             />
                              <Input
                               type="number"
@@ -861,6 +863,7 @@ export default function ServerProfilePage() {
                               value={faltaAno}
                               onChange={(e) => setFaltaAno(e.target.value)}
                               maxLength={4}
+                              className="bg-black/20 border-white/20 placeholder:text-white/60"
                             />
                           </div>
                        </div>
@@ -871,12 +874,13 @@ export default function ServerProfilePage() {
                           placeholder="Adicione uma descrição ou observação..."
                           value={faltaReason}
                           onChange={(e) => setFaltaReason(e.target.value)}
+                          className="bg-black/20 border-white/20 placeholder:text-white/60"
                         />
                       </div>
                     </div>
                     <DialogFooter>
-                      <Button variant="ghost" onClick={() => setIsFaltaDialogOpen(false)}>Cancelar</Button>
-                      <Button onClick={handleSaveFalta}>Salvar</Button>
+                      <Button variant="ghost" onClick={() => setIsFaltaDialogOpen(false)} className="text-white hover:bg-white/10">Cancelar</Button>
+                      <Button onClick={handleSaveFalta} className="bg-white/90 hover:bg-white text-black">Salvar</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -884,7 +888,7 @@ export default function ServerProfilePage() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 mb-4">
                     <Select value={selectedFaltaYear} onValueChange={setSelectedFaltaYear}>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-black/20 border-white/20">
                             <SelectValue placeholder="Selecione o Ano" />
                         </SelectTrigger>
                         <SelectContent>
@@ -894,7 +898,7 @@ export default function ServerProfilePage() {
                         </SelectContent>
                     </Select>
                     <Select value={selectedFaltaMonth} onValueChange={setSelectedFaltaMonth}>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-black/20 border-white/20">
                             <SelectValue placeholder="Selecione o Mês" />
                         </SelectTrigger>
                         <SelectContent>
@@ -908,30 +912,30 @@ export default function ServerProfilePage() {
                 {isLoadingFaltas ? <p>Carregando faltas...</p> : (filteredFaltas && filteredFaltas.length > 0) ? (
                   <Table>
                     <TableHeader className="hidden md:table-header-group">
-                      <TableRow>
-                        <TableHead>Data</TableHead>
-                        <TableHead>Descrição</TableHead>
-                        <TableHead className="text-right">Ações</TableHead>
+                      <TableRow className="border-white/20">
+                        <TableHead className="text-white">Data</TableHead>
+                        <TableHead className="text-white">Descrição</TableHead>
+                        <TableHead className="text-right text-white">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredFaltas.map((falta) => (
-                        <TableRow key={falta.id} className="flex flex-col md:table-row p-4 md:p-0 border-b last:border-b-0 md:border-b">
+                        <TableRow key={falta.id} className="flex flex-col md:table-row p-4 md:p-0 border-white/20 last:border-b-0 md:border-b">
                           <TableCell className="font-medium p-0 md:p-4">
                             <span className="md:hidden font-semibold">Data: </span>{falta.date}
                           </TableCell>
-                          <TableCell className="text-muted-foreground p-0 md:p-4">
-                             <span className="md:hidden font-semibold text-foreground">Descrição: </span>{falta.reason || 'Sem justificativa'}
+                          <TableCell className="text-white/80 p-0 md:p-4">
+                             <span className="md:hidden font-semibold text-white">Descrição: </span>{falta.reason || 'Sem justificativa'}
                           </TableCell>
                           <TableCell className="p-0 md:p-4 mt-2 md:mt-0 text-right">
                              <div className="flex items-center justify-end gap-2">
-                                <Button variant="ghost" size="icon" onClick={() => { setEditingFalta(falta); setIsFaltaDialogOpen(true); }}>
+                                <Button variant="ghost" size="icon" onClick={() => { setEditingFalta(falta); setIsFaltaDialogOpen(true); }} className="text-white hover:bg-white/10">
                                   <Edit className="h-5 w-5" />
                                 </Button>
                                 <AlertDialog>
                                   <AlertDialogTrigger asChild>
-                                    <Button variant="ghost" size="icon">
-                                      <Trash2 className="h-5 w-5 text-destructive" />
+                                    <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/20 hover:text-destructive">
+                                      <Trash2 className="h-5 w-5" />
                                     </Button>
                                   </AlertDialogTrigger>
                                   <AlertDialogContent>
@@ -956,26 +960,26 @@ export default function ServerProfilePage() {
                     </TableBody>
                   </Table>
                 ) : (
-                  <p className="text-center text-muted-foreground py-4">Nenhuma falta registrada para este período.</p>
+                  <p className="text-center text-white/80 py-4">Nenhuma falta registrada para este período.</p>
                 )}
               </CardContent>
             </Card>
           </TabsContent>
           <TabsContent value="licencas" className="mt-8 md:mt-10">
-             <Card className={cn(color)}>
+             <Card className={cn(color, "text-white")}>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <CalendarX className="h-6 w-6 text-primary" />
+                  <CalendarX className="h-6 w-6 text-white" />
                   <CardTitle className="text-lg">Licenças</CardTitle>
                 </div>
                  <Dialog open={isLicencaDialogOpen} onOpenChange={setIsLicencaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" onClick={() => setEditingLicenca(null)} className={cn("text-white", color.replace('dark:bg', 'dark:hover:bg').replace('bg-', 'hover:bg-'))}>
+                    <Button size="sm" onClick={() => setEditingLicenca(null)} className="bg-white/10 hover:bg-white/20 border-white/20 text-white">
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Licença
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className={cn("sm:max-w-md", color)}>
+                  <DialogContent className={cn("sm:max-w-md", color, "text-white")}>
                     <DialogHeader>
                       <DialogTitle>{editingLicenca ? 'Editar Licença' : 'Registrar Nova Licença'}</DialogTitle>
                     </DialogHeader>
@@ -983,7 +987,7 @@ export default function ServerProfilePage() {
                        <div className="space-y-2">
                             <Label htmlFor="licenca-type">Tipo de Licença</Label>
                             <Select value={licencaType} onValueChange={setLicencaType}>
-                                <SelectTrigger id="licenca-type">
+                                <SelectTrigger id="licenca-type" className="bg-black/20 border-white/20">
                                     <SelectValue placeholder="Selecione o tipo..." />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -1007,23 +1011,24 @@ export default function ServerProfilePage() {
                                     placeholder="Descreva o tipo de licença..."
                                     value={licencaReason}
                                     onChange={(e) => setLicencaReason(e.target.value)}
+                                    className="bg-black/20 border-white/20 placeholder:text-white/60"
                                 />
                             </div>
                         )}
                         <div className="space-y-2">
                             <Label>Data de Início</Label>
                             <div className="grid grid-cols-3 gap-2">
-                                <Input type="number" placeholder="Dia" value={licencaStartDia} onChange={(e) => setLicencaStartDia(e.target.value)} maxLength={2} />
-                                <Input type="number" placeholder="Mês" value={licencaStartMes} onChange={(e) => setLicencaStartMes(e.target.value)} maxLength={2} />
-                                <Input type="number" placeholder="Ano" value={licencaStartAno} onChange={(e) => setLicencaStartAno(e.target.value)} maxLength={4} />
+                                <Input type="number" placeholder="Dia" value={licencaStartDia} onChange={(e) => setLicencaStartDia(e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60" />
+                                <Input type="number" placeholder="Mês" value={licencaStartMes} onChange={(e) => setLicencaStartMes(e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60" />
+                                <Input type="number" placeholder="Ano" value={licencaStartAno} onChange={(e) => setLicencaStartAno(e.target.value)} maxLength={4} className="bg-black/20 border-white/20 placeholder:text-white/60" />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label>Data de Fim</Label>
                             <div className="grid grid-cols-3 gap-2">
-                                <Input type="number" placeholder="Dia" value={licencaEndDia} onChange={(e) => setLicencaEndDia(e.target.value)} maxLength={2} />
-                                <Input type="number" placeholder="Mês" value={licencaEndMes} onChange={(e) => setLicencaEndMes(e.target.value)} maxLength={2} />
-                                <Input type="number" placeholder="Ano" value={licencaEndAno} onChange={(e) => setLicencaEndAno(e.target.value)} maxLength={4} />
+                                <Input type="number" placeholder="Dia" value={licencaEndDia} onChange={(e) => setLicencaEndDia(e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60" />
+                                <Input type="number" placeholder="Mês" value={licencaEndMes} onChange={(e) => setLicencaEndMes(e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60" />
+                                <Input type="number" placeholder="Ano" value={licencaEndAno} onChange={(e) => setLicencaEndAno(e.target.value)} maxLength={4} className="bg-black/20 border-white/20 placeholder:text-white/60" />
                             </div>
                         </div>
                        {licencaType !== 'outro' && (
@@ -1034,13 +1039,14 @@ export default function ServerProfilePage() {
                             placeholder="Adicione uma descrição ou observação..."
                             value={licencaReason}
                             onChange={(e) => setLicencaReason(e.target.value)}
+                            className="bg-black/20 border-white/20 placeholder:text-white/60"
                             />
                         </div>
                        )}
                     </div>
                     <DialogFooter>
-                      <Button variant="ghost" onClick={() => setIsLicencaDialogOpen(false)}>Cancelar</Button>
-                      <Button onClick={handleSaveLicenca}>Salvar</Button>
+                      <Button variant="ghost" onClick={() => setIsLicencaDialogOpen(false)} className="text-white hover:bg-white/10">Cancelar</Button>
+                      <Button onClick={handleSaveLicenca} className="bg-white/90 hover:bg-white text-black">Salvar</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -1048,7 +1054,7 @@ export default function ServerProfilePage() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 mb-4">
                      <Select value={selectedLicencaYear} onValueChange={setSelectedLicencaYear}>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-black/20 border-white/20">
                             <SelectValue placeholder="Selecione o Ano" />
                         </SelectTrigger>
                         <SelectContent>
@@ -1058,7 +1064,7 @@ export default function ServerProfilePage() {
                         </SelectContent>
                     </Select>
                     <Select value={selectedLicencaMonth} onValueChange={setSelectedLicencaMonth}>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-black/20 border-white/20">
                             <SelectValue placeholder="Selecione o Mês" />
                         </SelectTrigger>
                         <SelectContent>
@@ -1072,34 +1078,34 @@ export default function ServerProfilePage() {
                 {isLoadingLicencas ? <p>Carregando licenças...</p> : (filteredLicencas && filteredLicencas.length > 0) ? (
                   <Table>
                     <TableHeader className="hidden md:table-header-group">
-                      <TableRow>
-                        <TableHead>Tipo</TableHead>
-                        <TableHead>Período</TableHead>
-                        <TableHead>Descrição</TableHead>
-                        <TableHead className="text-right">Ações</TableHead>
+                      <TableRow className="border-white/20">
+                        <TableHead className="text-white">Tipo</TableHead>
+                        <TableHead className="text-white">Período</TableHead>
+                        <TableHead className="text-white">Descrição</TableHead>
+                        <TableHead className="text-right text-white">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredLicencas.map((licenca) => (
-                        <TableRow key={licenca.id} className="flex flex-col md:table-row p-4 md:p-0 border-b last:border-b-0 md:border-b">
+                        <TableRow key={licenca.id} className="flex flex-col md:table-row p-4 md:p-0 border-white/20 last:border-b-0 md:border-b">
                            <TableCell className="p-0 md:p-4 font-medium">
                             <span className="md:hidden font-semibold">Tipo: </span>{licenca.type}
                           </TableCell>
                           <TableCell className="p-0 md:p-4">
                             <span className="md:hidden font-semibold">Período: </span>{`${licenca.startDate} - ${licenca.endDate}`}
                           </TableCell>
-                          <TableCell className="text-muted-foreground p-0 md:p-4">
-                            <span className="md:hidden font-semibold text-foreground">Descrição: </span>{licenca.reason || '-'}
+                          <TableCell className="text-white/80 p-0 md:p-4">
+                            <span className="md:hidden font-semibold text-white">Descrição: </span>{licenca.reason || '-'}
                           </TableCell>
                           <TableCell className="p-0 md:p-4 mt-2 md:mt-0 text-right">
                              <div className="flex items-center justify-end gap-2">
-                                <Button variant="ghost" size="icon" onClick={() => { setEditingLicenca(licenca); setIsLicencaDialogOpen(true); }}>
+                                <Button variant="ghost" size="icon" onClick={() => { setEditingLicenca(licenca); setIsLicencaDialogOpen(true); }} className="text-white hover:bg-white/10">
                                   <Edit className="h-5 w-5" />
                                 </Button>
                                 <AlertDialog>
                                   <AlertDialogTrigger asChild>
-                                    <Button variant="ghost" size="icon">
-                                      <Trash2 className="h-5 w-5 text-destructive" />
+                                    <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/20 hover:text-destructive">
+                                      <Trash2 className="h-5 w-5" />
                                     </Button>
                                   </AlertDialogTrigger>
                                   <AlertDialogContent>
@@ -1124,26 +1130,26 @@ export default function ServerProfilePage() {
                     </TableBody>
                   </Table>
                 ) : (
-                  <p className="text-center text-muted-foreground py-4">Nenhuma licença registrada para este período.</p>
+                  <p className="text-center text-white/80 py-4">Nenhuma licença registrada para este período.</p>
                 )}
               </CardContent>
             </Card>
           </TabsContent>
           <TabsContent value="ferias" className="mt-8 md:mt-10">
-            <Card className={cn(color)}>
+            <Card className={cn(color, "text-white")}>
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <CalendarDays className="h-6 w-6 text-primary" />
+                        <CalendarDays className="h-6 w-6 text-white" />
                         <CardTitle className="text-lg">Férias</CardTitle>
                     </div>
                     <Dialog open={isFeriaDialogOpen} onOpenChange={setIsFeriaDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button size="sm" onClick={() => setEditingFeria(null)} className={cn("text-white", color.replace('dark:bg', 'dark:hover:bg').replace('bg-', 'hover:bg-'))}>
+                            <Button size="sm" onClick={() => setEditingFeria(null)} className="bg-white/10 hover:bg-white/20 border-white/20 text-white">
                                 <PlusCircle className="h-4 w-4 mr-2" />
                                 Adicionar Férias
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className={cn("sm:max-w-lg", color)}>
+                        <DialogContent className={cn("sm:max-w-lg", color, "text-white")}>
                             <DialogHeader>
                                 <DialogTitle>{editingFeria ? 'Editar Férias' : 'Registrar Novas Férias'}</DialogTitle>
                             </DialogHeader>
@@ -1156,13 +1162,14 @@ export default function ServerProfilePage() {
                                       value={feriaPeriodoAquisitivo}
                                       onChange={(e) => setFeriaPeriodoAquisitivo(e.target.value)}
                                       disabled={!!editingFeria}
+                                      className="bg-black/20 border-white/20 placeholder:text-white/60"
                                     />
                                 </div>
                                 { !editingFeria &&
                                   <div className="space-y-2">
                                       <Label htmlFor="ferias-parcelamento">Parcelamento de Férias</Label>
                                       <Select value={feriasParcelamento} onValueChange={setFeriasParcelamento}>
-                                          <SelectTrigger id="ferias-parcelamento">
+                                          <SelectTrigger id="ferias-parcelamento" className="bg-black/20 border-white/20">
                                               <SelectValue placeholder="Selecione o parcelamento..." />
                                           </SelectTrigger>
                                           <SelectContent>
@@ -1176,7 +1183,7 @@ export default function ServerProfilePage() {
                                 }
                                 
                                 {feriasPeriodos.map((periodo, index) => (
-                                    <div key={index} className="space-y-3 p-3 border rounded-md relative">
+                                    <div key={index} className="space-y-3 p-3 border border-white/20 rounded-md relative">
                                         <Label className="font-semibold">Período {index + 1}</Label>
                                         {feriasParcelamento === 'custom' && feriasPeriodos.length > 1 && !editingFeria && (
                                             <Button
@@ -1192,32 +1199,32 @@ export default function ServerProfilePage() {
                                         <div className="space-y-2">
                                             <Label className="text-xs">Data de Início</Label>
                                             <div className="grid grid-cols-3 gap-2">
-                                                <Input type="number" placeholder="Dia" value={periodo.startDia} onChange={(e) => handleFeriasPeriodoChange(index, 'startDia', e.target.value)} maxLength={2} />
-                                                <Input type="number" placeholder="Mês" value={periodo.startMes} onChange={(e) => handleFeriasPeriodoChange(index, 'startMes', e.target.value)} maxLength={2} />
-                                                <Input type="number" placeholder="Ano" value={periodo.startAno} onChange={(e) => handleFeriasPeriodoChange(index, 'startAno', e.target.value)} maxLength={4} />
+                                                <Input type="number" placeholder="Dia" value={periodo.startDia} onChange={(e) => handleFeriasPeriodoChange(index, 'startDia', e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
+                                                <Input type="number" placeholder="Mês" value={periodo.startMes} onChange={(e) => handleFeriasPeriodoChange(index, 'startMes', e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
+                                                <Input type="number" placeholder="Ano" value={periodo.startAno} onChange={(e) => handleFeriasPeriodoChange(index, 'startAno', e.target.value)} maxLength={4} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
                                             </div>
                                         </div>
                                         <div className="space-y-2">
                                             <Label className="text-xs">Data de Fim</Label>
                                             <div className="grid grid-cols-3 gap-2">
-                                                <Input type="number" placeholder="Dia" value={periodo.endDia} onChange={(e) => handleFeriasPeriodoChange(index, 'endDia', e.target.value)} maxLength={2} />
-                                                <Input type="number" placeholder="Mês" value={periodo.endMes} onChange={(e) => handleFeriasPeriodoChange(index, 'endMes', e.target.value)} maxLength={2} />
-                                                <Input type="number" placeholder="Ano" value={periodo.endAno} onChange={(e) => handleFeriasPeriodoChange(index, 'endAno', e.target.value)} maxLength={4} />
+                                                <Input type="number" placeholder="Dia" value={periodo.endDia} onChange={(e) => handleFeriasPeriodoChange(index, 'endDia', e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
+                                                <Input type="number" placeholder="Mês" value={periodo.endMes} onChange={(e) => handleFeriasPeriodoChange(index, 'endMes', e.target.value)} maxLength={2} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
+                                                <Input type="number" placeholder="Ano" value={periodo.endAno} onChange={(e) => handleFeriasPeriodoChange(index, 'endAno', e.target.value)} maxLength={4} className="bg-black/20 border-white/20 placeholder:text-white/60"/>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
 
                                 {feriasParcelamento === 'custom' && !editingFeria && (
-                                    <Button type="button" variant="outline" size="sm" onClick={addFeriasPeriodo} className="w-full">
+                                    <Button type="button" variant="outline" size="sm" onClick={addFeriasPeriodo} className="w-full bg-white/10 hover:bg-white/20 border-white/20 text-white">
                                         <PlusCircle className="h-4 w-4 mr-2" />
                                         Adicionar Período
                                     </Button>
                                 )}
                             </div>
                             <DialogFooter>
-                                <Button variant="ghost" onClick={() => setIsFeriaDialogOpen(false)}>Cancelar</Button>
-                                <Button onClick={handleSaveFeria}>Salvar</Button>
+                                <Button variant="ghost" onClick={() => setIsFeriaDialogOpen(false)} className="text-white hover:bg-white/10">Cancelar</Button>
+                                <Button onClick={handleSaveFeria} className="bg-white/90 hover:bg-white text-black">Salvar</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -1225,7 +1232,7 @@ export default function ServerProfilePage() {
                 <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4 mb-4">
                         <Select value={selectedFeriaYear} onValueChange={setSelectedFeriaYear}>
-                            <SelectTrigger>
+                            <SelectTrigger className="bg-black/20 border-white/20">
                                 <SelectValue placeholder="Selecione o Ano" />
                             </SelectTrigger>
                             <SelectContent>
@@ -1235,7 +1242,7 @@ export default function ServerProfilePage() {
                             </SelectContent>
                         </Select>
                          <Select value={selectedFeriaMonth} onValueChange={setSelectedFeriaMonth}>
-                            <SelectTrigger>
+                            <SelectTrigger className="bg-black/20 border-white/20">
                                 <SelectValue placeholder="Selecione o Mês" />
                             </SelectTrigger>
                             <SelectContent>
@@ -1249,15 +1256,15 @@ export default function ServerProfilePage() {
                     {isLoadingFerias ? <p>Carregando férias...</p> : (filteredFerias && filteredFerias.length > 0) ? (
                         <Table>
                             <TableHeader className="hidden md:table-header-group">
-                                <TableRow>
-                                    <TableHead>Período Aquisitivo</TableHead>
-                                    <TableHead>Período de Gozo</TableHead>
-                                    <TableHead className="text-right">Ações</TableHead>
+                                <TableRow className="border-white/20">
+                                    <TableHead className="text-white">Período Aquisitivo</TableHead>
+                                    <TableHead className="text-white">Período de Gozo</TableHead>
+                                    <TableHead className="text-right text-white">Ações</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {filteredFerias.map((feria) => (
-                                    <TableRow key={feria.id} className="flex flex-col md:table-row p-4 md:p-0 border-b last:border-b-0 md:border-b">
+                                    <TableRow key={feria.id} className="flex flex-col md:table-row p-4 md:p-0 border-white/20 last:border-b-0 md:border-b">
                                         <TableCell className="p-0 md:p-4 font-medium">
                                           <span className="md:hidden font-semibold">Período Aquisitivo: </span>{feria.periodoAquisitivo}
                                         </TableCell>
@@ -1266,13 +1273,13 @@ export default function ServerProfilePage() {
                                         </TableCell>
                                         <TableCell className="p-0 md:p-4 mt-2 md:mt-0 text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                <Button variant="ghost" size="icon" onClick={() => { setEditingFeria(feria); setIsFeriaDialogOpen(true); }}>
+                                                <Button variant="ghost" size="icon" onClick={() => { setEditingFeria(feria); setIsFeriaDialogOpen(true); }} className="text-white hover:bg-white/10">
                                                     <Edit className="h-5 w-5" />
                                                 </Button>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
-                                                        <Button variant="ghost" size="icon">
-                                                            <Trash2 className="h-5 w-5 text-destructive" />
+                                                        <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/20 hover:text-destructive">
+                                                            <Trash2 className="h-5 w-5" />
                                                         </Button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
@@ -1297,7 +1304,7 @@ export default function ServerProfilePage() {
                             </TableBody>
                         </Table>
                     ) : (
-                        <p className="text-center text-muted-foreground py-4">Nenhum registro de férias para este período.</p>
+                        <p className="text-center text-white/80 py-4">Nenhum registro de férias para este período.</p>
                     )}
                 </CardContent>
             </Card>
@@ -1325,6 +1332,7 @@ export default function ServerProfilePage() {
 
 
     
+
 
 
 
