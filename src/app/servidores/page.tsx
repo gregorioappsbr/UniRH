@@ -1,5 +1,6 @@
 
 'use client';
+
 import React, { useEffect, useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -716,9 +717,9 @@ const handleExportPDF = async () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={handleShare}>
-                  <FileText className="mr-2 h-4 w-4" />
-                  <span>Compartilhar como Texto</span>
+                <DropdownMenuItem onClick={handleExportPDF}>
+                  <FileDown className="mr-2 h-4 w-4" />
+                  <span>Exportar como PDF</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleShareWhatsApp}>
                   <WhatsAppIcon className="mr-2 h-4 w-4" />
@@ -728,9 +729,9 @@ const handleExportPDF = async () => {
                   <Copy className="mr-2 h-4 w-4" />
                   <span>Copiar Texto</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleExportPDF}>
-                  <FileDown className="mr-2 h-4 w-4" />
-                  <span>Exportar como PDF</span>
+                <DropdownMenuItem onClick={handleShare}>
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>Compartilhar como Texto</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -908,6 +909,8 @@ const handleExportPDF = async () => {
   );
 }
 
+
+    
 
     
 

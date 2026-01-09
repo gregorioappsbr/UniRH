@@ -217,21 +217,21 @@ export default function NotesPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => handleShare(note)}>
-                          <FileText className="mr-2 h-4 w-4" />
-                          <span>Compartilhar como Texto</span>
+                        <DropdownMenuItem onClick={() => handleExportPDF(note)}>
+                          <FileDown className="mr-2 h-4 w-4" />
+                          <span>Exportar como PDF</span>
                         </DropdownMenuItem>
-                         <DropdownMenuItem onClick={() => handleShareWhatsApp(note)}>
+                        <DropdownMenuItem onClick={() => handleShareWhatsApp(note)}>
                           <WhatsAppIcon className="mr-2 h-4 w-4" />
                           <span>Compartilhar no WhatsApp</span>
                         </DropdownMenuItem>
-                         <DropdownMenuItem onClick={() => handleCopy(note)}>
+                        <DropdownMenuItem onClick={() => handleCopy(note)}>
                           <Copy className="mr-2 h-4 w-4" />
                           <span>Copiar Texto</span>
                         </DropdownMenuItem>
-                         <DropdownMenuItem onClick={() => handleExportPDF(note)}>
-                          <FileDown className="mr-2 h-4 w-4" />
-                          <span>Exportar como PDF</span>
+                        <DropdownMenuItem onClick={() => handleShare(note)}>
+                          <FileText className="mr-2 h-4 w-4" />
+                          <span>Compartilhar como Texto</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -282,6 +282,9 @@ export default function NotesPage() {
 
 
 
+
+
+    
 
 
     
