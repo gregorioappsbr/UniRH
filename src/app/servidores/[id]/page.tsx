@@ -798,7 +798,7 @@ export default function ServerProfilePage() {
           <TabsContent value="ficha" className="mt-8 flex-1 flex flex-col md:mt-10">
             <Accordion type="single" collapsible className="w-full space-y-2">
               {fichaItems.map((item, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className="bg-card border-border dark:border-white/80 border rounded-lg">
+                <AccordionItem key={index} value={`item-${index}`} className={cn("border-border dark:border-white/80 border rounded-lg", color === 'bg-card' ? 'bg-card' : color)}>
                   <AccordionTrigger className="p-4 hover:no-underline">
                     <div className="flex items-center gap-3">
                       <item.icon className="h-5 w-5 text-primary" />
@@ -1325,4 +1325,5 @@ export default function ServerProfilePage() {
 
 
     
+
 
