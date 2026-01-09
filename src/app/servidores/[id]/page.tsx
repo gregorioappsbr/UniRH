@@ -798,7 +798,7 @@ export default function ServerProfilePage() {
           <TabsContent value="ficha" className="mt-8 flex-1 flex flex-col md:mt-10">
             <Accordion type="single" collapsible className="w-full space-y-2">
               {fichaItems.map((item, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className={cn("border-border dark:border-white/80 border rounded-lg", color === 'bg-card' ? 'bg-card' : color)}>
+                <AccordionItem key={index} value={`item-${index}`} className={cn("border-border dark:border-white/80 border rounded-lg", color)}>
                   <AccordionTrigger className="p-4 hover:no-underline">
                     <div className="flex items-center gap-3">
                       <item.icon className="h-5 w-5 text-primary" />
@@ -820,7 +820,7 @@ export default function ServerProfilePage() {
             </Accordion>
           </TabsContent>
           <TabsContent value="faltas" className="mt-8 flex flex-col flex-1 md:mt-10">
-            <Card className="bg-card">
+            <Card className={cn(color)}>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <CalendarX className="h-6 w-6 text-primary" />
@@ -828,7 +828,7 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isFaltaDialogOpen} onOpenChange={setIsFaltaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" onClick={() => setEditingFalta(null)} className="bg-blue-500 hover:bg-blue-600 text-white">
+                    <Button size="sm" onClick={() => setEditingFalta(null)} className={cn("text-white", color.replace('dark:bg', 'dark:hover:bg').replace('bg-', 'hover:bg-'))}>
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Falta
                     </Button>
@@ -962,7 +962,7 @@ export default function ServerProfilePage() {
             </Card>
           </TabsContent>
           <TabsContent value="licencas" className="mt-8 md:mt-10">
-             <Card className="bg-card">
+             <Card className={cn(color)}>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <CalendarX className="h-6 w-6 text-primary" />
@@ -970,7 +970,7 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isLicencaDialogOpen} onOpenChange={setIsLicencaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" onClick={() => setEditingLicenca(null)} className="bg-blue-500 hover:bg-blue-600 text-white">
+                    <Button size="sm" onClick={() => setEditingLicenca(null)} className={cn("text-white", color.replace('dark:bg', 'dark:hover:bg').replace('bg-', 'hover:bg-'))}>
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Licença
                     </Button>
@@ -1130,7 +1130,7 @@ export default function ServerProfilePage() {
             </Card>
           </TabsContent>
           <TabsContent value="ferias" className="mt-8 md:mt-10">
-            <Card className="bg-card">
+            <Card className={cn(color)}>
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div className="flex items-center gap-2">
                         <CalendarDays className="h-6 w-6 text-primary" />
@@ -1138,7 +1138,7 @@ export default function ServerProfilePage() {
                     </div>
                     <Dialog open={isFeriaDialogOpen} onOpenChange={setIsFeriaDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button size="sm" onClick={() => setEditingFeria(null)} className="bg-blue-500 hover:bg-blue-600 text-white">
+                            <Button size="sm" onClick={() => setEditingFeria(null)} className={cn("text-white", color.replace('dark:bg', 'dark:hover:bg').replace('bg-', 'hover:bg-'))}>
                                 <PlusCircle className="h-4 w-4 mr-2" />
                                 Adicionar Férias
                             </Button>
@@ -1325,6 +1325,7 @@ export default function ServerProfilePage() {
 
 
     
+
 
 
 
