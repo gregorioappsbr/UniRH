@@ -171,11 +171,13 @@ export default function ServerListPage() {
     setVinculoFilters([]);
   };
 
-  const filteredServers = serversWithRatings.filter(server => {
-    const statusMatch = statusFilters.length === 0 || statusFilters.includes(server.status);
-    const vinculoMatch = vinculoFilters.length === 0 || vinculoFilters.includes(server.vinculo);
-    return statusMatch && vinculoMatch;
-  });
+  const filteredServers = useMemo(() => {
+    return serversWithRatings.filter(server => {
+      const statusMatch = statusFilters.length === 0 || statusFilters.includes(server.status);
+      const vinculoMatch = vinculoFilters.length === 0 || vinculoFilters.includes(server.vinculo);
+      return statusMatch && vinculoMatch;
+    });
+  }, [serversWithRatings, statusFilters, vinculoFilters]);
 
 
   const allSelected = filteredServers.length > 0 && selectionCount === filteredServers.length;
@@ -560,9 +562,27 @@ const handleExportPDF = async () => {
     }
   };
 
-  const formatName = (name: string): string => {
+  const nomeCompleto = (name: string): string => {
     if (!name) return '';
     return name;
+  };
+
+  const handleLongPress = (id: string) => {
+    if (isMobile) {
+      handleSelectServer(id, !selectedServers[id]);
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent, serverId: string) => {
+     if (isMobile) {
+        if (selectionCount > 0) {
+            handleSelectServer(serverId, !selectedServers[serverId]);
+        } else {
+            router.push(`/servidores/${serverId}`);
+        }
+     } else {
+        router.push(`/servidores/${serverId}`);
+     }
   };
 
   return (
@@ -641,16 +661,18 @@ const handleExportPDF = async () => {
                 </SheetFooter>
               </SheetContent>
             </Sheet>
+            
             {isMobile && selectionCount === 0 && (
-              <Button variant="outline" onClick={() => {
-                  if (filteredServers.length > 0) {
-                      handleSelectServer(filteredServers[0].id, true);
-                  }
-              }}>
-                  <CheckSquare className="mr-2 h-4 w-4" />
-                  Selecionar
-              </Button>
+                <Button variant="outline" onClick={() => {
+                    if (filteredServers.length > 0) {
+                        handleSelectServer(filteredServers[0].id, true);
+                    }
+                }}>
+                    <CheckSquare className="mr-2 h-4 w-4" />
+                    Selecionar
+                </Button>
             )}
+
             {!isMobile && (
               <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
                 Partilhar Formulário
@@ -708,21 +730,10 @@ const handleExportPDF = async () => {
                       getServerColor(server, index),
                       selectedServers[server.id] && 'border-primary ring-2 ring-primary'
                     )}
-                    onClick={(e) => {
-                      const target = e.target as HTMLElement;
-                      if (target.closest('a[href^="https://wa.me"]')) {
-                          e.stopPropagation();
-                          return;
-                      }
-                      if (selectionCount > 0) {
-                          handleSelectServer(server.id, !selectedServers[server.id]);
-                      } else {
-                          router.push(`/servidores/${server.id}`);
-                      }
-                    }}
+                    onClick={(e) => handleClick(e, server.id)}
                     onContextMenu={(e) => {
                         e.preventDefault();
-                        handleSelectServer(server.id, !selectedServers[server.id]);
+                        handleLongPress(server.id);
                     }}
                   >
                     <div className="flex flex-col items-center justify-start gap-2 pt-1">
@@ -744,7 +755,7 @@ const handleExportPDF = async () => {
                       </div>
                     </div>
                     <div className="flex-1 space-y-1 overflow-hidden">
-                      <p className="font-semibold">{formatName(server.nomeCompleto)}</p>
+                      <p className="font-semibold">{nomeCompleto(server.nomeCompleto)}</p>
                       <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
                       {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -804,13 +815,13 @@ const handleExportPDF = async () => {
                                   <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                               </Avatar>
                               <div>
-                                  <p className="font-semibold">{formatName(server.nomeCompleto)}</p>
+                                  <p className="font-semibold">{nomeCompleto(server.nomeCompleto)}</p>
                                   <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
                               </div>
                           </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
                           <Badge variant="outline" className={cn("w-fit", getStatusClass(server.status))}>
                               {getStatusIcon(server.status)}
                               {server.status}
