@@ -46,15 +46,20 @@ export default function ServerListPage() {
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [vinculoFilters, setVinculoFilters] = useState<string[]>([]);
   
+  const sortedServers = useMemo(() => {
+    if (!servers) return [];
+    return [...servers].sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
+  }, [servers]);
+
   useEffect(() => {
     const calculateRatings = async () => {
-      if (!servers || !firestore) return;
+      if (!sortedServers || !firestore) return;
       
       const currentMonth = new Date().getMonth() + 1;
       const currentYear = new Date().getFullYear();
 
       const serversData = await Promise.all(
-        servers.map(async (server) => {
+        sortedServers.map(async (server) => {
           const faltasQuery = query(collection(firestore, 'servers', server.id, 'faltas'));
           const licencasQuery = query(collection(firestore, 'servers', server.id, 'licencas'));
           
@@ -80,12 +85,11 @@ export default function ServerListPage() {
         })
       );
 
-      const sortedServers = serversData.sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
-      setServersWithRatings(sortedServers);
+      setServersWithRatings(serversData);
     };
 
     calculateRatings();
-  }, [servers, firestore]);
+  }, [sortedServers, firestore]);
 
   useEffect(() => {
     const vinculoQuery = searchParams.get('vinculo');
@@ -728,7 +732,8 @@ const handleExportPDF = async () => {
           {!isLoading && isMobile ? (
              <div className="space-y-4 p-4">
                 {filteredServers.map((server, index) => {
-                   const colorClass = getServerColor(server, index);
+                   const originalIndex = sortedServers.findIndex(s => s.id === server.id);
+                   const colorClass = getServerColor(server, originalIndex);
                    return (
                       <Card
                         key={server.id}
@@ -805,7 +810,8 @@ const handleExportPDF = async () => {
                 </TableHeader>
                 <TableBody>
                   {filteredServers.map((server, index) => {
-                    const colorClass = getServerColor(server, index);
+                    const originalIndex = sortedServers.findIndex(s => s.id === server.id);
+                    const colorClass = getServerColor(server, originalIndex);
                     return (
                       <TableRow 
                         key={server.id} 

@@ -49,15 +49,20 @@ export function ServerList() {
 
     const { data: servers, isLoading } = useCollection<any>(serversQuery);
 
+    const sortedServers = useMemo(() => {
+        if (!servers) return [];
+        return [...servers].sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
+    }, [servers]);
+
     useEffect(() => {
       const calculateRatings = async () => {
-        if (!servers || !firestore) return;
+        if (!sortedServers || !firestore) return;
         
         const currentMonth = new Date().getMonth() + 1;
         const currentYear = new Date().getFullYear();
 
         const serversData = await Promise.all(
-          servers.map(async (server) => {
+          sortedServers.map(async (server) => {
             const faltasQuery = query(collection(firestore, 'servers', server.id, 'faltas'));
             const licencasQuery = query(collection(firestore, 'servers', server.id, 'licencas'));
 
@@ -84,14 +89,15 @@ export function ServerList() {
         );
         
         const recentServers = serversData
-            .sort((a, b) => b.id.localeCompare(a.id))
-            .slice(0, 5);
+            .sort((a, b) => b.id.localeCompare(a.id)) // To get recent ones, assuming higher ID is newer
+            .slice(0, 5)
+            .sort((a,b) => a.nomeCompleto.localeCompare(b.nomeCompleto)); // Then sort alphabetically for display
 
         setServersWithRatings(recentServers);
       };
 
       calculateRatings();
-    }, [servers, firestore]);
+    }, [sortedServers, firestore]);
 
     const getRatingClass = (rating: number) => {
         if (rating >= 8) return 'text-green-600 dark:text-green-400';
@@ -149,7 +155,8 @@ export function ServerList() {
         ) : isMobile ? (
              <div className="space-y-4">
                 {serversWithRatings.map((server, index) => {
-                  const colorClass = getServerColor(server, index);
+                  const originalIndex = sortedServers.findIndex(s => s.id === server.id);
+                  const colorClass = getServerColor(server, originalIndex);
                   return (
                     <Card
                       key={server.id}
@@ -215,7 +222,8 @@ export function ServerList() {
                 </TableHeader>
                 <TableBody>
                   {serversWithRatings.map((server, index) => {
-                     const colorClass = getServerColor(server, index);
+                     const originalIndex = sortedServers.findIndex(s => s.id === server.id);
+                     const colorClass = getServerColor(server, originalIndex);
                     return (
                     <TableRow
                       key={server.id}
