@@ -19,7 +19,8 @@ import { useToast } from '@/hooks/use-toast';
 import { jsPDF } from "jspdf";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, deleteDoc, doc, getDocs, query } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, query, writeBatch } from 'firebase/firestore';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 
 const statusOptions = ['Ativo', 'Inativo', 'Licença'];
@@ -412,6 +413,34 @@ export default function ServerListPage() {
     window.open(whatsappUrl, '_blank');
   };
 
+  const handleDeleteSelected = async () => {
+    if (!firestore || selectionCount === 0) return;
+
+    const batch = writeBatch(firestore);
+    const idsToDelete = Object.keys(selectedServers).filter(id => selectedServers[id]);
+
+    idsToDelete.forEach(id => {
+      const docRef = doc(firestore, 'servers', id);
+      batch.delete(docRef);
+    });
+
+    try {
+      await batch.commit();
+      toast({
+        title: 'Servidores excluídos!',
+        description: `${selectionCount} servidor(es) foram removidos com sucesso.`
+      });
+      setSelectedServers({});
+    } catch (error) {
+      console.error('Erro ao excluir servidores:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao excluir',
+        description: 'Não foi possível excluir os servidores selecionados.'
+      });
+    }
+  };
+
 const handleExportPDF = async () => {
     const selected = (servers || []).filter(server => selectedServers[server.id]);
     if (selected.length === 0) return;
@@ -562,11 +591,6 @@ const handleExportPDF = async () => {
     }
   };
 
-  const nomeCompleto = (name: string): string => {
-    if (!name) return '';
-    return name;
-  };
-
   const handleLongPress = (id: string) => {
     if (isMobile) {
       handleSelectServer(id, !selectedServers[id]);
@@ -666,8 +690,8 @@ const handleExportPDF = async () => {
             
             {isMobile && selectionCount === 0 && (
                  <Button variant="outline" onClick={() => {
-                    if (filteredServers.length > 0 && selectionCount === 0) {
-                        handleSelectServer(filteredServers[0].id, true);
+                    if (filteredServers.length > 0) {
+                      handleSelectServer(filteredServers[0].id, true);
                     }
                 }}>
                     <CheckSquare className="mr-2 h-4 w-4" />
@@ -711,10 +735,26 @@ const handleExportPDF = async () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button variant="destructive">
-                <Trash2 className="mr-2 h-4 w-4"/>
-                Excluir ({selectionCount})
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive">
+                    <Trash2 className="mr-2 h-4 w-4"/>
+                    Excluir ({selectionCount})
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Essa ação não pode ser desfeita. Isso excluirá permanentemente o(s) {selectionCount} servidor(es) selecionado(s).
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDeleteSelected}>Confirmar</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
       )}
 
@@ -757,7 +797,7 @@ const handleExportPDF = async () => {
                       </div>
                     </div>
                     <div className="flex-1 space-y-1 overflow-hidden">
-                      <p className="font-semibold whitespace-nowrap">{nomeCompleto(server.nomeCompleto)}</p>
+                      <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
                       <p className="text-sm text-muted-foreground break-words">{server.emailInstitucional}</p>
                       {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -828,7 +868,7 @@ const handleExportPDF = async () => {
                                   <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                               </Avatar>
                               <div>
-                                  <p className="font-semibold">{nomeCompleto(server.nomeCompleto)}</p>
+                                  <p className="font-semibold">{server.nomeCompleto}</p>
                                   <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
                               </div>
                           </div>
@@ -868,5 +908,7 @@ const handleExportPDF = async () => {
   );
 }
 
+
+    
 
     
