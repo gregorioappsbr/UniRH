@@ -187,7 +187,7 @@ export function ServerList() {
                       </div>
                     </div>
                     <div className="flex-1 space-y-1">
-                      <p className="font-semibold">{formatName(server.nomeCompleto)}</p>
+                      <p className="font-semibold whitespace-nowrap">{formatName(server.nomeCompleto)}</p>
                       <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
                        {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
