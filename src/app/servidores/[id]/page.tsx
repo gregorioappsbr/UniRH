@@ -801,7 +801,7 @@ export default function ServerProfilePage() {
                 <AccordionItem key={index} value={`item-${index}`} className={cn("border-border dark:border-white/80 border-black/80 border rounded-lg", color)}>
                   <AccordionTrigger className="p-4 hover:no-underline dark:text-white text-black">
                     <div className="flex items-center gap-3">
-                      <item.icon className="h-5 w-5 dark:text-white text-black" />
+                      <item.icon className="h-5 w-5 text-primary" />
                       <span className="font-semibold">{item.label}</span>
                     </div>
                   </AccordionTrigger>
@@ -1340,5 +1340,7 @@ export default function ServerProfilePage() {
 
 
 
+
+    
 
     
