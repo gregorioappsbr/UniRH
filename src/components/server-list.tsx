@@ -22,6 +22,7 @@ import { useRouter } from 'next/navigation';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { useEffect, useState, useMemo } from 'react';
+import { getServerColor } from '@/lib/color-utils';
 
 type Server = {
   id: string;
@@ -147,54 +148,57 @@ export function ServerList() {
             <p className="text-center">Carregando...</p>
         ) : isMobile ? (
              <div className="space-y-4">
-                {serversWithRatings.map((server) => (
-                  <div
-                    key={server.id}
-                    className="flex items-start gap-4 border-b pb-4 last:border-b-0 cursor-pointer"
-                    onClick={(e) => {
-                      const target = e.target as HTMLElement;
-                      if (target.closest('a')) {
-                        return;
-                      }
-                      router.push(`/servidores/${server.id}`);
-                    }}
-                  >
-                    <div className="flex flex-col items-center gap-2">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage src={server.avatarUrl} />
-                        <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
-                      </Avatar>
-                       <div className="flex flex-col items-center gap-1">
-                        {server.status && (
-                          <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
-                            {getStatusIcon(server.status)}
-                            {server.status}
-                          </Badge>
-                        )}
-                        <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
-                            <Award className="w-3 h-3 mr-1 fill-current" />
-                            <span>Nota: {server.calculatedRating.toFixed(1)}</span>
+                {serversWithRatings.map((server, index) => {
+                  const colorClass = getServerColor(server, index);
+                  return (
+                    <div
+                      key={server.id}
+                      className="flex items-start gap-4 border-b pb-4 last:border-b-0 cursor-pointer"
+                      onClick={(e) => {
+                        const target = e.target as HTMLElement;
+                        if (target.closest('a')) {
+                          return;
+                        }
+                        router.push(`/servidores/${server.id}?color=${encodeURIComponent(colorClass)}`);
+                      }}
+                    >
+                      <div className="flex flex-col items-center gap-2">
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage src={server.avatarUrl} />
+                          <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
+                        </Avatar>
+                         <div className="flex flex-col items-center gap-1">
+                          {server.status && (
+                            <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
+                              {getStatusIcon(server.status)}
+                              {server.status}
+                            </Badge>
+                          )}
+                          <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
+                              <Award className="w-3 h-3 mr-1 fill-current" />
+                              <span>Nota: {server.calculatedRating.toFixed(1)}</span>
+                          </div>
                         </div>
                       </div>
+                      <div className="flex-1 space-y-1">
+                        <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
+                        <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
+                         {server.funcao && (
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            {getFuncaoIcon(server.funcao)}
+                            <span>{server.funcao}</span>
+                          </div>
+                        )}
+                        {server.telefonePrincipal && (
+                          <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
+                            <WhatsAppIcon className="h-4 w-4" />
+                            <span>{server.telefonePrincipal}</span>
+                          </a>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex-1 space-y-1">
-                      <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
-                      <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
-                       {server.funcao && (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          {getFuncaoIcon(server.funcao)}
-                          <span>{server.funcao}</span>
-                        </div>
-                      )}
-                      {server.telefonePrincipal && (
-                        <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
-                          <WhatsAppIcon className="h-4 w-4" />
-                          <span>{server.telefonePrincipal}</span>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
             </div>
         ) : (
              <Table>
@@ -208,7 +212,9 @@ export function ServerList() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {serversWithRatings.map((server) => (
+                  {serversWithRatings.map((server, index) => {
+                     const colorClass = getServerColor(server, index);
+                    return (
                     <TableRow
                       key={server.id}
                       className="cursor-pointer"
@@ -217,7 +223,7 @@ export function ServerList() {
                         if (target.closest('a')) {
                           return;
                         }
-                        router.push(`/servidores/${server.id}`);
+                        router.push(`/servidores/${server.id}?color=${encodeURIComponent(colorClass)}`);
                       }}
                     >
                       <TableCell>
@@ -257,7 +263,7 @@ export function ServerList() {
                         </a>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  )})}
                 </TableBody>
               </Table>
         )}

@@ -22,37 +22,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, deleteDoc, doc, getDocs, query, writeBatch } from 'firebase/firestore';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-
+import { getServerColor } from '@/lib/color-utils';
 
 const statusOptions = ['Ativo', 'Inativo', 'Licença'];
 const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comissionado'];
-
-const feminineColors = [
-  'bg-rose-200/50 dark:bg-rose-800/10',
-  'bg-pink-200/50 dark:bg-pink-800/10',
-  'bg-fuchsia-200/50 dark:bg-fuchsia-800/10',
-  'bg-purple-200/50 dark:bg-purple-800/10',
-  'bg-violet-200/50 dark:bg-violet-800/10',
-];
-
-const masculineColors = [
-  'bg-blue-200/50 dark:bg-blue-800/10',
-  'bg-green-200/50 dark:bg-green-800/10',
-  'bg-cyan-200/50 dark:bg-cyan-800/10',
-  'bg-teal-200/50 dark:bg-teal-800/10',
-  'bg-indigo-200/50 dark:bg-indigo-800/10',
-];
-
-const neutralColors = [
-  'bg-yellow-200/50 dark:bg-yellow-800/10',
-  'bg-orange-200/50 dark:bg-orange-800/10',
-  'bg-amber-200/50 dark:bg-amber-800/10',
-  'bg-lime-200/50 dark:bg-lime-800/10',
-  'bg-sky-200/50 dark:bg-sky-800/10',
-];
-
-const allColors = [...feminineColors, ...masculineColors, ...neutralColors];
-
 
 export default function ServerListPage() {
   const isMobile = useIsMobile();
@@ -73,18 +46,6 @@ export default function ServerListPage() {
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [vinculoFilters, setVinculoFilters] = useState<string[]>([]);
   
-  const getServerColor = (server: any, index: number) => {
-    const gender = server.genero?.toLowerCase();
-    switch (gender) {
-      case 'feminino':
-        return feminineColors[index % feminineColors.length];
-      case 'masculino':
-        return masculineColors[index % masculineColors.length];
-      default: // nao-binario, outro, nao-informar
-        return allColors[index % allColors.length];
-    }
-  };
-
   useEffect(() => {
     const calculateRatings = async () => {
       if (!servers || !firestore) return;
@@ -598,17 +559,18 @@ const handleExportPDF = async () => {
     }
   };
 
-  const handleClick = (e: React.MouseEvent, serverId: string) => {
+  const handleClick = (e: React.MouseEvent, serverId: string, color: string) => {
+     const url = `/servidores/${serverId}?color=${encodeURIComponent(color)}`;
      if (isMobile) {
         if (selectionCount > 0) {
             e.stopPropagation();
             e.preventDefault();
             handleSelectServer(serverId, !selectedServers[serverId]);
         } else {
-            router.push(`/servidores/${serverId}`);
+            router.push(url);
         }
      } else {
-        router.push(`/servidores/${serverId}`);
+        router.push(url);
      }
   };
 
@@ -765,56 +727,59 @@ const handleExportPDF = async () => {
           {isLoading && <p className="text-center p-4">Carregando servidores...</p>}
           {!isLoading && isMobile ? (
              <div className="space-y-4 p-4">
-                {filteredServers.map((server, index) => (
-                  <div
-                    key={server.id}
-                    className={cn(
-                      "flex items-start gap-4 border-b pb-4 last:border-b-0 p-4 rounded-lg cursor-pointer transition-all",
-                      getServerColor(server, index),
-                      selectedServers[server.id] && 'border-4 border-primary'
-                    )}
-                    onClick={(e) => handleClick(e, server.id)}
-                    onContextMenu={(e) => {
-                        e.preventDefault();
-                        handleLongPress(server.id);
-                    }}
-                  >
-                    <div className="flex flex-col items-center justify-start gap-2 pt-1">
-                      <Avatar className="h-12 w-12 mt-2">
-                         <AvatarImage src={server.avatarUrl} />
-                         <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col items-center gap-1 mt-1">
-                        {server.status && (
-                          <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
-                            {getStatusIcon(server.status)}
-                            {server.status}
-                          </Badge>
+                {filteredServers.map((server, index) => {
+                   const colorClass = getServerColor(server, index);
+                   return (
+                      <div
+                        key={server.id}
+                        className={cn(
+                          "flex items-start gap-4 border-b pb-4 last:border-b-0 p-4 rounded-lg cursor-pointer transition-all",
+                          colorClass,
+                          selectedServers[server.id] && 'border-4 border-primary'
                         )}
-                        <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
-                          <Award className="w-3 h-3 mr-1 fill-current" />
-                          <span>Nota: {server.calculatedRating.toFixed(1)}</span>
+                        onClick={(e) => handleClick(e, server.id, colorClass)}
+                        onContextMenu={(e) => {
+                            e.preventDefault();
+                            handleLongPress(server.id);
+                        }}
+                      >
+                        <div className="flex flex-col items-center justify-start gap-2 pt-1">
+                          <Avatar className="h-12 w-12 mt-2">
+                             <AvatarImage src={server.avatarUrl} />
+                             <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col items-center gap-1 mt-1">
+                            {server.status && (
+                              <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
+                                {getStatusIcon(server.status)}
+                                {server.status}
+                              </Badge>
+                            )}
+                            <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
+                              <Award className="w-3 h-3 mr-1 fill-current" />
+                              <span>Nota: {server.calculatedRating.toFixed(1)}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex-1 space-y-1 overflow-hidden">
+                          <p className="font-semibold">{server.nomeCompleto}</p>
+                          <p className="text-sm text-muted-foreground break-words">{server.emailInstitucional}</p>
+                          {server.funcao && (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              {getFuncaoIcon(server.funcao)}
+                              <span>{server.funcao}</span>
+                            </div>
+                          )}
+                           {server.telefonePrincipal && (
+                              <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-2 text-base text-foreground hover:text-primary" onClick={(e) => e.stopPropagation()}>
+                                <WhatsAppIcon className="h-4 w-4" />
+                                <span>{server.telefonePrincipal}</span>
+                              </a>
+                            )}
                         </div>
                       </div>
-                    </div>
-                    <div className="flex-1 space-y-1 overflow-hidden">
-                      <p className="font-semibold">{server.nomeCompleto}</p>
-                      <p className="text-sm text-muted-foreground break-words">{server.emailInstitucional}</p>
-                      {server.funcao && (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          {getFuncaoIcon(server.funcao)}
-                          <span>{server.funcao}</span>
-                        </div>
-                      )}
-                       {server.telefonePrincipal && (
-                          <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-2 text-base text-foreground hover:text-primary" onClick={(e) => e.stopPropagation()}>
-                            <WhatsAppIcon className="h-4 w-4" />
-                            <span>{server.telefonePrincipal}</span>
-                          </a>
-                        )}
-                    </div>
-                  </div>
-                ))}
+                   );
+                })}
               </div>
           ) : (
              <Table>
@@ -837,69 +802,72 @@ const handleExportPDF = async () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredServers.map((server, index) => (
-                    <TableRow 
-                      key={server.id} 
-                      className={cn("cursor-pointer", getServerColor(server, index))}
-                      onClick={(e) => {
-                          const target = e.target as HTMLElement;
-                          if (target.tagName.toLowerCase() === 'a' || target.closest('a')) {
-                              return;
-                          }
-                          if (selectionCount > 0) {
-                            e.stopPropagation();
-                            handleSelectServer(server.id, !selectedServers[server.id]);
-                          } else {
-                            router.push(`/servidores/${server.id}`);
-                          }
-                      }}
-                    >
-                      <TableCell onClick={(e) => e.stopPropagation()}>
-                          <Checkbox
-                            id={`server-desktop-${server.id}`}
-                            aria-label={`Selecionar ${server.nomeCompleto}`}
-                            checked={selectedServers[server.id] || false}
-                            onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
-                          />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                              <Avatar className="h-12 w-12">
-                                  <AvatarImage src={server.avatarUrl} />
-                                  <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
-                              </Avatar>
-                              <div>
-                                  <p className="font-semibold">{server.nomeCompleto}</p>
-                                  <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
-                              </div>
+                  {filteredServers.map((server, index) => {
+                    const colorClass = getServerColor(server, index);
+                    return (
+                      <TableRow 
+                        key={server.id} 
+                        className={cn("cursor-pointer", colorClass)}
+                        onClick={(e) => {
+                            const target = e.target as HTMLElement;
+                            if (target.tagName.toLowerCase() === 'a' || target.closest('a')) {
+                                return;
+                            }
+                            if (selectionCount > 0) {
+                              e.stopPropagation();
+                              handleSelectServer(server.id, !selectedServers[server.id]);
+                            } else {
+                              router.push(`/servidores/${server.id}?color=${encodeURIComponent(colorClass)}`);
+                            }
+                        }}
+                      >
+                        <TableCell onClick={(e) => e.stopPropagation()}>
+                            <Checkbox
+                              id={`server-desktop-${server.id}`}
+                              aria-label={`Selecionar ${server.nomeCompleto}`}
+                              checked={selectedServers[server.id] || false}
+                              onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
+                            />
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                                <Avatar className="h-12 w-12">
+                                    <AvatarImage src={server.avatarUrl} />
+                                    <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <p className="font-semibold">{server.nomeCompleto}</p>
+                                    <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
+                                </div>
+                            </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col items-start gap-1">
+                            <Badge variant="outline" className={cn("w-fit", getStatusClass(server.status))}>
+                                {getStatusIcon(server.status)}
+                                {server.status}
+                            </Badge>
+                             <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
+                                <Award className="w-3 h-3 mr-1 fill-current" />
+                                <span>Nota: {server.calculatedRating.toFixed(1)}</span>
+                            </div>
                           </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col items-start gap-1">
-                          <Badge variant="outline" className={cn("w-fit", getStatusClass(server.status))}>
-                              {getStatusIcon(server.status)}
-                              {server.status}
-                          </Badge>
-                           <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
-                              <Award className="w-3 h-3 mr-1 fill-current" />
-                              <span>Nota: {server.calculatedRating.toFixed(1)}</span>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                             {getFuncaoIcon(server.funcao)}
+                            <span>{server.funcao}</span>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                           {getFuncaoIcon(server.funcao)}
-                          <span>{server.funcao}</span>
-                        </div>
-                      </TableCell>
-                       <TableCell className="text-right pr-8 whitespace-nowrap">
-                         <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary justify-end" onClick={(e) => e.stopPropagation()}>
-                            <WhatsAppIcon className="h-4 w-4" />
-                            <span>{server.telefonePrincipal}</span>
-                        </a>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                         <TableCell className="text-right pr-8 whitespace-nowrap">
+                           <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary justify-end" onClick={(e) => e.stopPropagation()}>
+                              <WhatsAppIcon className="h-4 w-4" />
+                              <span>{server.telefonePrincipal}</span>
+                          </a>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
                 </TableBody>
               </Table>
           )}
