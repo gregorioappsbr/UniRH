@@ -46,7 +46,6 @@ export default function SettingsPage() {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [currentTheme, setCurrentTheme] = useState<Theme>('dark');
   const [selectedTheme, setSelectedTheme] = useState<Theme>('dark');
   const [selectedServer, setSelectedServer] = useState('todos');
 
@@ -64,20 +63,11 @@ export default function SettingsPage() {
     return staticEvents.filter(event => event.servidor === selectedServer);
   }, [selectedServer]);
 
-  // Effect to apply theme on initial load from localStorage
+  // Effect to load current theme preference from localStorage on component mount
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') as Theme | null;
-    const initialTheme = storedTheme || 'dark';
-    setCurrentTheme(initialTheme);
-    setSelectedTheme(initialTheme);
-
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    if (initialTheme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      root.classList.add(systemTheme);
-    } else {
-      root.classList.add(initialTheme);
+    if (storedTheme) {
+      setSelectedTheme(storedTheme);
     }
   }, []);
 
@@ -118,13 +108,14 @@ export default function SettingsPage() {
     }
 
     // --- Save Theme Changes (local to this browser only) ---
+    const currentTheme = localStorage.getItem('theme') || 'dark';
     if (selectedTheme !== currentTheme) {
         try {
             localStorage.setItem('theme', selectedTheme);
-            setCurrentTheme(selectedTheme);
             
             const root = window.document.documentElement;
             root.classList.remove('light', 'dark');
+
             if (selectedTheme === 'system') {
                 const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                 root.classList.add(systemTheme);
@@ -367,5 +358,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
-    
