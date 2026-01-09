@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown } from 'lucide-react';
+import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown, CheckSquare } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -562,10 +562,8 @@ const handleExportPDF = async () => {
 
   const formatName = (name: string): string => {
     if (!name) return '';
-    const parts = name.split(' ');
     return name;
   };
-
 
   return (
     <div className="p-4 space-y-4">
@@ -643,9 +641,21 @@ const handleExportPDF = async () => {
                 </SheetFooter>
               </SheetContent>
             </Sheet>
-            <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
-              Partilhar Formulário
-            </Button>
+            {isMobile && selectionCount === 0 && (
+              <Button variant="outline" onClick={() => {
+                  if (filteredServers.length > 0) {
+                      handleSelectServer(filteredServers[0].id, true);
+                  }
+              }}>
+                  <CheckSquare className="mr-2 h-4 w-4" />
+                  Selecionar
+              </Button>
+            )}
+            {!isMobile && (
+              <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                Partilhar Formulário
+              </Button>
+            )}
           </div>
         </>
       ) : (
@@ -710,7 +720,10 @@ const handleExportPDF = async () => {
                           router.push(`/servidores/${server.id}`);
                       }
                     }}
-                    onLongPress={() => handleSelectServer(server.id, !selectedServers[server.id])}
+                    onContextMenu={(e) => {
+                        e.preventDefault();
+                        handleSelectServer(server.id, !selectedServers[server.id]);
+                    }}
                   >
                     <div className="flex flex-col items-center justify-start gap-2 pt-1">
                       <Avatar className="h-12 w-12 mt-2">
@@ -730,7 +743,7 @@ const handleExportPDF = async () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex-1 space-y-1">
+                    <div className="flex-1 space-y-1 overflow-hidden">
                       <p className="font-semibold">{formatName(server.nomeCompleto)}</p>
                       <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
                       {server.funcao && (
