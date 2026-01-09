@@ -679,7 +679,7 @@ const handleExportPDF = async () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
-                <DropdownMenuItem onClick={handleExportPDF}>
+                 <DropdownMenuItem onClick={handleExportPDF}>
                   <FileDown className="mr-2 h-4 w-4" />
                   <span>Exportar como PDF</span>
                 </DropdownMenuItem>
@@ -885,3 +885,4 @@ const handleExportPDF = async () => {
     
 
     
+
