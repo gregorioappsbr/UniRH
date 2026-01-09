@@ -26,27 +26,27 @@ const statusOptions = ['Ativo', 'Inativo', 'Licença'];
 const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comissionado'];
 
 const feminineColors = [
-  'bg-rose-200/50 dark:bg-rose-500/20',
-  'bg-pink-200/50 dark:bg-pink-500/20',
-  'bg-fuchsia-200/50 dark:bg-fuchsia-500/20',
-  'bg-purple-200/50 dark:bg-purple-500/20',
-  'bg-violet-200/50 dark:bg-violet-500/20',
+  'bg-rose-200/50 dark:bg-rose-800/10',
+  'bg-pink-200/50 dark:bg-pink-800/10',
+  'bg-fuchsia-200/50 dark:bg-fuchsia-800/10',
+  'bg-purple-200/50 dark:bg-purple-800/10',
+  'bg-violet-200/50 dark:bg-violet-800/10',
 ];
 
 const masculineColors = [
-  'bg-blue-200/50 dark:bg-blue-500/20',
-  'bg-green-200/50 dark:bg-green-500/20',
-  'bg-cyan-200/50 dark:bg-cyan-500/20',
-  'bg-teal-200/50 dark:bg-teal-500/20',
-  'bg-indigo-200/50 dark:bg-indigo-500/20',
+  'bg-blue-200/50 dark:bg-blue-800/10',
+  'bg-green-200/50 dark:bg-green-800/10',
+  'bg-cyan-200/50 dark:bg-cyan-800/10',
+  'bg-teal-200/50 dark:bg-teal-800/10',
+  'bg-indigo-200/50 dark:bg-indigo-800/10',
 ];
 
 const neutralColors = [
-  'bg-yellow-200/50 dark:bg-yellow-500/20',
-  'bg-orange-200/50 dark:bg-orange-500/20',
-  'bg-amber-200/50 dark:bg-amber-500/20',
-  'bg-lime-200/50 dark:bg-lime-500/20',
-  'bg-sky-200/50 dark:bg-sky-500/20',
+  'bg-yellow-200/50 dark:bg-yellow-800/10',
+  'bg-orange-200/50 dark:bg-orange-800/10',
+  'bg-amber-200/50 dark:bg-amber-800/10',
+  'bg-lime-200/50 dark:bg-lime-800/10',
+  'bg-sky-200/50 dark:bg-sky-800/10',
 ];
 
 const allColors = [...feminineColors, ...masculineColors, ...neutralColors];
@@ -220,6 +220,15 @@ export default function ServerListPage() {
       default:
         return <Briefcase className="h-4 w-4" />;
     }
+  };
+
+  const formatName = (name: string): string => {
+    if (!name) return '';
+    const parts = name.split(' ');
+    if (parts.length > 2) {
+      return `${parts[0]} ${parts.slice(1, -1).map(p => `${p.charAt(0)}.`).join(' ')} ${parts[parts.length - 1]}`;
+    }
+    return name;
   };
 
   const getSelectedServersDetails = (server: (typeof serversWithRatings)[0], forWhatsApp: boolean = false) => {
@@ -697,69 +706,69 @@ const handleExportPDF = async () => {
               </div>
               <div className="space-y-4 p-4">
                 {filteredServers.map((server, index) => (
-                  <div 
-                      key={server.id}
-                      className={cn("flex items-start gap-4 border-b pb-4 last:border-b-0 p-4 rounded-lg", getServerColor(server, index))}
-                    >
-                    <div 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
+                  <div
+                    key={server.id}
+                    className={cn(
+                      "flex items-start gap-4 border-b pb-4 last:border-b-0 p-4 rounded-lg",
+                      getServerColor(server, index)
+                    )}
+                  >
+                    <div
+                      onClick={(e) => e.stopPropagation()}
                       className="flex items-center h-full pt-1"
                     >
-                        <Checkbox
-                          id={`server-${server.id}`}
-                          checked={selectedServers[server.id] || false}
-                          onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
-                          aria-label={`Selecionar ${server.nomeCompleto}`}
-                        />
+                      <Checkbox
+                        id={`server-${server.id}`}
+                        checked={selectedServers[server.id] || false}
+                        onCheckedChange={(checked) => handleSelectServer(server.id, checked as boolean)}
+                        aria-label={`Selecionar ${server.nomeCompleto}`}
+                      />
                     </div>
-                     <div 
-                        className="flex-1 cursor-pointer"
-                        onClick={(e) => {
-                            const target = e.target as HTMLElement;
-                            if (target.closest('a[href^="https://wa.me"]')) {
-                                e.stopPropagation();
-                                return;
-                            }
-                            router.push(`/servidores/${server.id}`);
-                        }}
-                     >
-                      <div className="flex items-start gap-4">
-                          <div className="flex flex-col items-center gap-2">
-                            <Avatar className="h-12 w-12">
-                              <AvatarImage src={server.avatarUrl} />
-                              <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
-                            </Avatar>
-                            <div className="flex flex-col items-center gap-1">
-                              {server.status && (
-                                <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
-                                  {getStatusIcon(server.status)}
-                                  {server.status}
-                                </Badge>
-                              )}
-                              <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
-                                <Award className="w-3 h-3 mr-1 fill-current" />
-                                <span>Nota: {server.calculatedRating.toFixed(1)}</span>
-                              </div>
-                            </div>
+                    <div
+                      className="flex-1 cursor-pointer grid grid-cols-[1fr_auto] gap-4"
+                      onClick={(e) => {
+                        const target = e.target as HTMLElement;
+                        if (target.closest('a[href^="https://wa.me"]')) {
+                          e.stopPropagation();
+                          return;
+                        }
+                        router.push(`/servidores/${server.id}`);
+                      }}
+                    >
+                      <div className="space-y-1">
+                        <p className="font-semibold">{formatName(server.nomeCompleto)}</p>
+                        <p className="text-sm text-muted-foreground truncate">{server.emailInstitucional}</p>
+                        {server.funcao && (
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            {getFuncaoIcon(server.funcao)}
+                            <span>{server.funcao}</span>
                           </div>
-                          <div className="flex-1 space-y-1">
-                            <p className="font-semibold">{server.nomeCompleto}</p>
-                            <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
-                            {server.funcao && (
-                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                {getFuncaoIcon(server.funcao)}
-                                <span>{server.funcao}</span>
-                              </div>
-                            )}
-                            {server.telefonePrincipal && (
-                                <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-2 text-base text-foreground hover:text-primary" onClick={(e) => e.stopPropagation()}>
-                                  <WhatsAppIcon className="h-4 w-4" />
-                                  <span>{server.telefonePrincipal}</span>
-                                </a>
-                              )}
+                        )}
+                         {server.telefonePrincipal && (
+                            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-2 text-base text-foreground hover:text-primary" onClick={(e) => e.stopPropagation()}>
+                              <WhatsAppIcon className="h-4 w-4" />
+                              <span>{server.telefonePrincipal}</span>
+                            </a>
+                          )}
+                      </div>
+
+                      <div className="flex flex-col items-center justify-start gap-2">
+                        <Avatar className="h-12 w-12">
+                           <AvatarImage src={server.avatarUrl} />
+                           <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col items-center gap-1">
+                          {server.status && (
+                            <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
+                              {getStatusIcon(server.status)}
+                              {server.status}
+                            </Badge>
+                          )}
+                          <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
+                            <Award className="w-3 h-3 mr-1 fill-current" />
+                            <span>Nota: {server.calculatedRating.toFixed(1)}</span>
                           </div>
+                        </div>
                       </div>
                     </div>
                   </div>
