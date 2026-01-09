@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,6 +9,7 @@ import {
   FirestoreError,
   QuerySnapshot,
   CollectionReference,
+  Timestamp,
 } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -36,6 +38,24 @@ export interface InternalQuery extends Query<DocumentData> {
     }
   }
 }
+
+// Function to recursively convert Firestore Timestamps to JS Date objects
+const convertTimestamps = (data: any): any => {
+  if (data instanceof Timestamp) {
+    return data.toDate();
+  }
+  if (Array.isArray(data)) {
+    return data.map(convertTimestamps);
+  }
+  if (data !== null && typeof data === 'object') {
+    return Object.keys(data).reduce((acc, key) => {
+      acc[key] = convertTimestamps(data[key]);
+      return acc;
+    }, {} as { [key: string]: any });
+  }
+  return data;
+};
+
 
 /**
  * React hook to subscribe to a Firestore collection or query in real-time.
@@ -78,7 +98,9 @@ export function useCollection<T = any>(
       (snapshot: QuerySnapshot<DocumentData>) => {
         const results: ResultItemType[] = [];
         for (const doc of snapshot.docs) {
-          results.push({ ...(doc.data() as T), id: doc.id });
+           const docData = doc.data() as T;
+           const convertedData = convertTimestamps(docData);
+           results.push({ ...convertedData, id: doc.id });
         }
         setData(results);
         setError(null);
@@ -112,3 +134,5 @@ export function useCollection<T = any>(
   }
   return { data, isLoading, error };
 }
+
+    

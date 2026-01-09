@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -11,13 +12,13 @@ import { useState, useEffect } from 'react';
 import type { jsPDF } from "jspdf";
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
-import { collection, deleteDoc, doc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 
 type Note = {
   id: string;
   title: string;
   content: string;
-  updatedAt: string;
+  updatedAt: Timestamp;
 };
 
 
@@ -156,6 +157,12 @@ export default function NotesPage() {
     }
   };
 
+  const formatDate = (timestamp: Timestamp | Date): string => {
+    if (!timestamp) return 'Data inválida';
+    const date = timestamp instanceof Timestamp ? timestamp.toDate() : timestamp;
+    return new Date(date).toLocaleString('pt-BR');
+  }
+
 
   return (
     <div className="p-4 space-y-4">
@@ -180,11 +187,11 @@ export default function NotesPage() {
 
       {!isLoading && notes && notes.length > 0 ? (
         <Accordion type="single" collapsible className="w-full space-y-4">
-          {notes.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map((note) => (
+          {notes.sort((a, b) => b.updatedAt.toMillis() - a.updatedAt.toMillis()).map((note) => (
             <AccordionItem key={note.id} value={`item-${note.id}`} className="bg-card border rounded-lg overflow-hidden">
               <AccordionTrigger className="p-4 hover:no-underline">
                 <div className="flex flex-col items-start text-left">
-                  <span className="text-xs text-muted-foreground">Atualizado em {new Date(note.updatedAt).toLocaleString('pt-BR')}</span>
+                  <span className="text-xs text-muted-foreground">Atualizado em {formatDate(note.updatedAt)}</span>
                   <span className="text-lg font-semibold mt-1">{note.title}</span>
                 </div>
               </AccordionTrigger>
@@ -258,3 +265,6 @@ export default function NotesPage() {
     </div>
   );
 }
+
+
+    
