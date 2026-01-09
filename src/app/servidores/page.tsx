@@ -716,7 +716,7 @@ const handleExportPDF = async () => {
                   Compartilhar ({selectionCount})
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
                 <DropdownMenuItem onClick={handleExportPDF}>
                   <FileDown className="mr-2 h-4 w-4" />
                   <span>Exportar como PDF</span>
@@ -731,7 +731,7 @@ const handleExportPDF = async () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleShare}>
                   <FileText className="mr-2 h-4 w-4" />
-                  <span>Compartilhar como Texto</span>
+                  <span>Outras Opções</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -771,7 +771,7 @@ const handleExportPDF = async () => {
                     className={cn(
                       "flex items-start gap-4 border-b pb-4 last:border-b-0 p-4 rounded-lg cursor-pointer transition-all",
                       getServerColor(server, index),
-                      selectedServers[server.id] && 'border-primary ring-2 ring-primary'
+                      selectedServers[server.id] && 'border-4 border-primary'
                     )}
                     onClick={(e) => handleClick(e, server.id)}
                     onContextMenu={(e) => {
@@ -798,7 +798,7 @@ const handleExportPDF = async () => {
                       </div>
                     </div>
                     <div className="flex-1 space-y-1 overflow-hidden">
-                      <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
+                      <p className="font-semibold">{server.nomeCompleto}</p>
                       <p className="text-sm text-muted-foreground break-words">{server.emailInstitucional}</p>
                       {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -909,6 +909,8 @@ const handleExportPDF = async () => {
   );
 }
 
+
+    
 
     
 
