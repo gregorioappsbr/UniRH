@@ -194,12 +194,12 @@ export default function SettingsPage() {
       </header>
 
       <Tabs defaultValue="geral" className="w-full flex-1 flex flex-col">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-2 border">
           <TabsTrigger value="geral">Geral</TabsTrigger>
           <TabsTrigger value="registros">Registros</TabsTrigger>
         </TabsList>
         <TabsContent value="geral" className="mt-6 space-y-6">
-          <Card className="dark:border dark:border-white/80">
+          <Card className="border">
             <CardHeader>
               <CardTitle>Perfil</CardTitle>
               <CardDescription>
@@ -217,7 +217,7 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="dark:border dark:border-white/80">
+          <Card className="border">
             <CardHeader>
               <CardTitle>Tema</CardTitle>
               <CardDescription>
@@ -229,7 +229,7 @@ export default function SettingsPage() {
                 <Button
                   variant="outline"
                   className={cn(
-                    'flex items-center gap-2 h-16 bg-white text-black hover:bg-gray-200 hover:text-black dark:border-white/80',
+                    'flex items-center gap-2 h-16 bg-white text-black hover:bg-gray-200 hover:text-black',
                     selectedTheme === 'light' && 'ring-2 ring-primary'
                   )}
                   onClick={() => setSelectedTheme('light')}
@@ -240,7 +240,7 @@ export default function SettingsPage() {
                 <Button
                   variant="outline"
                   className={cn(
-                    'flex items-center gap-2 h-16 bg-black text-white hover:bg-gray-800 hover:text-white dark:border-white/80',
+                    'flex items-center gap-2 h-16 bg-black text-white hover:bg-gray-800 hover:text-white',
                     selectedTheme === 'dark' && 'ring-2 ring-primary'
                   )}
                   onClick={() => setSelectedTheme('dark')}
@@ -251,7 +251,7 @@ export default function SettingsPage() {
                 <Button
                   variant="outline"
                   className={cn(
-                    'flex items-center gap-2 h-16 dark:border-white/80',
+                    'flex items-center gap-2 h-16',
                     selectedTheme === 'system' && 'ring-2 ring-primary'
                   )}
                   onClick={() => setSelectedTheme('system')}
@@ -264,7 +264,7 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
         <TabsContent value="registros" className="mt-6 flex-1">
-          <Card className="h-full dark:border dark:border-white/80">
+          <Card className="h-full border">
             <CardHeader className="items-center text-center">
               <div className="flex items-center gap-3">
                   <CalendarDays className="h-6 w-6 text-primary" />
@@ -285,7 +285,7 @@ export default function SettingsPage() {
                 </Select>
                  <Select>
                   <SelectTrigger>
-                    <SelectValue placeholder="2026" />
+                    <SelectValue placeholder="Selecione o Ano" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="2026">2026</SelectItem>
@@ -367,3 +367,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
