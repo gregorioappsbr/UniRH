@@ -787,19 +787,17 @@ export default function ServerProfilePage() {
       
       {server && (
         <Tabs defaultValue="ficha" className="w-full flex-1 flex flex-col">
-          <div className={cn("border dark:border-white/80 border-black/80 rounded-md", color.replace('bg-', 'border-'))}>
-            <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
+           <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4">
               <TabsTrigger value="ficha" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Ficha</TabsTrigger>
               <TabsTrigger value="faltas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Faltas</TabsTrigger>
               <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Licenças</TabsTrigger>
               <TabsTrigger value="ferias" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Férias</TabsTrigger>
             </TabsList>
-          </div>
-          <TabsContent value="ficha" className="mt-8 flex-1 flex flex-col md:mt-10">
+          <TabsContent value="ficha" className="mt-4 flex-1 flex flex-col md:mt-6 bg-card rounded-md p-2">
             <Accordion type="single" collapsible className="w-full space-y-2">
               {fichaItems.map((item, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className={cn("border-border dark:border-white/80 border-black/80 border rounded-lg", color)}>
-                  <AccordionTrigger className="p-4 hover:no-underline dark:text-white text-black">
+                <AccordionItem key={index} value={`item-${index}`} className="border-border dark:border-white/20 border-black/20 border rounded-lg bg-background">
+                  <AccordionTrigger className="p-4 hover:no-underline">
                     <div className="flex items-center gap-3">
                       <item.icon className="h-5 w-5 text-primary" />
                       <span className="font-semibold">{item.label}</span>
@@ -808,9 +806,9 @@ export default function ServerProfilePage() {
                   <AccordionContent className="p-4 pt-0">
                     <div className="space-y-2">
                       {item.content.map((detail, detailIndex) => (detail.value) && (
-                        <div key={detailIndex} className="flex justify-between items-center text-sm p-2 bg-black/20 rounded-md">
-                          <span className="font-semibold dark:text-white/80 text-black/80">{detail.label}:</span>
-                          <span className="text-right dark:text-white text-black">{detail.value}</span>
+                        <div key={detailIndex} className="flex justify-between items-center text-sm p-2 bg-muted rounded-md">
+                          <span className="font-semibold text-muted-foreground">{detail.label}:</span>
+                          <span className="text-right text-foreground">{detail.value}</span>
                         </div>
                       ))}
                     </div>
@@ -819,7 +817,7 @@ export default function ServerProfilePage() {
               ))}
             </Accordion>
           </TabsContent>
-          <TabsContent value="faltas" className="mt-8 flex flex-col flex-1 md:mt-10">
+          <TabsContent value="faltas" className="mt-4 flex flex-col flex-1 md:mt-6">
             <Card className={cn(color, "dark:text-white text-black")}>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -1340,6 +1338,8 @@ export default function ServerProfilePage() {
 
 
 
+
+    
 
     
 
