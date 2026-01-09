@@ -151,9 +151,9 @@ export function ServerList() {
                 {serversWithRatings.map((server, index) => {
                   const colorClass = getServerColor(server, index);
                   return (
-                    <div
+                    <Card
                       key={server.id}
-                      className={cn("flex items-start gap-4 border-b pb-4 last:border-b-0 cursor-pointer p-4 rounded-lg", colorClass)}
+                      className={cn("cursor-pointer", colorClass)}
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (target.closest('a')) {
@@ -162,41 +162,43 @@ export function ServerList() {
                         router.push(`/servidores/${server.id}?color=${encodeURIComponent(colorClass)}`);
                       }}
                     >
-                      <div className="flex flex-col items-center gap-2">
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage src={server.avatarUrl} />
-                          <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
-                        </Avatar>
-                         <div className="flex flex-col items-center gap-1">
-                          {server.status && (
-                            <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
-                              {getStatusIcon(server.status)}
-                              {server.status}
-                            </Badge>
-                          )}
-                          <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
-                              <Award className="w-3 h-3 mr-1 fill-current" />
-                              <span>Nota: {server.calculatedRating.toFixed(1)}</span>
+                      <CardContent className="flex items-start gap-4 p-4">
+                        <div className="flex flex-col items-center gap-2">
+                          <Avatar className="h-12 w-12">
+                            <AvatarImage src={server.avatarUrl} />
+                            <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
+                          </Avatar>
+                           <div className="flex flex-col items-center gap-1">
+                            {server.status && (
+                              <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
+                                {getStatusIcon(server.status)}
+                                {server.status}
+                              </Badge>
+                            )}
+                            <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
+                                <Award className="w-3 h-3 mr-1 fill-current" />
+                                <span>Nota: {server.calculatedRating.toFixed(1)}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex-1 space-y-1">
-                        <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
-                        <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
-                         {server.funcao && (
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            {getFuncaoIcon(server.funcao)}
-                            <span>{server.funcao}</span>
-                          </div>
-                        )}
-                        {server.telefonePrincipal && (
-                          <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
-                            <WhatsAppIcon className="h-4 w-4" />
-                            <span>{server.telefonePrincipal}</span>
-                          </a>
-                        )}
-                      </div>
-                    </div>
+                        <div className="flex-1 space-y-1">
+                          <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
+                          <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
+                           {server.funcao && (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              {getFuncaoIcon(server.funcao)}
+                              <span>{server.funcao}</span>
+                            </div>
+                          )}
+                          {server.telefonePrincipal && (
+                            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
+                              <WhatsAppIcon className="h-4 w-4" />
+                              <span>{server.telefonePrincipal}</span>
+                            </a>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
                   );
                 })}
             </div>

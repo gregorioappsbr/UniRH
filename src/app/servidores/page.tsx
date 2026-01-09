@@ -730,10 +730,10 @@ const handleExportPDF = async () => {
                 {filteredServers.map((server, index) => {
                    const colorClass = getServerColor(server, index);
                    return (
-                      <div
+                      <Card
                         key={server.id}
                         className={cn(
-                          "flex items-start gap-4 border-b pb-4 last:border-b-0 p-4 rounded-lg cursor-pointer transition-all",
+                          "cursor-pointer transition-all",
                           colorClass,
                           selectedServers[server.id] && 'border-4 border-primary'
                         )}
@@ -743,6 +743,7 @@ const handleExportPDF = async () => {
                             handleLongPress(server.id);
                         }}
                       >
+                        <CardContent className="flex items-start gap-4 p-4">
                         <div className="flex flex-col items-center justify-start gap-2 pt-1">
                           <Avatar className="h-12 w-12 mt-2">
                              <AvatarImage src={server.avatarUrl} />
@@ -777,7 +778,8 @@ const handleExportPDF = async () => {
                               </a>
                             )}
                         </div>
-                      </div>
+                        </CardContent>
+                      </Card>
                    );
                 })}
               </div>
