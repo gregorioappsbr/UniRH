@@ -132,15 +132,6 @@ export function ServerList() {
           return <Briefcase className="h-4 w-4" />;
       }
     };
-    
-    const formatName = (name: string): string => {
-      if (!name) return '';
-      const parts = name.split(' ');
-      if (parts.length > 3) {
-        return `${parts[0]} ${parts.slice(1, -1).map(p => `${p.charAt(0)}.`).join(' ')} ${parts[parts.length - 1]}`;
-      }
-      return name;
-    };
 
 
   return (
@@ -187,7 +178,7 @@ export function ServerList() {
                       </div>
                     </div>
                     <div className="flex-1 space-y-1">
-                      <p className="font-semibold whitespace-nowrap">{formatName(server.nomeCompleto)}</p>
+                      <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
                       <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
                        {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
