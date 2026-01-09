@@ -23,12 +23,12 @@ type Note = {
 };
 
 const noteColors = [
-  'bg-yellow-50 dark:bg-yellow-900/30',
-  'bg-blue-50 dark:bg-blue-900/30',
-  'bg-green-50 dark:bg-green-900/30',
-  'bg-purple-50 dark:bg-purple-900/30',
-  'bg-pink-50 dark:bg-pink-900/30',
-  'bg-indigo-50 dark:bg-indigo-900/30',
+  'bg-yellow-50 dark:bg-yellow-800/20',
+  'bg-blue-50 dark:bg-blue-800/20',
+  'bg-green-50 dark:bg-green-800/20',
+  'bg-purple-50 dark:bg-purple-800/20',
+  'bg-pink-50 dark:bg-pink-800/20',
+  'bg-indigo-50 dark:bg-indigo-800/20',
 ];
 
 
@@ -279,5 +279,6 @@ export default function NotesPage() {
 
 
     
+
 
 
