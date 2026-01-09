@@ -26,12 +26,12 @@ const statusOptions = ['Ativo', 'Inativo', 'Licença'];
 const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comissionado'];
 
 const serverColors = [
-  'bg-yellow-50 dark:bg-yellow-800/20',
-  'bg-blue-50 dark:bg-blue-800/20',
-  'bg-green-50 dark:bg-green-800/20',
-  'bg-purple-50 dark:bg-purple-800/20',
-  'bg-pink-50 dark:bg-pink-800/20',
-  'bg-indigo-50 dark:bg-indigo-800/20',
+  'bg-yellow-50 dark:bg-yellow-800/10',
+  'bg-blue-50 dark:bg-blue-800/10',
+  'bg-green-50 dark:bg-green-800/10',
+  'bg-purple-50 dark:bg-purple-800/10',
+  'bg-pink-50 dark:bg-pink-800/10',
+  'bg-indigo-50 dark:bg-indigo-800/10',
 ];
 
 
@@ -821,4 +821,5 @@ const handleExportPDF = async () => {
 
     
 
+    
     
