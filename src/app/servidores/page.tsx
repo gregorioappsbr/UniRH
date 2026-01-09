@@ -25,6 +25,15 @@ import { collection, deleteDoc, doc, getDocs, query } from 'firebase/firestore';
 const statusOptions = ['Ativo', 'Inativo', 'Licença'];
 const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comissionado'];
 
+const serverColors = [
+  'bg-yellow-50 dark:bg-yellow-900/30',
+  'bg-blue-50 dark:bg-blue-900/30',
+  'bg-green-50 dark:bg-green-900/30',
+  'bg-purple-50 dark:bg-purple-900/30',
+  'bg-pink-50 dark:bg-pink-900/30',
+  'bg-indigo-50 dark:bg-indigo-900/30',
+];
+
 
 export default function ServerListPage() {
   const isMobile = useIsMobile();
@@ -658,10 +667,10 @@ const handleExportPDF = async () => {
                 </label>
               </div>
               <div className="space-y-4 p-4">
-                {filteredServers.map((server) => (
+                {filteredServers.map((server, index) => (
                   <div 
                       key={server.id}
-                      className="flex items-start gap-4 border-b pb-4 last:border-b-0"
+                      className={cn("flex items-start gap-4 border-b pb-4 last:border-b-0 p-4 rounded-lg", serverColors[index % serverColors.length])}
                     >
                     <div 
                       onClick={(e) => {
@@ -749,10 +758,10 @@ const handleExportPDF = async () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredServers.map((server) => (
+                  {filteredServers.map((server, index) => (
                     <TableRow 
                       key={server.id} 
-                      className="cursor-pointer"
+                      className={cn("cursor-pointer", serverColors[index % serverColors.length])}
                       onClick={() => router.push(`/servidores/${server.id}`)}
                     >
                       <TableCell onClick={(e) => e.stopPropagation()}>
@@ -809,5 +818,7 @@ const handleExportPDF = async () => {
     </div>
   );
 }
+
+    
 
     
