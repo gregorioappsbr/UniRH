@@ -730,7 +730,7 @@ export default function ServerProfilePage() {
             <Link href={`/servidores/novo?id=${id}`}>
               <Avatar className="h-24 w-24 cursor-pointer">
                 <AvatarImage src={server.avatarUrl} />
-                <AvatarFallback className="text-4xl">
+                <AvatarFallback className="text-4xl text-black">
                   {server.initials}
                 </AvatarFallback>
               </Avatar>
@@ -740,11 +740,11 @@ export default function ServerProfilePage() {
               <p className="dark:text-white/80 text-black/80">{server.cargo}</p>
             </div>
             <div className="flex gap-2">
-              <Badge className={cn("font-semibold dark:text-white text-black dark:border-white/50 border-black/50", color)}>
+              <Badge className={cn("font-semibold text-white dark:border-white/50 border-black/50", getStatusClass(server.status))}>
                 {getStatusIcon(server.status)}
                 {server.status}
               </Badge>
-              <Badge variant="outline" className={cn("font-semibold dark:text-white text-black dark:border-white/50 border-black/50", getRatingClass(calculatedRating))}>
+              <Badge variant="outline" className={cn("font-semibold text-white dark:border-white/50 border-black/50", getRatingClass(calculatedRating))}>
                 <Award className="h-3 w-3 mr-1" />
                 Nota: {calculatedRating.toFixed(1)}
               </Badge>
@@ -826,12 +826,12 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isFaltaDialogOpen} onOpenChange={setIsFaltaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" onClick={() => setEditingFalta(null)} >
+                    <Button size="sm" onClick={() => setEditingFalta(null)} className={cn(color, "dark:text-white text-black")}>
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Falta
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className={cn("sm:max-w-md", "bg-background")}>
+                  <DialogContent className={cn("sm:max-w-md", color, "dark:text-white text-black")}>
                     <DialogHeader>
                       <DialogTitle>{editingFalta ? 'Editar Falta' : 'Registrar Nova Falta'}</DialogTitle>
                     </DialogHeader>
@@ -845,7 +845,7 @@ export default function ServerProfilePage() {
                               value={faltaDia}
                               onChange={(e) => setFaltaDia(e.target.value)}
                               maxLength={2}
-                              className="bg-muted"
+                              className="bg-black/20"
                             />
                              <Input
                               type="number"
@@ -853,7 +853,7 @@ export default function ServerProfilePage() {
                               value={faltaMes}
                               onChange={(e) => setFaltaMes(e.target.value)}
                               maxLength={2}
-                              className="bg-muted"
+                              className="bg-black/20"
                             />
                              <Input
                               type="number"
@@ -861,7 +861,7 @@ export default function ServerProfilePage() {
                               value={faltaAno}
                               onChange={(e) => setFaltaAno(e.target.value)}
                               maxLength={4}
-                              className="bg-muted"
+                              className="bg-black/20"
                             />
                           </div>
                        </div>
@@ -872,7 +872,7 @@ export default function ServerProfilePage() {
                           placeholder="Adicione uma descrição ou observação..."
                           value={faltaReason}
                           onChange={(e) => setFaltaReason(e.target.value)}
-                          className="bg-muted"
+                          className="bg-black/20"
                         />
                       </div>
                     </div>
@@ -972,12 +972,12 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isLicencaDialogOpen} onOpenChange={setIsLicencaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" onClick={() => setEditingLicenca(null)}>
+                    <Button size="sm" onClick={() => setEditingLicenca(null)} className={cn(color, "dark:text-white text-black")}>
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Licença
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className={cn("sm:max-w-md", "bg-background")}>
+                  <DialogContent className={cn("sm:max-w-md", color, "dark:text-white text-black")}>
                     <DialogHeader>
                       <DialogTitle>{editingLicenca ? 'Editar Licença' : 'Registrar Nova Licença'}</DialogTitle>
                     </DialogHeader>
@@ -985,7 +985,7 @@ export default function ServerProfilePage() {
                        <div className="space-y-2">
                             <Label htmlFor="licenca-type">Tipo de Licença</Label>
                             <Select value={licencaType} onValueChange={setLicencaType}>
-                                <SelectTrigger id="licenca-type" className="bg-muted">
+                                <SelectTrigger id="licenca-type" className="bg-black/20">
                                     <SelectValue placeholder="Selecione o tipo..." />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -1009,24 +1009,24 @@ export default function ServerProfilePage() {
                                     placeholder="Descreva o tipo de licença..."
                                     value={licencaReason}
                                     onChange={(e) => setLicencaReason(e.target.value)}
-                                    className="bg-muted"
+                                    className="bg-black/20"
                                 />
                             </div>
                         )}
                         <div className="space-y-2">
                             <Label>Data de Início</Label>
                             <div className="grid grid-cols-3 gap-2">
-                                <Input type="number" placeholder="Dia" value={licencaStartDia} onChange={(e) => setLicencaStartDia(e.target.value)} maxLength={2} className="bg-muted" />
-                                <Input type="number" placeholder="Mês" value={licencaStartMes} onChange={(e) => setLicencaStartMes(e.target.value)} maxLength={2} className="bg-muted" />
-                                <Input type="number" placeholder="Ano" value={licencaStartAno} onChange={(e) => setLicencaStartAno(e.target.value)} maxLength={4} className="bg-muted" />
+                                <Input type="number" placeholder="Dia" value={licencaStartDia} onChange={(e) => setLicencaStartDia(e.target.value)} maxLength={2} className="bg-black/20" />
+                                <Input type="number" placeholder="Mês" value={licencaStartMes} onChange={(e) => setLicencaStartMes(e.target.value)} maxLength={2} className="bg-black/20" />
+                                <Input type="number" placeholder="Ano" value={licencaStartAno} onChange={(e) => setLicencaStartAno(e.target.value)} maxLength={4} className="bg-black/20" />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label>Data de Fim</Label>
                             <div className="grid grid-cols-3 gap-2">
-                                <Input type="number" placeholder="Dia" value={licencaEndDia} onChange={(e) => setLicencaEndDia(e.target.value)} maxLength={2} className="bg-muted" />
-                                <Input type="number" placeholder="Mês" value={licencaEndMes} onChange={(e) => setLicencaEndMes(e.target.value)} maxLength={2} className="bg-muted" />
-                                <Input type="number" placeholder="Ano" value={licencaEndAno} onChange={(e) => setLicencaEndAno(e.target.value)} maxLength={4} className="bg-muted" />
+                                <Input type="number" placeholder="Dia" value={licencaEndDia} onChange={(e) => setLicencaEndDia(e.target.value)} maxLength={2} className="bg-black/20" />
+                                <Input type="number" placeholder="Mês" value={licencaEndMes} onChange={(e) => setLicencaEndMes(e.target.value)} maxLength={2} className="bg-black/20" />
+                                <Input type="number" placeholder="Ano" value={licencaEndAno} onChange={(e) => setLicencaEndAno(e.target.value)} maxLength={4} className="bg-black/20" />
                             </div>
                         </div>
                        {licencaType !== 'outro' && (
@@ -1037,7 +1037,7 @@ export default function ServerProfilePage() {
                             placeholder="Adicione uma descrição ou observação..."
                             value={licencaReason}
                             onChange={(e) => setLicencaReason(e.target.value)}
-                            className="bg-muted"
+                            className="bg-black/20"
                             />
                         </div>
                        )}
@@ -1142,12 +1142,12 @@ export default function ServerProfilePage() {
                     </div>
                     <Dialog open={isFeriaDialogOpen} onOpenChange={setIsFeriaDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button size="sm" onClick={() => setEditingFeria(null)}>
+                            <Button size="sm" onClick={() => setEditingFeria(null)} className={cn(color, "dark:text-white text-black")}>
                                 <PlusCircle className="h-4 w-4 mr-2" />
                                 Adicionar Férias
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className={cn("sm:max-w-lg", "bg-background")}>
+                        <DialogContent className={cn("sm:max-w-lg", color, "dark:text-white text-black")}>
                             <DialogHeader>
                                 <DialogTitle>{editingFeria ? 'Editar Férias' : 'Registrar Novas Férias'}</DialogTitle>
                             </DialogHeader>
@@ -1160,14 +1160,14 @@ export default function ServerProfilePage() {
                                       value={feriaPeriodoAquisitivo}
                                       onChange={(e) => setFeriaPeriodoAquisitivo(e.target.value)}
                                       disabled={!!editingFeria}
-                                      className="bg-muted"
+                                      className="bg-black/20"
                                     />
                                 </div>
                                 { !editingFeria &&
                                   <div className="space-y-2">
                                       <Label htmlFor="ferias-parcelamento">Parcelamento de Férias</Label>
                                       <Select value={feriasParcelamento} onValueChange={setFeriasParcelamento}>
-                                          <SelectTrigger id="ferias-parcelamento" className="bg-muted">
+                                          <SelectTrigger id="ferias-parcelamento" className="bg-black/20">
                                               <SelectValue placeholder="Selecione o parcelamento..." />
                                           </SelectTrigger>
                                           <SelectContent>
@@ -1197,17 +1197,17 @@ export default function ServerProfilePage() {
                                         <div className="space-y-2">
                                             <Label className="text-xs">Data de Início</Label>
                                             <div className="grid grid-cols-3 gap-2">
-                                                <Input type="number" placeholder="Dia" value={periodo.startDia} onChange={(e) => handleFeriasPeriodoChange(index, 'startDia', e.target.value)} maxLength={2} className="bg-muted"/>
-                                                <Input type="number" placeholder="Mês" value={periodo.startMes} onChange={(e) => handleFeriasPeriodoChange(index, 'startMes', e.target.value)} maxLength={2} className="bg-muted"/>
-                                                <Input type="number" placeholder="Ano" value={periodo.startAno} onChange={(e) => handleFeriasPeriodoChange(index, 'startAno', e.target.value)} maxLength={4} className="bg-muted"/>
+                                                <Input type="number" placeholder="Dia" value={periodo.startDia} onChange={(e) => handleFeriasPeriodoChange(index, 'startDia', e.target.value)} maxLength={2} className="bg-black/20"/>
+                                                <Input type="number" placeholder="Mês" value={periodo.startMes} onChange={(e) => handleFeriasPeriodoChange(index, 'startMes', e.target.value)} maxLength={2} className="bg-black/20"/>
+                                                <Input type="number" placeholder="Ano" value={periodo.startAno} onChange={(e) => handleFeriasPeriodoChange(index, 'startAno', e.target.value)} maxLength={4} className="bg-black/20"/>
                                             </div>
                                         </div>
                                         <div className="space-y-2">
                                             <Label className="text-xs">Data de Fim</Label>
                                             <div className="grid grid-cols-3 gap-2">
-                                                <Input type="number" placeholder="Dia" value={periodo.endDia} onChange={(e) => handleFeriasPeriodoChange(index, 'endDia', e.target.value)} maxLength={2} className="bg-muted"/>
-                                                <Input type="number" placeholder="Mês" value={periodo.endMes} onChange={(e) => handleFeriasPeriodoChange(index, 'endMes', e.target.value)} maxLength={2} className="bg-muted"/>
-                                                <Input type="number" placeholder="Ano" value={periodo.endAno} onChange={(e) => handleFeriasPeriodoChange(index, 'endAno', e.target.value)} maxLength={4} className="bg-muted"/>
+                                                <Input type="number" placeholder="Dia" value={periodo.endDia} onChange={(e) => handleFeriasPeriodoChange(index, 'endDia', e.target.value)} maxLength={2} className="bg-black/20"/>
+                                                <Input type="number" placeholder="Mês" value={periodo.endMes} onChange={(e) => handleFeriasPeriodoChange(index, 'endMes', e.target.value)} maxLength={2} className="bg-black/20"/>
+                                                <Input type="number" placeholder="Ano" value={periodo.endAno} onChange={(e) => handleFeriasPeriodoChange(index, 'endAno', e.target.value)} maxLength={4} className="bg-black/20"/>
                                             </div>
                                         </div>
                                     </div>
@@ -1312,35 +1312,3 @@ export default function ServerProfilePage() {
     </div>
   );
 }
- 
-    
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-    
-
-    
-
-    

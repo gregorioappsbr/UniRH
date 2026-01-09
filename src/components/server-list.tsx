@@ -159,7 +159,7 @@ export function ServerList() {
                   return (
                     <Card
                       key={server.id}
-                      className={cn("cursor-pointer", colorClass)}
+                      className={cn("cursor-pointer text-white", colorClass)}
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (target.closest('a')) {
@@ -172,16 +172,16 @@ export function ServerList() {
                         <div className="flex flex-col items-center gap-2">
                           <Avatar className="h-12 w-12">
                             <AvatarImage src={server.avatarUrl} />
-                            <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
+                            <AvatarFallback className="text-lg text-black">{server.initials}</AvatarFallback>
                           </Avatar>
                            <div className="flex flex-col items-center gap-1">
                             {server.status && (
-                              <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
+                              <Badge variant="outline" className={cn("text-xs text-white border-white/50", getStatusClass(server.status))}>
                                 {getStatusIcon(server.status)}
                                 {server.status}
                               </Badge>
                             )}
-                            <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
+                            <div className={cn("flex items-center text-xs font-semibold text-white")}>
                                 <Award className="w-3 h-3 mr-1 fill-current" />
                                 <span>Nota: {server.calculatedRating.toFixed(1)}</span>
                             </div>
@@ -189,15 +189,15 @@ export function ServerList() {
                         </div>
                         <div className="flex-1 space-y-1">
                           <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
-                          <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
+                          <p className="text-sm text-white/80">{server.emailInstitucional}</p>
                            {server.funcao && (
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2 text-sm text-white/80">
                               {getFuncaoIcon(server.funcao)}
                               <span>{server.funcao}</span>
                             </div>
                           )}
                           {server.telefonePrincipal && (
-                            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-foreground hover:text-primary">
+                            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base text-white hover:text-white/80">
                               <WhatsAppIcon className="h-4 w-4" />
                               <span>{server.telefonePrincipal}</span>
                             </a>
@@ -226,7 +226,7 @@ export function ServerList() {
                     return (
                     <TableRow
                       key={server.id}
-                      className={cn("cursor-pointer", colorClass)}
+                      className={cn("cursor-pointer text-white", colorClass)}
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (target.closest('a')) {
@@ -239,34 +239,34 @@ export function ServerList() {
                         <div className="flex items-center gap-3">
                             <Avatar className="h-12 w-12">
                                 <AvatarImage src={server.avatarUrl} />
-                                <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
+                                <AvatarFallback className="text-lg text-black">{server.initials}</AvatarFallback>
                             </Avatar>
                             <div>
                                 <p className="font-semibold">{server.nomeCompleto}</p>
-                                <p className="text-sm text-muted-foreground">{server.emailInstitucional}</p>
+                                <p className="text-sm text-white/80">{server.emailInstitucional}</p>
                             </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                         <Badge variant="outline" className={cn(getStatusClass(server.status))}>
+                         <Badge variant="outline" className={cn("text-white border-white/50", getStatusClass(server.status))}>
                             {getStatusIcon(server.status)}
                             {server.status}
                           </Badge>
                       </TableCell>
                       <TableCell>
-                         <div className={cn("flex items-center font-semibold", getRatingClass(server.calculatedRating))}>
+                         <div className={cn("flex items-center font-semibold text-white")}>
                             <Award className="w-3 h-3 mr-1 fill-current" />
                             <span>{server.calculatedRating.toFixed(1)}</span>
                           </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2 text-sm text-white/80">
                            {getFuncaoIcon(server.funcao)}
                           <span>{server.funcao}</span>
                         </div>
                       </TableCell>
                        <TableCell className="whitespace-nowrap">
-                         <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-foreground hover:text-primary">
+                         <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base text-white hover:text-white/80">
                             <WhatsAppIcon className="h-4 w-4" />
                             <span>{server.telefonePrincipal}</span>
                         </a>
