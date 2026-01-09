@@ -279,12 +279,21 @@ export default function SettingsPage() {
               </div>
               <Select>
                   <SelectTrigger>
-                    <SelectValue placeholder="janeiro" />
+                    <SelectValue placeholder="Selecione o Mês" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="janeiro">janeiro</SelectItem>
-                    <SelectItem value="fevereiro">fevereiro</SelectItem>
-                    <SelectItem value="marco">março</SelectItem>
+                    <SelectItem value="janeiro">Janeiro</SelectItem>
+                    <SelectItem value="fevereiro">Fevereiro</SelectItem>
+                    <SelectItem value="marco">Março</SelectItem>
+                    <SelectItem value="abril">Abril</SelectItem>
+                    <SelectItem value="maio">Maio</SelectItem>
+                    <SelectItem value="junho">Junho</SelectItem>
+                    <SelectItem value="julho">Julho</SelectItem>
+                    <SelectItem value="agosto">Agosto</SelectItem>
+                    <SelectItem value="setembro">Setembro</SelectItem>
+                    <SelectItem value="outubro">Outubro</SelectItem>
+                    <SelectItem value="novembro">Novembro</SelectItem>
+                    <SelectItem value="dezembro">Dezembro</SelectItem>
                   </SelectContent>
               </Select>
                <Select>
