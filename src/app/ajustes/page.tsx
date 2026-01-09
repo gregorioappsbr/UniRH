@@ -194,7 +194,7 @@ export default function SettingsPage() {
       </header>
 
       <Tabs defaultValue="geral" className="w-full flex-1 flex flex-col">
-        <TabsList className="grid w-full grid-cols-2 border">
+        <TabsList className="grid w-full grid-cols-2 border dark:text-foreground">
           <TabsTrigger value="geral">Geral</TabsTrigger>
           <TabsTrigger value="registros">Registros</TabsTrigger>
         </TabsList>
