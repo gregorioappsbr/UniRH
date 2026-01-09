@@ -153,7 +153,7 @@ export function ServerList() {
                   return (
                     <div
                       key={server.id}
-                      className="flex items-start gap-4 border-b pb-4 last:border-b-0 cursor-pointer"
+                      className={cn("flex items-start gap-4 border-b pb-4 last:border-b-0 cursor-pointer p-4 rounded-lg", colorClass)}
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (target.closest('a')) {
@@ -217,7 +217,7 @@ export function ServerList() {
                     return (
                     <TableRow
                       key={server.id}
-                      className="cursor-pointer"
+                      className={cn("cursor-pointer", colorClass)}
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (target.closest('a')) {
