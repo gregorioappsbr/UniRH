@@ -522,9 +522,9 @@ export default function ServerProfilePage() {
       if (!ferias) return [];
       return ferias.filter(feria => {
           const [startDay, startMonth, startYear] = feria.startDate.split('/');
-          return startYear === selectedFeriaYear;
+          return startYear === selectedFeriaYear && startMonth === selectedFeriaMonth.padStart(2, '0');
       });
-    }, [ferias, selectedFeriaYear]);
+    }, [ferias, selectedFeriaYear, selectedFeriaMonth]);
 
 
     const yearOptions = useMemo(() => {
@@ -1323,3 +1323,4 @@ export default function ServerProfilePage() {
 
 
     
+
