@@ -248,7 +248,7 @@ export default function SettingsPage() {
         </TabsContent>
         <TabsContent value="registros" className="mt-6 flex-1">
           <Card className="h-full">
-            <CardHeader>
+            <CardHeader className="items-center text-center">
               <div className="flex items-center gap-3">
                   <CalendarDays className="h-6 w-6 text-primary" />
                   <CardTitle>Registros de Eventos</CardTitle>
@@ -339,6 +339,8 @@ export default function SettingsPage() {
       </div>
     </div>
   );
+
+    
 
     
 
