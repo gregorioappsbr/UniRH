@@ -833,7 +833,7 @@ export default function ServerProfilePage() {
                       Adicionar Falta
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
+                  <DialogContent className={cn("sm:max-w-md", color)}>
                     <DialogHeader>
                       <DialogTitle>{editingFalta ? 'Editar Falta' : 'Registrar Nova Falta'}</DialogTitle>
                     </DialogHeader>
@@ -975,7 +975,7 @@ export default function ServerProfilePage() {
                       Adicionar Licença
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
+                  <DialogContent className={cn("sm:max-w-md", color)}>
                     <DialogHeader>
                       <DialogTitle>{editingLicenca ? 'Editar Licença' : 'Registrar Nova Licença'}</DialogTitle>
                     </DialogHeader>
@@ -1143,7 +1143,7 @@ export default function ServerProfilePage() {
                                 Adicionar Férias
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-lg">
+                        <DialogContent className={cn("sm:max-w-lg", color)}>
                             <DialogHeader>
                                 <DialogTitle>{editingFeria ? 'Editar Férias' : 'Registrar Novas Férias'}</DialogTitle>
                             </DialogHeader>
@@ -1325,6 +1325,7 @@ export default function ServerProfilePage() {
 
 
     
+
 
 
 
