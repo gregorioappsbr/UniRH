@@ -721,7 +721,7 @@ const handleExportPDF = async () => {
                         router.push(`/servidores/${server.id}`);
                       }}
                   >
-                     <div className="flex flex-col items-center justify-start gap-2 pt-1">
+                    <div className="flex flex-col items-center justify-start gap-2 pt-1">
                        <Checkbox
                         id={`server-${server.id}`}
                         checked={selectedServers[server.id] || false}
