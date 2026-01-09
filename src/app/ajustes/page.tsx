@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,13 +10,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LogOut, Settings, CalendarDays, Share, Trash2, Sun, Moon, Laptop, Save } from 'lucide-react';
-import { useUser, useAuth } from '@/firebase';
+import { useUser, useAuth, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { updateProfile } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { collection } from 'firebase/firestore';
 
-const events = [
+const staticEvents = [
   {
     servidor: "Ana Silva",
     tipo: "Férias",
@@ -39,6 +40,7 @@ type Theme = "light" | "dark" | "system";
 export default function SettingsPage() {
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
+  const firestore = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -46,6 +48,21 @@ export default function SettingsPage() {
   const [email, setEmail] = useState('');
   const [currentTheme, setCurrentTheme] = useState<Theme>('dark');
   const [selectedTheme, setSelectedTheme] = useState<Theme>('dark');
+  const [selectedServer, setSelectedServer] = useState('todos');
+
+  const serversQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'servers');
+  }, [firestore]);
+
+  const { data: servers, isLoading: isLoadingServers } = useCollection<any>(serversQuery);
+
+  const displayedEvents = useMemo(() => {
+    if (selectedServer === 'todos') {
+      return staticEvents;
+    }
+    return staticEvents.filter(event => event.servidor === selectedServer);
+  }, [selectedServer]);
 
   // Effect to apply theme on initial load from localStorage
   useEffect(() => {
@@ -160,7 +177,7 @@ export default function SettingsPage() {
     }
   };
   
-  if (isUserLoading) {
+  if (isUserLoading || isLoadingServers) {
     return <div className="p-4 text-center">Carregando...</div>
   }
 
@@ -296,14 +313,15 @@ export default function SettingsPage() {
                     <SelectItem value="dezembro">Dezembro</SelectItem>
                   </SelectContent>
               </Select>
-               <Select>
+               <Select value={selectedServer} onValueChange={setSelectedServer}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Todos os Servidores" />
+                    <SelectValue placeholder="Selecione o Servidor" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="todos">Todos os Servidores</SelectItem>
-                    <SelectItem value="ana">Ana Silva</SelectItem>
-                    <SelectItem value="bruno">Bruno Costa</SelectItem>
+                    {servers?.map((server) => (
+                      <SelectItem key={server.id} value={server.nomeCompleto}>{server.nomeCompleto}</SelectItem>
+                    ))}
                   </SelectContent>
               </Select>
               <div className="grid grid-cols-2 gap-4">
@@ -319,7 +337,7 @@ export default function SettingsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {events.map((event, index) => (
+                  {displayedEvents.map((event, index) => (
                     <TableRow key={index}>
                       <TableCell className="font-medium">{event.servidor}</TableCell>
                       <TableCell>{event.tipo}</TableCell>
@@ -348,9 +366,4 @@ export default function SettingsPage() {
       </div>
     </div>
   );
-
-    
-
-    
-
-    
+}
