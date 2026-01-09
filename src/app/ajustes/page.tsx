@@ -27,6 +27,7 @@ type EventRecord = {
   servidor: string;
   tipo: 'Férias' | 'Licença' | 'Falta';
   periodo: string;
+  descricao: string;
   startDate: Date;
   endDate: Date;
 };
@@ -61,9 +62,6 @@ export default function SettingsPage() {
     const storedTheme = localStorage.getItem('theme') as Theme | null;
     if (storedTheme) {
       setSelectedTheme(storedTheme);
-    } else {
-      // Fallback to system theme if nothing is stored
-      setSelectedTheme('dark');
     }
 
     setSelectedMonth((new Date().getMonth() + 1).toString());
@@ -99,7 +97,7 @@ export default function SettingsPage() {
           const data = doc.data();
           const [day, month, year] = data.date.split('/');
           const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-          events.push({ servidor: serverName, tipo: 'Falta', periodo: data.date, startDate: date, endDate: date });
+          events.push({ servidor: serverName, tipo: 'Falta', periodo: data.date, descricao: data.reason || '-', startDate: date, endDate: date });
         });
         
         // Fetch Licenças
@@ -111,7 +109,8 @@ export default function SettingsPage() {
           const [endDay, endMonth, endYear] = data.endDate.split('/');
           const startDate = new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
           const endDate = new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay));
-          events.push({ servidor: serverName, tipo: 'Licença', periodo: `${data.startDate} a ${data.endDate}`, startDate, endDate });
+          const finalReason = data.type === 'outro' ? data.reason : `${data.type} - ${data.reason || 'Sem descrição'}`;
+          events.push({ servidor: serverName, tipo: 'Licença', periodo: `${data.startDate} a ${data.endDate}`, descricao: finalReason, startDate, endDate });
         });
         
         // Fetch Férias
@@ -123,7 +122,7 @@ export default function SettingsPage() {
           const [endDay, endMonth, endYear] = data.endDate.split('/');
           const startDate = new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
           const endDate = new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay));
-          events.push({ servidor: serverName, tipo: 'Férias', periodo: `${data.startDate} a ${data.endDate}`, startDate, endDate });
+          events.push({ servidor: serverName, tipo: 'Férias', periodo: `${data.startDate} a ${data.endDate}`, descricao: data.periodoAquisitivo || '-', startDate, endDate });
         });
       }
       
@@ -239,8 +238,8 @@ export default function SettingsPage() {
     
     const title = `Relatório de Eventos - ${view === 'anual' ? `Ano ${selectedYear}` : `${selectedMonth}/${selectedYear}`}${selectedServer !== 'todos' ? ` - ${selectedServer}` : ''}`;
     
-    const header = "Servidor | Tipo | Período\n------------------------------------\n";
-    const body = displayedEvents.map(e => `${e.servidor} | ${e.tipo} | ${e.periodo}`).join('\n');
+    const header = "Servidor | Tipo | Período | Descrição\n------------------------------------\n";
+    const body = displayedEvents.map(e => `${e.servidor} | ${e.tipo} | ${e.periodo} | ${e.descricao}`).join('\n');
     return `${title}\n\n${header}${body}`;
   };
 
@@ -295,8 +294,8 @@ export default function SettingsPage() {
 
       (doc as any).autoTable({
         startY: 35,
-        head: [['Servidor', 'Tipo', 'Período']],
-        body: displayedEvents.map(e => [e.servidor, e.tipo, e.periodo]),
+        head: [['Servidor', 'Tipo', 'Período', 'Descrição']],
+        body: displayedEvents.map(e => [e.servidor, e.tipo, e.periodo, e.descricao]),
         theme: 'striped',
         headStyles: { fillColor: [30, 144, 255] }, // Azul (cor primária)
       });
@@ -493,6 +492,7 @@ export default function SettingsPage() {
                         <TableHead>Servidor</TableHead>
                         <TableHead>Tipo</TableHead>
                         <TableHead>Período</TableHead>
+                        <TableHead>Descrição</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -501,6 +501,7 @@ export default function SettingsPage() {
                           <TableCell className="font-medium">{event.servidor}</TableCell>
                           <TableCell>{event.tipo}</TableCell>
                           <TableCell>{event.periodo}</TableCell>
+                          <TableCell>{event.descricao}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -530,3 +531,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
