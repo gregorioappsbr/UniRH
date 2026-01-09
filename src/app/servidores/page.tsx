@@ -576,6 +576,7 @@ const handleExportPDF = async () => {
   const handleClick = (e: React.MouseEvent, serverId: string) => {
      if (isMobile) {
         if (selectionCount > 0) {
+            e.stopPropagation();
             handleSelectServer(serverId, !selectedServers[serverId]);
         } else {
             router.push(`/servidores/${serverId}`);
@@ -663,9 +664,13 @@ const handleExportPDF = async () => {
             </Sheet>
             
             {isMobile && selectionCount === 0 && (
-                <Button variant="outline" onClick={() => {
+                 <Button variant="outline" onClick={() => {
                     if (filteredServers.length > 0) {
-                        handleSelectServer(filteredServers[0].id, true);
+                        if (selectionCount > 0) {
+                            setSelectedServers({});
+                        } else {
+                            handleSelectServer(filteredServers[0].id, true);
+                        }
                     }
                 }}>
                     <CheckSquare className="mr-2 h-4 w-4" />
@@ -755,7 +760,7 @@ const handleExportPDF = async () => {
                       </div>
                     </div>
                     <div className="flex-1 space-y-1 overflow-hidden">
-                      <p className="font-semibold">{nomeCompleto(server.nomeCompleto)}</p>
+                      <p className="font-semibold whitespace-nowrap">{nomeCompleto(server.nomeCompleto)}</p>
                       <p className="text-sm text-muted-foreground break-all">{server.emailInstitucional}</p>
                       {server.funcao && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -798,7 +803,14 @@ const handleExportPDF = async () => {
                     <TableRow 
                       key={server.id} 
                       className={cn("cursor-pointer", getServerColor(server, index))}
-                      onClick={() => router.push(`/servidores/${server.id}`)}
+                      onClick={(e) => {
+                          if (selectionCount > 0) {
+                            e.stopPropagation();
+                            handleSelectServer(server.id, !selectedServers[server.id]);
+                          } else {
+                            router.push(`/servidores/${server.id}`);
+                          }
+                      }}
                     >
                       <TableCell onClick={(e) => e.stopPropagation()}>
                           <Checkbox
@@ -821,7 +833,7 @@ const handleExportPDF = async () => {
                           </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col items-start gap-1">
                           <Badge variant="outline" className={cn("w-fit", getStatusClass(server.status))}>
                               {getStatusIcon(server.status)}
                               {server.status}
@@ -854,5 +866,3 @@ const handleExportPDF = async () => {
     </div>
   );
 }
-
-    
