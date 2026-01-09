@@ -57,12 +57,15 @@ export default function SettingsPage() {
 
   const { data: servers, isLoading: isLoadingServers } = useCollection<any>(serversQuery);
   
-  // Effect to set user data and initial theme from localStorage
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') as Theme | null;
     if (storedTheme) {
       setSelectedTheme(storedTheme);
+    } else {
+      // Fallback to system theme if nothing is stored
+      setSelectedTheme('dark');
     }
+
     setSelectedMonth((new Date().getMonth() + 1).toString());
     
     if (user) {
@@ -246,7 +249,13 @@ export default function SettingsPage() {
     if (navigator.share) {
       try {
         await navigator.share({ title: 'Relatório de Eventos', text: textToShare });
-      } catch (error) { console.error('Erro ao compartilhar', error); }
+      } catch (error) { 
+        if (error instanceof DOMException && (error.name === 'AbortError' || error.name === 'NotAllowedError')) {
+          // User cancelled the share sheet, do nothing.
+        } else {
+          console.error('Erro ao compartilhar', error); 
+        }
+      }
     } else {
       handleCopy();
       toast({ title: 'Copiado!', description: 'Seu navegador não suporta compartilhamento. O conteúdo foi copiado.' });
