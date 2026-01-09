@@ -13,6 +13,7 @@ import type { jsPDF } from "jspdf";
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { collection, deleteDoc, doc, Timestamp } from 'firebase/firestore';
+import { cn } from '@/lib/utils';
 
 type Note = {
   id: string;
@@ -20,6 +21,15 @@ type Note = {
   content: string;
   updatedAt: Timestamp;
 };
+
+const noteColors = [
+  'bg-yellow-50 dark:bg-yellow-900/20',
+  'bg-blue-50 dark:bg-blue-900/20',
+  'bg-green-50 dark:bg-green-900/20',
+  'bg-purple-50 dark:bg-purple-900/20',
+  'bg-pink-50 dark:bg-pink-900/20',
+  'bg-indigo-50 dark:bg-indigo-900/20',
+];
 
 
 export default function NotesPage() {
@@ -160,6 +170,7 @@ export default function NotesPage() {
   const formatDate = (timestamp: Timestamp | Date): string => {
     if (!timestamp) return 'Data inválida';
     const date = timestamp instanceof Timestamp ? timestamp.toDate() : timestamp;
+    if (isNaN(date.getTime())) return 'Data inválida';
     return new Date(date).toLocaleString('pt-BR');
   }
 
@@ -187,8 +198,8 @@ export default function NotesPage() {
 
       {!isLoading && notes && notes.length > 0 ? (
         <Accordion type="single" collapsible className="w-full space-y-4">
-          {notes.sort((a, b) => b.updatedAt.toMillis() - a.updatedAt.toMillis()).map((note) => (
-            <AccordionItem key={note.id} value={`item-${note.id}`} className="bg-card border rounded-lg overflow-hidden">
+          {notes.sort((a, b) => b.updatedAt.toMillis() - a.updatedAt.toMillis()).map((note, index) => (
+            <AccordionItem key={note.id} value={`item-${note.id}`} className={cn("border rounded-lg overflow-hidden", noteColors[index % noteColors.length])}>
               <AccordionTrigger className="p-4 hover:no-underline">
                 <div className="flex flex-col items-start text-left">
                   <span className="text-xs text-muted-foreground">Atualizado em {formatDate(note.updatedAt)}</span>
