@@ -267,11 +267,11 @@ export default function SettingsPage() {
                <div className="grid grid-cols-2 gap-4">
                  <Select>
                   <SelectTrigger>
-                    <SelectValue placeholder="Ver por Mês" />
+                    <SelectValue placeholder="Visualização" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="mes">Ver por Mês</SelectItem>
-                    <SelectItem value="ano">Ver por Ano</SelectItem>
+                    <SelectItem value="mensal">Mensal</SelectItem>
+                    <SelectItem value="anual">Anual</SelectItem>
                   </SelectContent>
                 </Select>
                  <Select>
