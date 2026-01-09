@@ -19,7 +19,7 @@ type Note = {
   id: string;
   title: string;
   content: string;
-  updatedAt: Timestamp;
+  updatedAt: Timestamp | Date;
 };
 
 const noteColors = [
@@ -169,9 +169,9 @@ export default function NotesPage() {
 
   const formatDate = (timestamp: Timestamp | Date): string => {
     if (!timestamp) return 'Data inválida';
-    const date = timestamp instanceof Timestamp ? timestamp.toDate() : timestamp;
+    const date = timestamp instanceof Timestamp ? timestamp.toDate() : new Date(timestamp);
     if (isNaN(date.getTime())) return 'Data inválida';
-    return new Date(date).toLocaleString('pt-BR');
+    return date.toLocaleString('pt-BR');
   }
 
 
@@ -198,7 +198,7 @@ export default function NotesPage() {
 
       {!isLoading && notes && notes.length > 0 ? (
         <Accordion type="single" collapsible className="w-full space-y-4">
-          {notes.sort((a, b) => b.updatedAt.toMillis() - a.updatedAt.toMillis()).map((note, index) => (
+          {notes.sort((a, b) => (b.updatedAt as Date).getTime() - (a.updatedAt as Date).getTime()).map((note, index) => (
             <AccordionItem key={note.id} value={`item-${note.id}`} className={cn("border rounded-lg overflow-hidden", noteColors[index % noteColors.length])}>
               <AccordionTrigger className="p-4 hover:no-underline">
                 <div className="flex flex-col items-start text-left">
@@ -279,3 +279,4 @@ export default function NotesPage() {
 
 
     
+
