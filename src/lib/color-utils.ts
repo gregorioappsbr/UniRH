@@ -1,9 +1,9 @@
 
 const feminineColors = [
-    'bg-pink-500',
+    'bg-pink-500', // Rosa Pink
     'bg-fuchsia-500',
-    'bg-rose-500',
     'bg-violet-500',
+    'bg-rose-500',
     'bg-red-500',
     'bg-orange-500',
     'bg-amber-500',
