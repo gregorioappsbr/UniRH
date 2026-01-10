@@ -806,7 +806,7 @@ export default function ServerProfilePage() {
                   <AccordionContent className="p-4 pt-0">
                     <div className="space-y-2">
                       {item.content.map((detail, detailIndex) => (detail.value) && (
-                        <div key={detailIndex} className="flex justify-between items-center text-sm p-2 rounded-md bg-muted/50">
+                        <div key={detailIndex} className="flex justify-between items-center text-sm p-2 rounded-md bg-card dark:bg-muted/50">
                           <span className="font-semibold text-muted-foreground">{detail.label}:</span>
                           <span className="text-right">{detail.value}</span>
                         </div>
@@ -1312,6 +1312,7 @@ export default function ServerProfilePage() {
     </div>
   );
 }
+
 
 
 
