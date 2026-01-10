@@ -628,26 +628,47 @@ const handleExportPDF = async () => {
       const link = `${window.location.origin}/pre-cadastro/${preCadastroRef.id}`;
       const textToShare = `Por favor, preencha o formulário de registro de servidor: ${link}`;
 
-      if (shareOption === 'copy') {
-        navigator.clipboard.writeText(textToShare).then(() => {
-          toast({
-            title: 'Link copiado!',
-            description: 'O link de pré-cadastro foi copiado para a área de transferência.',
-          });
-        }).catch(err => {
-          console.error('Erro ao copiar o link:', err);
-          toast({
-            variant: "destructive",
-            title: 'Erro ao copiar',
-            description: 'Não foi possível copiar o link.',
-          });
-        });
-      } else if (shareOption === 'whatsapp') {
+      if (shareOption === 'whatsapp') {
         const encodedText = encodeURIComponent(textToShare);
         const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
-        window.open(whatsappUrl, '_blank');
+        const newWindow = window.open(whatsappUrl, '_blank');
+        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+            toast({
+                variant: "destructive",
+                title: "Pop-up bloqueado",
+                description: "Por favor, habilite os pop-ups para compartilhar no WhatsApp.",
+            });
+        }
+      } else { // 'copy'
+        if (navigator.clipboard && window.isSecureContext) {
+           await navigator.clipboard.writeText(textToShare);
+           toast({
+              title: 'Link copiado!',
+              description: 'O link de pré-cadastro foi copiado para a área de transferência.',
+           });
+        } else {
+          // Fallback para ambientes não seguros (HTTP) ou navegadores antigos
+          const textArea = document.createElement("textarea");
+          textArea.value = textToShare;
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            toast({
+              title: 'Link copiado!',
+              description: 'O link de pré-cadastro foi copiado para a área de transferência.',
+            });
+          } catch (err) {
+            toast({
+              variant: "destructive",
+              title: 'Erro ao copiar',
+              description: 'Não foi possível copiar o link. Tente manualmente.',
+            });
+          }
+          document.body.removeChild(textArea);
+        }
       }
-
     } catch (error) {
       console.error("Erro ao gerar link de pré-cadastro:", error);
       toast({
@@ -752,11 +773,11 @@ const handleExportPDF = async () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
-                 <DropdownMenuItem onClick={() => handleGenerateLink('copy')}>
+                 <DropdownMenuItem onSelect={() => handleGenerateLink('copy')}>
                   <Copy className="mr-2 h-4 w-4" />
                   <span>Copiar Link</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleGenerateLink('whatsapp')}>
+                <DropdownMenuItem onSelect={() => handleGenerateLink('whatsapp')}>
                   <WhatsAppIcon className="mr-2 h-4 w-4" />
                   <span>Partilhar no WhatsApp</span>
                 </DropdownMenuItem>
