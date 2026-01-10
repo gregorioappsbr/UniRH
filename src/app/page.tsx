@@ -25,30 +25,35 @@ export default function Home() {
       icon: ShieldCheck,
       href: '/servidores?vinculo=efetivo',
       quantidade: servers?.filter(s => s.vinculo === 'Efetivo').length ?? 0,
+      color: 'text-blue-500',
     },
     {
       nome: 'Terceirizado',
       icon: Users,
       href: '/servidores?vinculo=terceirizado',
       quantidade: servers?.filter(s => s.vinculo === 'Terceirizado').length ?? 0,
+      color: 'text-green-500',
     },
     {
       nome: 'Cedido',
       icon: ArrowRightLeft,
       href: '/servidores?vinculo=cedido',
       quantidade: servers?.filter(s => s.vinculo === 'Cedido').length ?? 0,
+      color: 'text-purple-500',
     },
     {
       nome: 'Contratado',
       icon: FileText,
       href: '/servidores?vinculo=contratado',
       quantidade: servers?.filter(s => s.vinculo === 'Contratado').length ?? 0,
+      color: 'text-orange-500',
     },
     {
       nome: 'Comissionado',
       icon: Briefcase,
       href: '/servidores?vinculo=comissionado',
       quantidade: servers?.filter(s => s.vinculo === 'Comissionado').length ?? 0,
+      color: 'text-indigo-500',
     },
   ];
 
@@ -84,7 +89,7 @@ export default function Home() {
                   {vinculos.map((vinculo) => (
                     <Link href={vinculo.href} key={vinculo.nome} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 cursor-pointer">
                       <div className="flex items-center gap-4">
-                        <vinculo.icon className="h-5 w-5 text-primary" />
+                        <vinculo.icon className={`h-5 w-5 ${vinculo.color}`} />
                         <span className="font-medium">{vinculo.nome}</span>
                       </div>
                       <span className="font-bold">{isLoading ? '...' : vinculo.quantidade}</span>
