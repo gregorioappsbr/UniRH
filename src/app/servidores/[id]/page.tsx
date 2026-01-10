@@ -796,7 +796,7 @@ export default function ServerProfilePage() {
           <TabsContent value="ficha" className="mt-0 flex-1 flex flex-col md:mt-0 p-2 border border-t-0 rounded-b-lg bg-card">
             <Accordion type="single" collapsible className="w-full space-y-2">
               {fichaItems.map((item, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className={cn("border border-border rounded-lg bg-background")}>
+                <AccordionItem key={index} value={`item-${index}`} className="border border-border rounded-lg bg-background">
                   <AccordionTrigger className="p-4 hover:no-underline">
                     <div className="flex items-center gap-3">
                       <item.icon className="h-5 w-5 text-primary" />
@@ -806,7 +806,7 @@ export default function ServerProfilePage() {
                   <AccordionContent className="p-4 pt-0">
                     <div className="space-y-2">
                       {item.content.map((detail, detailIndex) => (detail.value) && (
-                        <div key={detailIndex} className="flex justify-between items-center text-sm p-2 rounded-md bg-background/50">
+                        <div key={detailIndex} className="flex justify-between items-center text-sm p-2 rounded-md bg-muted/50 dark:bg-background/50">
                           <span className="font-semibold text-muted-foreground">{detail.label}:</span>
                           <span className="text-right">{detail.value}</span>
                         </div>
@@ -1312,6 +1312,7 @@ export default function ServerProfilePage() {
     </div>
   );
 }
+
 
 
 
