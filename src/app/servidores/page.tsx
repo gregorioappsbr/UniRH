@@ -748,7 +748,7 @@ const handleExportPDF = async () => {
                             handleLongPress(server.id);
                         }}
                       >
-                        <CardContent className="flex items-start gap-4 p-4">
+                        <CardContent className="flex items-start gap-4 p-4 text-foreground dark:text-white">
                         <div className="flex flex-col items-center justify-start gap-2 pt-1">
                           <Avatar className="h-12 w-12 mt-2">
                              <AvatarImage src={server.avatarUrl} />
@@ -806,7 +806,7 @@ const handleExportPDF = async () => {
                     <TableHead>Status</TableHead>
                     <TableHead>Nota</TableHead>
                     <TableHead>Função</TableHead>
-                    <TableHead className="text-right pr-8">Telefone</TableHead>
+                    <TableHead className="text-right pr-4">Telefone</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -844,31 +844,31 @@ const handleExportPDF = async () => {
                                     <AvatarImage src={server.avatarUrl} />
                                     <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                                 </Avatar>
-                                <div>
+                                <div className="text-foreground dark:text-white">
                                     <p className="font-semibold">{server.nomeCompleto}</p>
                                     <p className="text-sm break-all">{server.emailInstitucional}</p>
                                 </div>
                             </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex flex-col items-start gap-1">
-                            <Badge variant="outline" className={cn("w-fit border-border", getStatusClass(server.status))}>
-                                {getStatusIcon(server.status)}
-                                {server.status}
-                            </Badge>
-                             <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
-                                <Award className="w-3 h-3 mr-1 fill-current" />
-                                <span>Nota: {server.calculatedRating.toFixed(1)}</span>
-                            </div>
+                          <Badge variant="outline" className={cn("w-fit border-border", getStatusClass(server.status))}>
+                              {getStatusIcon(server.status)}
+                              {server.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className={cn("flex items-center font-semibold", getRatingClass(server.calculatedRating))}>
+                              <Award className="w-3 h-3 mr-1 fill-current" />
+                              <span>{server.calculatedRating.toFixed(1)}</span>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2 text-sm">
+                          <div className="flex items-center gap-2 text-sm text-foreground dark:text-white">
                              {getFuncaoIcon(server.funcao)}
                             <span>{server.funcao}</span>
                           </div>
                         </TableCell>
-                         <TableCell className="text-right pr-8 whitespace-nowrap">
+                         <TableCell className="text-right pr-4 whitespace-nowrap">
                            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base justify-end" onClick={(e) => e.stopPropagation()}>
                               <WhatsAppIcon className="h-4 w-4 text-green-500" />
                               <span className="text-sm text-blue-500">{server.telefonePrincipal}</span>
