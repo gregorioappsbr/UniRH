@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
@@ -157,9 +158,9 @@ export default function ServerListPage() {
   };
 
   const getStatusClass = (status: string) => {
-    if (status === 'Ativo') return 'bg-green-500/20 text-green-300 border-green-500/50';
-    if (status === 'Licença') return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/50';
-    return 'bg-red-500/20 text-red-300 border-red-500/50';
+    if (status === 'Ativo') return 'bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-300 border-green-500/50';
+    if (status === 'Licença') return 'bg-yellow-100 dark:bg-yellow-500/20 text-yellow-800 dark:text-yellow-300 border-yellow-500/50';
+    return 'bg-red-100 dark:bg-red-500/20 text-red-800 dark:text-red-300 border-red-500/50';
   };
 
   const getStatusIcon = (status: string) => {
@@ -748,7 +749,7 @@ const handleExportPDF = async () => {
                             handleLongPress(server.id);
                         }}
                       >
-                        <CardContent className="flex items-start gap-4 p-4 text-foreground dark:text-white">
+                        <CardContent className="flex items-start gap-4 p-4">
                         <div className="flex flex-col items-center justify-start gap-2 pt-1">
                           <Avatar className="h-12 w-12 mt-2">
                              <AvatarImage src={server.avatarUrl} />
@@ -844,7 +845,7 @@ const handleExportPDF = async () => {
                                     <AvatarImage src={server.avatarUrl} />
                                     <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                                 </Avatar>
-                                <div className="text-foreground dark:text-white">
+                                <div>
                                     <p className="font-semibold">{server.nomeCompleto}</p>
                                     <p className="text-sm break-all">{server.emailInstitucional}</p>
                                 </div>
@@ -863,7 +864,7 @@ const handleExportPDF = async () => {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2 text-sm text-foreground dark:text-white">
+                          <div className="flex items-center gap-2 text-sm">
                              {getFuncaoIcon(server.funcao)}
                             <span>{server.funcao}</span>
                           </div>
