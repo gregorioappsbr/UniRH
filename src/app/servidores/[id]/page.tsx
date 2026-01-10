@@ -831,7 +831,7 @@ export default function ServerProfilePage() {
                       Adicionar Falta
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md bg-background">
+                  <DialogContent className="sm:max-w-md bg-card">
                     <DialogHeader>
                       <DialogTitle>{editingFalta ? 'Editar Falta' : 'Registrar Nova Falta'}</DialogTitle>
                     </DialogHeader>
@@ -977,7 +977,7 @@ export default function ServerProfilePage() {
                       Adicionar Licença
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md bg-background">
+                  <DialogContent className="sm:max-w-md bg-card">
                     <DialogHeader>
                       <DialogTitle>{editingLicenca ? 'Editar Licença' : 'Registrar Nova Licença'}</DialogTitle>
                     </DialogHeader>
@@ -1147,7 +1147,7 @@ export default function ServerProfilePage() {
                                 Adicionar Férias
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-lg bg-background">
+                        <DialogContent className="sm:max-w-lg bg-card">
                             <DialogHeader>
                                 <DialogTitle>{editingFeria ? 'Editar Férias' : 'Registrar Novas Férias'}</DialogTitle>
                             </DialogHeader>
@@ -1312,3 +1312,4 @@ export default function ServerProfilePage() {
     </div>
   );
 }
+
