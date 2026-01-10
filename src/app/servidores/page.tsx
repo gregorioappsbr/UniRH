@@ -617,67 +617,57 @@ const handleExportPDF = async () => {
      }
   };
 
- const handleGenerateLink = async (shareOption: 'copy' | 'whatsapp') => {
+const handleGenerateLink = async (shareOption: 'copy' | 'whatsapp') => {
     if (!firestore) return;
 
     try {
-      const preCadastroRef = await addDoc(collection(firestore, 'preCadastros'), {
-        status: 'pending',
-        createdAt: serverTimestamp(),
-      });
-      const link = `${window.location.origin}/pre-cadastro/${preCadastroRef.id}`;
-      const textToShare = `Por favor, preencha o formulário de registro de servidor: ${link}`;
+        const preCadastroRef = await addDoc(collection(firestore, 'preCadastros'), {
+            status: 'pending',
+            createdAt: serverTimestamp(),
+        });
+        const link = `${window.location.origin}/pre-cadastro/${preCadastroRef.id}`;
+        const textToShare = `Por favor, preencha o formulário de registro de servidor: ${link}`;
 
-      if (shareOption === 'whatsapp') {
-        const encodedText = encodeURIComponent(textToShare);
-        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
-        const newWindow = window.open(whatsappUrl, '_blank');
-        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+        // Prioritize Web Share API for a native mobile experience
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Formulário de Pré-Cadastro',
+                    text: textToShare,
+                });
+                return; // Exit after successful native share
+            } catch (error) {
+                // Ignore AbortError from user cancelling share sheet
+                if (error instanceof DOMException && error.name === 'AbortError') {
+                    return;
+                }
+                console.error("Web Share API error:", error);
+                // Fallback to other methods if Web Share fails
+            }
+        }
+        
+        // --- Fallback for desktop or failed Web Share ---
+        if (shareOption === 'whatsapp') {
+            const encodedText = encodeURIComponent(textToShare);
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        } else { // 'copy'
+            await navigator.clipboard.writeText(textToShare);
             toast({
-                variant: "destructive",
-                title: "Pop-up bloqueado",
-                description: "Por favor, habilite os pop-ups para compartilhar no WhatsApp.",
+                title: 'Link copiado!',
+                description: 'O link de pré-cadastro foi copiado para a área de transferência.',
             });
         }
-      } else { // 'copy'
-        if (navigator.clipboard && window.isSecureContext) {
-           await navigator.clipboard.writeText(textToShare);
-           toast({
-              title: 'Link copiado!',
-              description: 'O link de pré-cadastro foi copiado para a área de transferência.',
-           });
-        } else {
-          // Fallback para ambientes não seguros (HTTP) ou navegadores antigos
-          const textArea = document.createElement("textarea");
-          textArea.value = textToShare;
-          document.body.appendChild(textArea);
-          textArea.focus();
-          textArea.select();
-          try {
-            document.execCommand('copy');
-            toast({
-              title: 'Link copiado!',
-              description: 'O link de pré-cadastro foi copiado para a área de transferência.',
-            });
-          } catch (err) {
-            toast({
-              variant: "destructive",
-              title: 'Erro ao copiar',
-              description: 'Não foi possível copiar o link. Tente manualmente.',
-            });
-          }
-          document.body.removeChild(textArea);
-        }
-      }
     } catch (error) {
-      console.error("Erro ao gerar link de pré-cadastro:", error);
-      toast({
-        variant: "destructive",
-        title: "Erro",
-        description: "Não foi possível gerar o link de pré-cadastro.",
-      });
+        console.error("Erro ao gerar ou compartilhar link de pré-cadastro:", error);
+        toast({
+            variant: "destructive",
+            title: "Erro",
+            description: "Não foi possível gerar ou compartilhar o link de pré-cadastro.",
+        });
     }
-  };
+};
+
 
   return (
     <div className="p-4 space-y-4">
