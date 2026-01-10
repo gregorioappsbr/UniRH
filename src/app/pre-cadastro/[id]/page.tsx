@@ -122,11 +122,12 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
   return (
     <div className="flex justify-center min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
         <form onSubmit={handleSubmit(onSubmit)} className="p-4 h-full flex flex-col w-full max-w-4xl">
-        <header className="relative flex items-center justify-center mb-6 text-center">
-            <h1 className="text-3xl font-bold">Formulário de Pré-Cadastro</h1>
+        <header className="relative flex flex-col items-center justify-center mb-6 text-center">
+          <h1 className="text-3xl font-bold">Formulário de</h1>
+          <h2 className="text-3xl font-bold text-primary">Pré-Cadastro</h2>
         </header>
         <p className="text-center text-muted-foreground mb-6">
-            Por favor, preencha todos os campos com atenção. Seus dados serão enviados para o departamento de RH.
+            Por favor, preencha todos os campos com atenção para a atualização do seu cadastro.
         </p>
 
         <Tabs defaultValue="pessoais" className="w-full flex-1 flex flex-col overflow-hidden">
@@ -747,5 +748,5 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
         </Tabs>
         </form>
     </div>
-  )
+  );
 }
