@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { X, Save } from "lucide-react"
+import { X, Save, ScrollText } from "lucide-react"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import { useForm, Controller } from "react-hook-form";
@@ -111,7 +111,11 @@ export default function NewServerPage() {
     };
 
     if (isEditing && isLoadingServer) {
-        return <div className="p-4 text-center">Carregando dados do servidor...</div>;
+        return (
+          <div className="flex h-full flex-1 items-center justify-center">
+            <ScrollText className="h-16 w-16 animate-spin text-primary" />
+          </div>
+        );
     }
 
   return (

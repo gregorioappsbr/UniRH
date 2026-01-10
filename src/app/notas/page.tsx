@@ -6,7 +6,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, Notebook, Share, Edit, Trash2, FileText, Copy, FileDown } from 'lucide-react';
+import { PlusCircle, Notebook, Share, Edit, Trash2, FileText, Copy, FileDown, ScrollText } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import type { jsPDF } from "jspdf";
@@ -195,7 +195,11 @@ export default function NotesPage() {
         </Link>
       </Button>
 
-      {isLoading && <p className="text-center">Carregando notas...</p>}
+      {isLoading && (
+        <div className="flex items-center justify-center p-8">
+          <ScrollText className="h-12 w-12 animate-spin text-primary" />
+        </div>
+      )}
 
       {!isLoading && notes && notes.length > 0 ? (
         <Accordion type="single" collapsible className="w-full space-y-4">

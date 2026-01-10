@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { LogOut, Settings, CalendarDays, Share, Sun, Moon, Laptop, Save, FileText, Copy, FileDown } from 'lucide-react';
+import { LogOut, Settings, CalendarDays, Share, Sun, Moon, Laptop, Save, FileText, Copy, FileDown, ScrollText } from 'lucide-react';
 import { useUser, useAuth, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { updateProfile } from 'firebase/auth';
@@ -312,7 +312,11 @@ export default function SettingsPage() {
   };
   
   if (isUserLoading || isLoadingServers) {
-    return <div className="p-4 text-center">Carregando...</div>
+    return (
+      <div className="flex h-full flex-1 items-center justify-center">
+        <ScrollText className="h-16 w-16 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
@@ -484,7 +488,11 @@ export default function SettingsPage() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              { isLoadingEvents ? <p className="text-center">Carregando eventos...</p> : 
+              { isLoadingEvents ? (
+                <div className="flex items-center justify-center p-8">
+                  <ScrollText className="h-12 w-12 animate-spin text-primary" />
+                </div>
+              ) : 
                 (displayedEvents.length > 0 ? (
                   <Table>
                     <TableHeader>

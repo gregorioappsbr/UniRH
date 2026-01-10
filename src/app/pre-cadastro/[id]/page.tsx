@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { Save, ServerCrash } from "lucide-react"
+import { Save, ServerCrash, ScrollText } from "lucide-react"
 import React, { useEffect, useState } from "react"
 import { useForm, Controller } from "react-hook-form";
 import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
@@ -93,7 +93,7 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
     if (isLoadingPreCadastro) {
         return (
             <div className="flex items-center justify-center min-h-screen p-4 bg-background">
-                <p className="text-lg">Verificando link...</p>
+                <ScrollText className="h-16 w-16 animate-spin text-primary" />
             </div>
         );
     }

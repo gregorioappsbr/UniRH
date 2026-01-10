@@ -5,6 +5,7 @@ import { useUser } from '@/firebase';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { BottomNav } from './bottom-nav';
+import { ScrollText } from 'lucide-react';
 
 const publicPaths = ['/login', '/signup', '/pre-cadastro'];
 
@@ -29,7 +30,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
-                <p>Carregando...</p>
+                <ScrollText className="h-16 w-16 text-primary animate-spin" />
             </div>
         </div>
     );

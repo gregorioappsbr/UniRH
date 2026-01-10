@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown, CheckSquare, CheckCircle, Link2 } from 'lucide-react';
+import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown, CheckSquare, CheckCircle, Link2, ScrollText } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -865,7 +865,11 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
 
       <Card>
         <CardContent className="p-0">
-          {isLoading && <p className="text-center p-4">Carregando servidores...</p>}
+          {isLoading && 
+            <div className="flex items-center justify-center p-8">
+              <ScrollText className="h-12 w-12 animate-spin text-primary" />
+            </div>
+          }
           {!isLoading && isMobile ? (
              <div className="space-y-4 p-4">
                 {filteredServers.map((server) => {

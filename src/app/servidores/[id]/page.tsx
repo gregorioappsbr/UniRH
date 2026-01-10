@@ -705,7 +705,11 @@ export default function ServerProfilePage({ params }: { params: { id: string } }
   const isLoading = isLoadingServer || isLoadingFaltas || isLoadingLicencas || isLoadingFerias;
 
   if (isLoading) {
-    return <div className="p-4 text-center">Carregando...</div>;
+    return (
+      <div className="flex h-full flex-1 items-center justify-center">
+        <ScrollText className="h-16 w-16 animate-spin text-primary" />
+      </div>
+    );
   }
 
   if (!server) {
