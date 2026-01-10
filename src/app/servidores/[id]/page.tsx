@@ -680,9 +680,9 @@ export default function ServerProfilePage() {
     ] : [];
 
   const getRatingClass = (rating: number) => {
-    if (rating >= 8) return 'text-green-600 border-green-500 dark:text-green-400 dark:border-green-400';
-    if (rating >= 4) return 'text-yellow-600 border-yellow-500 dark:text-yellow-400 dark:border-yellow-400';
-    return 'text-red-600 border-red-500 dark:text-red-400 dark:border-red-400';
+    if (rating >= 8) return 'text-green-600 dark:text-green-400';
+    if (rating >= 4) return 'text-yellow-600 dark:text-yellow-400';
+    return 'text-red-600 dark:text-red-400';
   };
 
   const getStatusClass = (status: string) => {
@@ -724,7 +724,7 @@ export default function ServerProfilePage() {
         </Button>
       </header>
 
-      <Card className={cn("dark:text-white text-black", color)}>
+      <Card className={cn(color)}>
         <CardContent className="p-6 space-y-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <Link href={`/servidores/novo?id=${id}`}>
@@ -736,7 +736,7 @@ export default function ServerProfilePage() {
               </Avatar>
             </Link>
             <div>
-              <h2 className="text-2xl font-bold">{server.nomeCompleto}</h2>
+              <h2 className="text-2xl font-bold dark:text-white text-black">{server.nomeCompleto}</h2>
               <p className="dark:text-white/80 text-black/80">{server.cargo}</p>
             </div>
             <div className="flex gap-2">
@@ -754,7 +754,7 @@ export default function ServerProfilePage() {
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <Mail className="h-5 w-5 dark:text-white/80 text-black/80" />
-              <span className="text-sm">{server.emailInstitucional}</span>
+              <span className="text-sm dark:text-white text-black">{server.emailInstitucional}</span>
             </div>
             <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base dark:text-white text-black hover:dark:text-white/80 hover:text-black/80">
               <WhatsAppIcon className="h-5 w-5 dark:text-white/80 text-black/80" />
@@ -762,11 +762,11 @@ export default function ServerProfilePage() {
             </a>
             <div className="flex items-center gap-4">
               <Type className="h-5 w-5 dark:text-white/80 text-black/80" />
-              <span className="text-sm">{server.vinculo}</span>
+              <span className="text-sm dark:text-white text-black">{server.vinculo}</span>
             </div>
             <div className="flex items-center gap-4">
               <Building className="h-5 w-5 dark:text-white/80 text-black/80" />
-              <span className="text-sm">{server.setor}</span>
+              <span className="text-sm dark:text-white text-black">{server.setor}</span>
             </div>
           </div>
 

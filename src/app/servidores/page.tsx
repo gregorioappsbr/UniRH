@@ -738,7 +738,7 @@ const handleExportPDF = async () => {
                       <Card
                         key={server.id}
                         className={cn(
-                          "cursor-pointer transition-all dark:text-white text-black",
+                          "cursor-pointer transition-all",
                           colorClass,
                           selectedServers[server.id] && 'border-4 border-primary'
                         )}
@@ -761,14 +761,14 @@ const handleExportPDF = async () => {
                                 {server.status}
                               </Badge>
                             )}
-                            <div className={cn("flex items-center text-xs font-semibold dark:text-white text-black")}>
+                            <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
                               <Award className="w-3 h-3 mr-1 fill-current" />
                               <span>Nota: {server.calculatedRating.toFixed(1)}</span>
                             </div>
                           </div>
                         </div>
                         <div className="flex-1 space-y-1 overflow-hidden">
-                          <p className="font-semibold">{server.nomeCompleto}</p>
+                          <p className="font-semibold dark:text-white text-black">{server.nomeCompleto}</p>
                           <p className="text-sm dark:text-white/80 text-black/80 break-words">{server.emailInstitucional}</p>
                           {server.funcao && (
                             <div className="flex items-center gap-2 text-sm dark:text-white/80 text-black/80">
@@ -804,6 +804,7 @@ const handleExportPDF = async () => {
                       Servidor
                     </TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Nota</TableHead>
                     <TableHead>Função</TableHead>
                     <TableHead className="text-right pr-8">Telefone</TableHead>
                   </TableRow>
@@ -815,7 +816,7 @@ const handleExportPDF = async () => {
                     return (
                       <TableRow 
                         key={server.id} 
-                        className={cn("cursor-pointer dark:text-white text-black", colorClass)}
+                        className={cn("cursor-pointer", colorClass)}
                         onClick={(e) => {
                             const target = e.target as HTMLElement;
                             if (target.tagName.toLowerCase() === 'a' || target.closest('a')) {
@@ -844,7 +845,7 @@ const handleExportPDF = async () => {
                                     <AvatarFallback className="text-lg text-black">{server.initials}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <p className="font-semibold">{server.nomeCompleto}</p>
+                                    <p className="font-semibold dark:text-white text-black">{server.nomeCompleto}</p>
                                     <p className="text-sm dark:text-white/80 text-black/80 break-all">{server.emailInstitucional}</p>
                                 </div>
                             </div>
@@ -855,7 +856,7 @@ const handleExportPDF = async () => {
                                 {getStatusIcon(server.status)}
                                 {server.status}
                             </Badge>
-                             <div className={cn("flex items-center text-xs font-semibold dark:text-white text-black")}>
+                             <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
                                 <Award className="w-3 h-3 mr-1 fill-current" />
                                 <span>Nota: {server.calculatedRating.toFixed(1)}</span>
                             </div>

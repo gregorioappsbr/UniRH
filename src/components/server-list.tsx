@@ -159,7 +159,7 @@ export function ServerList() {
                   return (
                     <Card
                       key={server.id}
-                      className={cn("cursor-pointer dark:text-white text-black", colorClass)}
+                      className={cn("cursor-pointer", colorClass)}
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (target.closest('a')) {
@@ -181,14 +181,14 @@ export function ServerList() {
                                 {server.status}
                               </Badge>
                             )}
-                            <div className={cn("flex items-center text-xs font-semibold dark:text-white text-black")}>
+                            <div className={cn("flex items-center text-xs font-semibold", getRatingClass(server.calculatedRating))}>
                                 <Award className="w-3 h-3 mr-1 fill-current" />
                                 <span>Nota: {server.calculatedRating.toFixed(1)}</span>
                             </div>
                           </div>
                         </div>
                         <div className="flex-1 space-y-1">
-                          <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
+                          <p className="font-semibold whitespace-nowrap dark:text-white text-black">{server.nomeCompleto}</p>
                           <p className="text-sm dark:text-white/80 text-black/80">{server.emailInstitucional}</p>
                            {server.funcao && (
                             <div className="flex items-center gap-2 text-sm dark:text-white/80 text-black/80">
@@ -226,7 +226,7 @@ export function ServerList() {
                     return (
                     <TableRow
                       key={server.id}
-                      className={cn("cursor-pointer dark:text-white text-black", colorClass)}
+                      className={cn("cursor-pointer", colorClass)}
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (target.closest('a')) {
@@ -242,7 +242,7 @@ export function ServerList() {
                                 <AvatarFallback className="text-lg text-black">{server.initials}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <p className="font-semibold">{server.nomeCompleto}</p>
+                                <p className="font-semibold dark:text-white text-black">{server.nomeCompleto}</p>
                                 <p className="text-sm dark:text-white/80 text-black/80">{server.emailInstitucional}</p>
                             </div>
                         </div>
@@ -254,7 +254,7 @@ export function ServerList() {
                           </Badge>
                       </TableCell>
                       <TableCell>
-                         <div className={cn("flex items-center font-semibold dark:text-white text-black")}>
+                         <div className={cn("flex items-center font-semibold", getRatingClass(server.calculatedRating))}>
                             <Award className="w-3 h-3 mr-1 fill-current" />
                             <span>{server.calculatedRating.toFixed(1)}</span>
                           </div>
