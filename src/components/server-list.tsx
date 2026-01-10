@@ -99,9 +99,9 @@ export function ServerList() {
     }, [sortedServers, firestore]);
 
     const getRatingClass = (rating: number) => {
-        if (rating >= 8) return 'text-green-600 dark:text-green-400';
-        if (rating >= 4) return 'text-yellow-600 dark:text-yellow-400';
-        return 'text-red-600 dark:text-red-400';
+        if (rating >= 8) return 'text-green-600';
+        if (rating >= 4) return 'text-yellow-500';
+        return 'text-red-600';
     };
 
     const getStatusClass = (status: string) => {
@@ -197,9 +197,9 @@ export function ServerList() {
                             </div>
                           )}
                           {server.telefonePrincipal && (
-                            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base dark:text-white hover:dark:text-white/80 text-black hover:text-black/80">
-                              <WhatsAppIcon className="h-4 w-4" />
-                              <span>{server.telefonePrincipal}</span>
+                            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base">
+                              <WhatsAppIcon className="h-4 w-4 text-green-500" />
+                              <span className="text-blue-500">{server.telefonePrincipal}</span>
                             </a>
                           )}
                         </div>
@@ -266,9 +266,9 @@ export function ServerList() {
                         </div>
                       </TableCell>
                        <TableCell className="whitespace-nowrap">
-                         <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base dark:text-white hover:dark:text-white/80 text-black hover:text-black/80">
-                            <WhatsAppIcon className="h-4 w-4" />
-                            <span>{server.telefonePrincipal}</span>
+                         <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base">
+                            <WhatsAppIcon className="h-4 w-4 text-green-500" />
+                            <span className="text-blue-500">{server.telefonePrincipal}</span>
                         </a>
                       </TableCell>
                     </TableRow>

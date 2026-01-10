@@ -151,9 +151,9 @@ export default function ServerListPage() {
 
 
   const getRatingClass = (rating: number) => {
-    if (rating >= 8) return 'text-green-600 dark:text-green-400';
-    if (rating >= 4) return 'text-yellow-600 dark:text-yellow-400';
-    return 'text-red-600 dark:text-red-400';
+    if (rating >= 8) return 'text-green-600';
+    if (rating >= 4) return 'text-yellow-500';
+    return 'text-red-600';
   };
 
   const getStatusClass = (status: string) => {
@@ -777,9 +777,9 @@ const handleExportPDF = async () => {
                             </div>
                           )}
                            {server.telefonePrincipal && (
-                              <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-2 text-base dark:text-white hover:dark:text-white/80 text-black hover:text-black/80" onClick={(e) => e.stopPropagation()}>
-                                <WhatsAppIcon className="h-4 w-4" />
-                                <span>{server.telefonePrincipal}</span>
+                              <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-2 text-base" onClick={(e) => e.stopPropagation()}>
+                                <WhatsAppIcon className="h-4 w-4 text-green-500" />
+                                <span className="text-blue-500">{server.telefonePrincipal}</span>
                               </a>
                             )}
                         </div>
@@ -869,9 +869,9 @@ const handleExportPDF = async () => {
                           </div>
                         </TableCell>
                          <TableCell className="text-right pr-8 whitespace-nowrap">
-                           <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base dark:text-white hover:dark:text-white/80 text-black hover:text-black/80 justify-end" onClick={(e) => e.stopPropagation()}>
-                              <WhatsAppIcon className="h-4 w-4" />
-                              <span>{server.telefonePrincipal}</span>
+                           <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base justify-end" onClick={(e) => e.stopPropagation()}>
+                              <WhatsAppIcon className="h-4 w-4 text-green-500" />
+                              <span className="text-blue-500">{server.telefonePrincipal}</span>
                           </a>
                         </TableCell>
                       </TableRow>

@@ -680,9 +680,9 @@ export default function ServerProfilePage() {
     ] : [];
 
   const getRatingClass = (rating: number) => {
-    if (rating >= 8) return 'text-green-600 dark:text-green-400';
-    if (rating >= 4) return 'text-yellow-600 dark:text-yellow-400';
-    return 'text-red-600 dark:text-red-400';
+    if (rating >= 8) return 'text-green-600';
+    if (rating >= 4) return 'text-yellow-500';
+    return 'text-red-600';
   };
 
   const getStatusClass = (status: string) => {
@@ -756,9 +756,9 @@ export default function ServerProfilePage() {
               <Mail className="h-5 w-5 dark:text-white/80 text-black/80" />
               <span className="text-sm dark:text-white text-black">{server.emailInstitucional}</span>
             </div>
-            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base dark:text-white text-black hover:dark:text-white/80 hover:text-black/80">
-              <WhatsAppIcon className="h-5 w-5 dark:text-white/80 text-black/80" />
-              <span className="text-base">{server.telefonePrincipal}</span>
+            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base">
+              <WhatsAppIcon className="h-5 w-5 text-green-500" />
+              <span className="text-sm text-blue-500">{server.telefonePrincipal}</span>
             </a>
             <div className="flex items-center gap-4">
               <Type className="h-5 w-5 dark:text-white/80 text-black/80" />
@@ -826,7 +826,7 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isFaltaDialogOpen} onOpenChange={setIsFaltaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" onClick={() => setEditingFalta(null)} className={cn(color, "dark:text-white text-black")}>
+                    <Button size="sm" onClick={() => setEditingFalta(null)}>
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Falta
                     </Button>
@@ -972,7 +972,7 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isLicencaDialogOpen} onOpenChange={setIsLicencaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" onClick={() => setEditingLicenca(null)} className={cn(color, "dark:text-white text-black")}>
+                    <Button size="sm" onClick={() => setEditingLicenca(null)}>
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Licença
                     </Button>
@@ -1142,7 +1142,7 @@ export default function ServerProfilePage() {
                     </div>
                     <Dialog open={isFeriaDialogOpen} onOpenChange={setIsFeriaDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button size="sm" onClick={() => setEditingFeria(null)} className={cn(color, "dark:text-white text-black")}>
+                            <Button size="sm" onClick={() => setEditingFeria(null)}>
                                 <PlusCircle className="h-4 w-4 mr-2" />
                                 Adicionar Férias
                             </Button>
