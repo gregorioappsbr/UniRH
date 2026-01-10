@@ -26,6 +26,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { getServerColor } from '@/lib/color-utils';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
 
 const statusOptions = ['Ativo', 'Inativo', 'Licença'];
 const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comissionado'];
@@ -48,6 +50,9 @@ export default function ServerListPage() {
   const [selectedServers, setSelectedServers] = useState<Record<string, boolean>>({});
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [vinculoFilters, setVinculoFilters] = useState<string[]>([]);
+  const [preCadastroLink, setPreCadastroLink] = useState('');
+  const [customShareMessage, setCustomShareMessage] = useState('Por favor, preencha o formulário de registro de servidor:');
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   
   const sortedServers = useMemo(() => {
     if (!servers) return [];
@@ -617,7 +622,8 @@ const handleExportPDF = async () => {
      }
   };
 
-const handleGenerateLink = async (shareOption: 'copy' | 'whatsapp') => {
+
+const handleOpenShareDialog = async () => {
     if (!firestore) return;
 
     try {
@@ -626,46 +632,55 @@ const handleGenerateLink = async (shareOption: 'copy' | 'whatsapp') => {
             createdAt: serverTimestamp(),
         });
         const link = `${window.location.origin}/pre-cadastro/${preCadastroRef.id}`;
-        const textToShare = `Por favor, preencha o formulário de registro de servidor: ${link}`;
-
-        // Prioritize Web Share API for a native mobile experience
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: 'Formulário de Pré-Cadastro',
-                    text: textToShare,
-                });
-                return; // Exit after successful native share
-            } catch (error) {
-                // Ignore AbortError from user cancelling share sheet
-                if (error instanceof DOMException && error.name === 'AbortError') {
-                    return;
-                }
-                console.error("Web Share API error:", error);
-                // Fallback to other methods if Web Share fails
-            }
-        }
-        
-        // --- Fallback for desktop or failed Web Share ---
-        if (shareOption === 'whatsapp') {
-            const encodedText = encodeURIComponent(textToShare);
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
-            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-        } else { // 'copy'
-            await navigator.clipboard.writeText(textToShare);
-            toast({
-                title: 'Link copiado!',
-                description: 'O link de pré-cadastro foi copiado para a área de transferência.',
-            });
-        }
+        setPreCadastroLink(link);
+        setIsShareDialogOpen(true);
     } catch (error) {
-        console.error("Erro ao gerar ou compartilhar link de pré-cadastro:", error);
+        console.error("Erro ao gerar link de pré-cadastro:", error);
         toast({
             variant: "destructive",
             title: "Erro",
-            description: "Não foi possível gerar ou compartilhar o link de pré-cadastro.",
+            description: "Não foi possível gerar o link de pré-cadastro.",
         });
     }
+};
+
+const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') => {
+    const textToShare = `${customShareMessage}\n${preCadastroLink}`;
+
+    if (shareOption === 'native' && navigator.share) {
+        try {
+            await navigator.share({
+                title: 'Formulário de Pré-Cadastro',
+                text: textToShare,
+            });
+            setIsShareDialogOpen(false);
+            return;
+        } catch (error) {
+            if (!(error instanceof DOMException && error.name === 'AbortError')) {
+                console.error("Web Share API error:", error);
+                // Fallback to copy if native share fails for other reasons
+                await navigator.clipboard.writeText(textToShare);
+                toast({
+                    title: 'Falha no Compartilhamento',
+                    description: 'Link copiado para a área de transferência.',
+                });
+            }
+            return;
+        }
+    }
+
+    if (shareOption === 'whatsapp') {
+        const encodedText = encodeURIComponent(textToShare);
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    } else { // 'copy'
+        await navigator.clipboard.writeText(textToShare);
+        toast({
+            title: 'Link copiado!',
+            description: 'A mensagem e o link de pré-cadastro foram copiados.',
+        });
+    }
+    setIsShareDialogOpen(false);
 };
 
 
@@ -754,25 +769,46 @@ const handleGenerateLink = async (shareOption: 'copy' | 'whatsapp') => {
                 <CheckSquare className="mr-2 h-4 w-4" />
                 Selecionar
             </Button>
-
-             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-black">
-                  <Link2 className="mr-2 h-4 w-4" />
-                  Formulário
+            
+             <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
+              <DialogTrigger asChild>
+                 <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-black" onClick={handleOpenShareDialog}>
+                    <Link2 className="mr-2 h-4 w-4" />
+                    Formulário
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
-                 <DropdownMenuItem onSelect={() => handleGenerateLink('copy')}>
-                  <Copy className="mr-2 h-4 w-4" />
-                  <span>Copiar Link</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => handleGenerateLink('whatsapp')}>
-                  <WhatsAppIcon className="mr-2 h-4 w-4" />
-                  <span>Partilhar no WhatsApp</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Partilhar Formulário de Pré-Cadastro</DialogTitle>
+                  <DialogDescription>
+                    Edite a mensagem e partilhe o link único com o novo servidor.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="share-message">Mensagem Personalizada</Label>
+                        <Textarea 
+                            id="share-message"
+                            value={customShareMessage}
+                            onChange={(e) => setCustomShareMessage(e.target.value)}
+                            className="min-h-[80px]"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="share-link">Link</Label>
+                        <Input id="share-link" readOnly value={preCadastroLink} />
+                    </div>
+                </div>
+                <DialogFooter className="gap-2 sm:justify-end">
+                    <Button variant="outline" onClick={() => handleShareAction('copy')}>
+                        <Copy className="mr-2 h-4 w-4" /> Copiar
+                    </Button>
+                    <Button onClick={() => handleShareAction('whatsapp')}>
+                        <WhatsAppIcon className="mr-2 h-4 w-4" /> WhatsApp
+                    </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </>
       ) : (
@@ -986,3 +1022,4 @@ const handleGenerateLink = async (shareOption: 'copy' | 'whatsapp') => {
     </div>
   );
 }
+
