@@ -515,6 +515,10 @@ export default function SettingsPage() {
         </TabsContent>
       </Tabs>
       <div className="space-y-4 mt-auto">
+        <Button className="w-full" onClick={handleSaveChanges}>
+          <Save className="mr-2 h-4 w-4" />
+          Salvar Alterações
+        </Button>
         <Button 
             variant="destructive" 
             className="w-full"
@@ -522,10 +526,6 @@ export default function SettingsPage() {
         >
           <LogOut className="mr-2 h-4 w-4" />
           Sair da Conta
-        </Button>
-        <Button className="w-full" onClick={handleSaveChanges}>
-          <Save className="mr-2 h-4 w-4" />
-          Salvar Alterações
         </Button>
       </div>
     </div>
