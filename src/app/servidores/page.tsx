@@ -48,8 +48,6 @@ export default function ServerListPage() {
   const [selectedServers, setSelectedServers] = useState<Record<string, boolean>>({});
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [vinculoFilters, setVinculoFilters] = useState<string[]>([]);
-  const [generatedLink, setGeneratedLink] = useState('');
-  const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
   
   const sortedServers = useMemo(() => {
     if (!servers) return [];
@@ -619,7 +617,7 @@ const handleExportPDF = async () => {
      }
   };
 
-  const handleGenerateLink = async () => {
+ const handleGenerateLink = async (shareOption: 'copy' | 'whatsapp') => {
     if (!firestore) return;
 
     try {
@@ -628,8 +626,28 @@ const handleExportPDF = async () => {
         createdAt: serverTimestamp(),
       });
       const link = `${window.location.origin}/pre-cadastro/${preCadastroRef.id}`;
-      setGeneratedLink(link);
-      setIsLinkDialogOpen(true);
+      const textToShare = `Por favor, preencha o formulário de registro de servidor: ${link}`;
+
+      if (shareOption === 'copy') {
+        navigator.clipboard.writeText(textToShare).then(() => {
+          toast({
+            title: 'Link copiado!',
+            description: 'O link de pré-cadastro foi copiado para a área de transferência.',
+          });
+        }).catch(err => {
+          console.error('Erro ao copiar o link:', err);
+          toast({
+            variant: "destructive",
+            title: 'Erro ao copiar',
+            description: 'Não foi possível copiar o link.',
+          });
+        });
+      } else if (shareOption === 'whatsapp') {
+        const encodedText = encodeURIComponent(textToShare);
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
+        window.open(whatsappUrl, '_blank');
+      }
+
     } catch (error) {
       console.error("Erro ao gerar link de pré-cadastro:", error);
       toast({
@@ -638,24 +656,6 @@ const handleExportPDF = async () => {
         description: "Não foi possível gerar o link de pré-cadastro.",
       });
     }
-  };
-
-   const handleCopyLink = () => {
-    const textToCopy = `Por favor, preencha o formulário de registro de servidor: ${generatedLink}`;
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      toast({
-        title: 'Link copiado!',
-        description: 'O link de pré-cadastro foi copiado para a área de transferência.',
-      });
-      setIsLinkDialogOpen(false);
-    }).catch(err => {
-      console.error('Erro ao copiar o link:', err);
-      toast({
-        variant: "destructive",
-        title: 'Erro ao copiar',
-        description: 'Não foi possível copiar o link.',
-      });
-    });
   };
 
   return (
@@ -746,10 +746,24 @@ const handleExportPDF = async () => {
                 </Button>
             )}
 
-             <Button onClick={handleGenerateLink} className="bg-yellow-500 hover:bg-yellow-600 text-black">
-                <Link2 className="mr-2 h-4 w-4" />
-                Partilhar Formulário
-            </Button>
+             <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                  <Link2 className="mr-2 h-4 w-4" />
+                  Partilhar Formulário
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
+                 <DropdownMenuItem onClick={() => handleGenerateLink('copy')}>
+                  <Copy className="mr-2 h-4 w-4" />
+                  <span>Copiar Link</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleGenerateLink('whatsapp')}>
+                  <WhatsAppIcon className="mr-2 h-4 w-4" />
+                  <span>Partilhar no WhatsApp</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </>
       ) : (
@@ -803,34 +817,6 @@ const handleExportPDF = async () => {
             </AlertDialog>
         </div>
       )}
-
-      <AlertDialog open={isLinkDialogOpen} onOpenChange={setIsLinkDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Link de Pré-Cadastro Gerado</AlertDialogTitle>
-            <AlertDialogDescription>
-              Copie e envie este link para o novo servidor. O link é de uso único.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="space-y-2">
-             <Label htmlFor="link-text">Mensagem para compartilhar</Label>
-            <Textarea 
-              id="link-text"
-              readOnly 
-              value={`Por favor, preencha o formulário de registro de servidor: ${generatedLink}`} 
-              rows={3}
-            />
-          </div>
-          <AlertDialogFooter>
-             <Button variant="secondary" onClick={handleCopyLink}>
-              <Copy className="mr-2 h-4 w-4"/>
-              Copiar
-            </Button>
-            <AlertDialogCancel>Fechar</AlertDialogCancel>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
 
       <Card>
         <CardContent className="p-0">
