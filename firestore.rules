@@ -1,9 +1,14 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Rules are wide open for any authenticated user.
-    // This is not recommended for production applications.
+    // Allow anyone to read from the pre-registration collection to verify link status
+    match /preCadastros/{preCadastroId} {
+      allow read, write; 
+    }
+
+    // Secure all other documents to only be accessible by authenticated users.
     match /{document=**} {
       allow read, write: if request.auth != null;
     }

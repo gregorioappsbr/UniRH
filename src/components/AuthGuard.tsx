@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useUser } from '@/firebase';
@@ -24,7 +25,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     }
   }, [user, isUserLoading, router, pathname, isPublicPath]);
 
-  if (isUserLoading) {
+  if (isUserLoading && !isPublicPath) {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
@@ -51,7 +52,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   return (
     <>
       {children}
-      {!isPublicPath && <BottomNav />}
+      {!isPublicPath && user && <BottomNav />}
     </>
   );
 }
