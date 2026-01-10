@@ -22,7 +22,7 @@ type PreCadastro = {
 };
 
 export default function PreCadastroPage({ params }: { params: { id: string } }) {
-    const id = params.id;
+    const { id } = params;
     const { toast } = useToast();
     const firestore = useFirestore();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,8 +65,9 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
             const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
             await addDoc(collection(firestore, 'servers'), newServer);
             
-            // Invalidate the link
-            await setDoc(preCadastroRef, { status: 'completed' }, { merge: true });
+            if (preCadastroRef) {
+                await setDoc(preCadastroRef, { status: 'completed' }, { merge: true });
+            }
 
             toast({
                 title: "Cadastro enviado!",
@@ -748,5 +749,3 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
     </div>
   )
 }
-
-    
