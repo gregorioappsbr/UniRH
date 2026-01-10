@@ -724,7 +724,7 @@ export default function ServerProfilePage() {
         </Button>
       </header>
 
-      <Card className={cn('bg-card dark:bg-transparent', color)}>
+      <Card className={cn('bg-card', `dark:${color}`)}>
         <CardContent className="p-6 space-y-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <Link href={`/servidores/novo?id=${id}`}>
@@ -1312,6 +1312,7 @@ export default function ServerProfilePage() {
     </div>
   );
 }
+
 
 
 
