@@ -730,14 +730,14 @@ export default function ServerProfilePage() {
             <Link href={`/servidores/novo?id=${id}`}>
               <Avatar className="h-24 w-24 cursor-pointer">
                 <AvatarImage src={server.avatarUrl} />
-                <AvatarFallback className="text-4xl text-black">
+                <AvatarFallback className="text-4xl">
                   {server.initials}
                 </AvatarFallback>
               </Avatar>
             </Link>
             <div>
-              <h2 className="text-2xl font-bold dark:text-white text-black">{server.nomeCompleto}</h2>
-              <p className="dark:text-white/80 text-black/80">{server.cargo}</p>
+              <h2 className="text-2xl font-bold">{server.nomeCompleto}</h2>
+              <p>{server.cargo}</p>
             </div>
             <div className="flex gap-2">
               <Badge className={cn("font-semibold", getStatusClass(server.status))}>
@@ -753,25 +753,25 @@ export default function ServerProfilePage() {
 
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <Mail className="h-5 w-5 dark:text-white/80 text-black/80" />
-              <span className="text-sm dark:text-white text-black">{server.emailInstitucional}</span>
+              <Mail className="h-5 w-5" />
+              <span className="text-sm">{server.emailInstitucional}</span>
             </div>
             <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base">
               <WhatsAppIcon className="h-5 w-5 text-green-500" />
               <span className="text-sm text-blue-500">{server.telefonePrincipal}</span>
             </a>
             <div className="flex items-center gap-4">
-              <Type className="h-5 w-5 dark:text-white/80 text-black/80" />
-              <span className="text-sm dark:text-white text-black">{server.vinculo}</span>
+              <Type className="h-5 w-5" />
+              <span className="text-sm">{server.vinculo}</span>
             </div>
             <div className="flex items-center gap-4">
-              <Building className="h-5 w-5 dark:text-white/80 text-black/80" />
-              <span className="text-sm dark:text-white text-black">{server.setor}</span>
+              <Building className="h-5 w-5" />
+              <span className="text-sm">{server.setor}</span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline" asChild className="dark:bg-white/10 dark:hover:bg-white/20 dark:border-white/20 dark:text-white bg-black/10 hover:bg-black/20 border-black/20 text-black">
+            <Button variant="outline" asChild className="dark:bg-white/10 dark:hover:bg-white/20 dark:border-white/20 bg-black/10 hover:bg-black/20 border-black/20">
               <Link href={`/servidores/novo?id=${id}`}>
                 <Edit className="h-4 w-4 mr-2" />
                 Editar Perfil
@@ -787,7 +787,7 @@ export default function ServerProfilePage() {
       
       {server && (
         <Tabs defaultValue="ficha" className="w-full flex-1 flex flex-col rounded-lg">
-           <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full text-foreground bg-muted md:grid md:grid-cols-4 border">
+           <TabsList className="h-auto items-center justify-center rounded-md p-1 flex flex-wrap w-full bg-muted md:grid md:grid-cols-4 border">
               <TabsTrigger value="ficha" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Ficha</TabsTrigger>
               <TabsTrigger value="faltas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Faltas</TabsTrigger>
               <TabsTrigger value="licencas" className="data-[state=active]:text-primary-foreground w-1/2 md:w-auto flex-grow">Licenças</TabsTrigger>

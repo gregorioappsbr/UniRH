@@ -172,7 +172,7 @@ export function ServerList() {
                         <div className="flex flex-col items-center gap-2">
                           <Avatar className="h-12 w-12">
                             <AvatarImage src={server.avatarUrl} />
-                            <AvatarFallback className="text-lg text-black">{server.initials}</AvatarFallback>
+                            <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                           </Avatar>
                            <div className="flex flex-col items-center gap-1">
                             {server.status && (
@@ -188,10 +188,10 @@ export function ServerList() {
                           </div>
                         </div>
                         <div className="flex-1 space-y-1">
-                          <p className="font-semibold whitespace-nowrap dark:text-white text-black">{server.nomeCompleto}</p>
-                          <p className="text-sm dark:text-white/80 text-black/80">{server.emailInstitucional}</p>
+                          <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
+                          <p className="text-sm">{server.emailInstitucional}</p>
                            {server.funcao && (
-                            <div className="flex items-center gap-2 text-sm dark:text-white/80 text-black/80">
+                            <div className="flex items-center gap-2 text-sm">
                               {getFuncaoIcon(server.funcao)}
                               <span>{server.funcao}</span>
                             </div>
@@ -239,11 +239,11 @@ export function ServerList() {
                         <div className="flex items-center gap-3">
                             <Avatar className="h-12 w-12">
                                 <AvatarImage src={server.avatarUrl} />
-                                <AvatarFallback className="text-lg text-black">{server.initials}</AvatarFallback>
+                                <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <p className="font-semibold dark:text-white text-black">{server.nomeCompleto}</p>
-                                <p className="text-sm dark:text-white/80 text-black/80">{server.emailInstitucional}</p>
+                                <p className="font-semibold">{server.nomeCompleto}</p>
+                                <p className="text-sm">{server.emailInstitucional}</p>
                             </div>
                         </div>
                       </TableCell>
@@ -260,7 +260,7 @@ export function ServerList() {
                           </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2 text-sm dark:text-white/80 text-black/80">
+                        <div className="flex items-center gap-2 text-sm">
                            {getFuncaoIcon(server.funcao)}
                           <span>{server.funcao}</span>
                         </div>

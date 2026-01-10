@@ -752,7 +752,7 @@ const handleExportPDF = async () => {
                         <div className="flex flex-col items-center justify-start gap-2 pt-1">
                           <Avatar className="h-12 w-12 mt-2">
                              <AvatarImage src={server.avatarUrl} />
-                             <AvatarFallback className="text-lg text-black">{server.initials}</AvatarFallback>
+                             <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                           </Avatar>
                           <div className="flex flex-col items-center gap-1 mt-1">
                             {server.status && (
@@ -768,10 +768,10 @@ const handleExportPDF = async () => {
                           </div>
                         </div>
                         <div className="flex-1 space-y-1 overflow-hidden">
-                          <p className="font-semibold dark:text-white text-black">{server.nomeCompleto}</p>
-                          <p className="text-sm dark:text-white/80 text-black/80 break-words">{server.emailInstitucional}</p>
+                          <p className="font-semibold">{server.nomeCompleto}</p>
+                          <p className="text-sm break-words">{server.emailInstitucional}</p>
                           {server.funcao && (
-                            <div className="flex items-center gap-2 text-sm dark:text-white/80 text-black/80">
+                            <div className="flex items-center gap-2 text-sm">
                               {getFuncaoIcon(server.funcao)}
                               <span>{server.funcao}</span>
                             </div>
@@ -842,11 +842,11 @@ const handleExportPDF = async () => {
                           <div className="flex items-center gap-3">
                                 <Avatar className="h-12 w-12">
                                     <AvatarImage src={server.avatarUrl} />
-                                    <AvatarFallback className="text-lg text-black">{server.initials}</AvatarFallback>
+                                    <AvatarFallback className="text-lg">{server.initials}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <p className="font-semibold dark:text-white text-black">{server.nomeCompleto}</p>
-                                    <p className="text-sm dark:text-white/80 text-black/80 break-all">{server.emailInstitucional}</p>
+                                    <p className="font-semibold">{server.nomeCompleto}</p>
+                                    <p className="text-sm break-all">{server.emailInstitucional}</p>
                                 </div>
                             </div>
                         </TableCell>
@@ -863,7 +863,7 @@ const handleExportPDF = async () => {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2 text-sm dark:text-white/80 text-black/80">
+                          <div className="flex items-center gap-2 text-sm">
                              {getFuncaoIcon(server.funcao)}
                             <span>{server.funcao}</span>
                           </div>
