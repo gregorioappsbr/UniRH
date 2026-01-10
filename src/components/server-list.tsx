@@ -154,7 +154,7 @@ export function ServerList() {
             <p className="text-center">Carregando...</p>
         ) : isMobile ? (
              <div className="space-y-4">
-                {serversWithRatings.map((server, index) => {
+                {serversWithRatings.map((server) => {
                   const originalIndex = sortedServers.findIndex(s => s.id === server.id);
                   const colorClass = getServerColor(server, originalIndex);
                   return (
@@ -221,7 +221,7 @@ export function ServerList() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {serversWithRatings.map((server, index) => {
+                  {serversWithRatings.map((server) => {
                      const originalIndex = sortedServers.findIndex(s => s.id === server.id);
                      const colorClass = getServerColor(server, originalIndex);
                     return (

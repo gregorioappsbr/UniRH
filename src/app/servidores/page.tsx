@@ -732,7 +732,7 @@ const handleExportPDF = async () => {
           {isLoading && <p className="text-center p-4">Carregando servidores...</p>}
           {!isLoading && isMobile ? (
              <div className="space-y-4 p-4">
-                {filteredServers.map((server, index) => {
+                {filteredServers.map((server) => {
                    const originalIndex = sortedServers.findIndex(s => s.id === server.id);
                    const colorClass = getServerColor(server, originalIndex);
                    return (
@@ -811,7 +811,7 @@ const handleExportPDF = async () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredServers.map((server, index) => {
+                  {filteredServers.map((server) => {
                     const originalIndex = sortedServers.findIndex(s => s.id === server.id);
                     const colorClass = getServerColor(server, originalIndex);
                     return (
