@@ -18,7 +18,7 @@ import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
 import { doc, collection, addDoc, deleteDoc, serverTimestamp, setDoc, writeBatch } from 'firebase/firestore';
 import { useState, useMemo, useEffect } from 'react';
@@ -119,10 +119,9 @@ type FeriasPeriodo = {
   endAno: string;
 };
 
-export default function ServerProfilePage() {
-    const params = useParams();
-    const searchParams = useSearchParams();
+export default function ServerProfilePage({ params }: { params: { id: string } }) {
     const { id } = params;
+    const searchParams = useSearchParams();
     const color = searchParams.get('color') || 'bg-card';
     const firestore = useFirestore();
     const { toast } = useToast();
@@ -724,7 +723,7 @@ export default function ServerProfilePage() {
         </Button>
       </header>
 
-      <Card className={cn('bg-card', `dark:${color}`)}>
+      <Card className={cn('bg-card dark:bg-card', `dark:${color}`)}>
         <CardContent className="p-6 space-y-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <Link href={`/servidores/novo?id=${id}`}>
@@ -1312,12 +1311,3 @@ export default function ServerProfilePage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
