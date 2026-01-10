@@ -679,10 +679,10 @@ const handleExportPDF = async () => {
             </Link>
           </Button>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline">
+                <Button variant="outline" className="w-full">
                   <Filter className="mr-2 h-4 w-4" />
                   Filtrar
                 </Button>
@@ -735,22 +735,20 @@ const handleExportPDF = async () => {
               </SheetContent>
             </Sheet>
             
-            {isMobile && selectionCount === 0 && (
-                 <Button variant="outline" onClick={() => {
-                    if (filteredServers.length > 0) {
-                      handleSelectServer(filteredServers[0].id, true);
-                    }
-                }}>
-                    <CheckSquare className="mr-2 h-4 w-4" />
-                    Selecionar
-                </Button>
-            )}
+            <Button variant="outline" className="w-full" onClick={() => {
+                if (filteredServers.length > 0) {
+                  handleSelectServer(filteredServers[0].id, true);
+                }
+            }}>
+                <CheckSquare className="mr-2 h-4 w-4" />
+                Selecionar
+            </Button>
 
              <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-black">
                   <Link2 className="mr-2 h-4 w-4" />
-                  Partilhar Formulário
+                  Formulário
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
