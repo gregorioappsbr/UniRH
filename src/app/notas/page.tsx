@@ -23,12 +23,13 @@ type Note = {
 };
 
 const noteColors = [
-  'bg-lime-200/50 dark:bg-lime-500/20',
-  'bg-cyan-200/50 dark:bg-cyan-500/20',
-  'bg-fuchsia-200/50 dark:bg-fuchsia-500/20',
-  'bg-emerald-200/50 dark:bg-emerald-500/20',
-  'bg-rose-200/50 dark:bg-rose-500/20',
-  'bg-amber-200/50 dark:bg-amber-500/20',
+  'bg-lime-400/50 dark:bg-lime-500/20',
+  'bg-cyan-400/50 dark:bg-cyan-500/20',
+  'bg-fuchsia-400/50 dark:bg-fuchsia-500/20',
+  'bg-emerald-400/50 dark:bg-emerald-500/20',
+  'bg-rose-400/50 dark:bg-rose-500/20',
+  'bg-amber-400/50 dark:bg-amber-500/20',
+  'bg-violet-400/50 dark:bg-violet-500/20',
 ];
 
 
