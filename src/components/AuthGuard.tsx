@@ -5,24 +5,24 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { BottomNav } from './bottom-nav';
 
-const publicPaths = ['/login', '/signup'];
+const publicPaths = ['/login', '/signup', '/pre-cadastro'];
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
   const pathname = usePathname();
 
+  const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
+
   useEffect(() => {
     if (!isUserLoading) {
-      const isPublicPath = publicPaths.includes(pathname);
-
       if (!user && !isPublicPath) {
         router.push('/login');
-      } else if (user && isPublicPath) {
+      } else if (user && pathname === '/login') { // Only redirect from /login if logged in
         router.push('/');
       }
     }
-  }, [user, isUserLoading, router, pathname]);
+  }, [user, isUserLoading, router, pathname, isPublicPath]);
 
   if (isUserLoading) {
     return (
@@ -34,8 +34,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
   
-  const isPublic = publicPaths.includes(pathname);
-    if (!user && !isPublic) {
+    if (!user && !isPublicPath) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
@@ -45,14 +44,14 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
         );
     }
     
-    if (user && isPublic) {
+    if (user && pathname === '/login') {
         return null; // Don't render anything while redirecting
     }
 
   return (
     <>
       {children}
-      {!publicPaths.includes(pathname) && <BottomNav />}
+      {!isPublicPath && <BottomNav />}
     </>
   );
 }

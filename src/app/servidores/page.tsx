@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown, CheckSquare, CheckCircle } from 'lucide-react';
+import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown, CheckSquare, CheckCircle, Link2 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -21,9 +21,10 @@ import { useToast } from '@/hooks/use-toast';
 import { jsPDF } from "jspdf";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, deleteDoc, doc, getDocs, query, writeBatch } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, query, writeBatch, addDoc, serverTimestamp } from 'firebase/firestore';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { getServerColor } from '@/lib/color-utils';
+import { Input } from '@/components/ui/input';
 
 const statusOptions = ['Ativo', 'Inativo', 'Licença'];
 const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comissionado'];
@@ -46,6 +47,8 @@ export default function ServerListPage() {
   const [selectedServers, setSelectedServers] = useState<Record<string, boolean>>({});
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [vinculoFilters, setVinculoFilters] = useState<string[]>([]);
+  const [generatedLink, setGeneratedLink] = useState('');
+  const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
   
   const sortedServers = useMemo(() => {
     if (!servers) return [];
@@ -95,13 +98,12 @@ export default function ServerListPage() {
   useEffect(() => {
     const vinculoQuery = searchParams.get('vinculo');
     if (vinculoQuery) {
-      // Capitalize the first letter
       const capitalizedVinculo = vinculoQuery.charAt(0).toUpperCase() + vinculoQuery.slice(1);
       if (vinculoOptions.includes(capitalizedVinculo) && !vinculoFilters.includes(capitalizedVinculo)) {
         setVinculoFilters(prev => [...prev, capitalizedVinculo]);
       }
     }
-  }, [searchParams, vinculoFilters]);
+  }, [searchParams]);
 
   const selectionCount = Object.values(selectedServers).filter(Boolean).length;
 
@@ -199,60 +201,73 @@ export default function ServerListPage() {
 
         details += `*DADOS PESSOAIS*\n${underline}\n`;
         details += `*NOME COMPLETO:* ${server.nomeCompleto.toUpperCase()}\n`;
-        details += `*NOME SOCIAL:* ${server.nomeSocial.toUpperCase()}\n`;
-        details += `*CPF:* ${server.cpf.toUpperCase()}\n`;
-        details += `*RG:* ${server.rg.toUpperCase()}\n`;
-        details += `*DATA DE NASCIMENTO:* ${server.dataNascimento.toUpperCase()}\n`;
-        details += `*GÊNERO:* ${server.genero.toUpperCase()}\n`;
-        details += `*COR/RAÇA:* ${server.corRaca.toUpperCase()}\n`;
-        details += `*ESTADO CIVIL:* ${server.estadoCivil.toUpperCase()}\n`;
+        if (server.nomeSocial) details += `*NOME SOCIAL:* ${server.nomeSocial.toUpperCase()}\n`;
+        details += `*CPF:* ${server.cpf}\n`;
+        details += `*RG:* ${server.rg}\n`;
+        details += `*DATA DE NASCIMENTO:* ${server.dataNascimento}\n`;
+        details += `*GÊNERO:* ${server.genero}\n`;
+        if (server.outroGenero) details += `*OUTRO GÊNERO:* ${server.outroGenero.toUpperCase()}\n`;
+        details += `*COR/RAÇA:* ${server.corRaca}\n`;
+        details += `*ESTADO CIVIL:* ${server.estadoCivil}\n`;
         details += `*NACIONALIDADE:* ${server.nacionalidade.toUpperCase()}\n`;
         details += `*NATURALIDADE:* ${server.naturalidade.toUpperCase()}\n`;
-        details += `*PCD:* ${server.pcd.toUpperCase()}\n\n`;
+        details += `*PCD:* ${server.isPCD}\n`;
+         if (server.pcdDescricao) details += `*DESCRIÇÃO PCD:* ${server.pcdDescricao.toUpperCase()}\n`;
+        details += `\n`;
+        
+        details += `*FILIAÇÃO*\n${underline}\n`;
+        details += `*NOME DA MÃE:* ${server.nomeMae.toUpperCase()}\n`;
+        if (server.nomePai) details += `*NOME DO PAI:* ${server.nomePai.toUpperCase()}\n`;
+        details += `\n`;
 
         details += `*CONTATO*\n${underline}\n`;
-        details += `*TELEFONE PRINCIPAL:* ${server.telefonePrincipal.toUpperCase()}\n`;
-        if (server.telefoneSecundario) details += `*TELEFONE SECUNDÁRIO:* ${server.telefoneSecundario.toUpperCase()}\n`;
-        details += `*E-MAIL PESSOAL:* ${server.emailPessoal.toUpperCase()}\n`;
-        details += `*CONTATO DE EMERGÊNCIA:* ${server.contatoEmergenciaNome.toUpperCase()} - ${server.contatoEmergenciaTelefone.toUpperCase()}\n\n`;
+        details += `*TELEFONE PRINCIPAL:* ${server.telefonePrincipal}\n`;
+        if (server.telefoneSecundario) details += `*TELEFONE SECUNDÁRIO:* ${server.telefoneSecundario}\n`;
+        if (server.emailPessoal) details += `*E-MAIL PESSOAL:* ${server.emailPessoal}\n`;
+        details += `*CONTATO DE EMERGÊNCIA:* ${server.contatoEmergenciaNome.toUpperCase()} - ${server.contatoEmergenciaTelefone}\n\n`;
 
         details += `*ENDEREÇO*\n${underline}\n`;
-        details += `*CEP:* ${server.cep.toUpperCase()}\n`;
+        details += `*CEP:* ${server.cep}\n`;
         details += `*LOGRADOURO:* ${server.logradouro.toUpperCase()}\n`;
         if (server.complemento) details += `*COMPLEMENTO:* ${server.complemento.toUpperCase()}\n`;
         details += `*BAIRRO:* ${server.bairro.toUpperCase()}\n`;
         details += `*CIDADE/ESTADO:* ${server.cidade.toUpperCase()}/${server.uf.toUpperCase()}\n\n`;
 
         details += `*DADOS PROFISSIONAIS*\n${underline}\n`;
-        details += `*VÍNCULO:* ${server.vinculo.toUpperCase()}\n`;
-        if (server.matricula) details += `*MATRÍCULA:* ${server.matricula.toUpperCase()}\n`;
+        details += `*VÍNCULO:* ${server.vinculo}\n`;
+        if (server.matricula) details += `*MATRÍCULA:* ${server.matricula}\n`;
         details += `*CARGO:* ${server.cargo.toUpperCase()}\n`;
         details += `*FUNÇÃO:* ${server.funcao.toUpperCase()}\n`;
-        details += `*DATA DE INÍCIO:* ${server.dataInicio.toUpperCase()}\n`;
-        details += `*POSSUI DGA?:* ${server.possuiDGA.toUpperCase()}\n`;
+        details += `*DATA DE INÍCIO:* ${server.dataInicio}\n`;
+        details += `*POSSUI DGA?:* ${server.possuiDGA}\n`;
         if (server.especificacaoDGA) details += `*ESPECIFICAÇÃO DGA:* ${server.especificacaoDGA.toUpperCase()}\n`;
         details += `*SETOR:* ${server.setor.toUpperCase()}\n`;
-        details += `*RAMAL:* ${server.ramal.toUpperCase()}\n`;
-        details += `*JORNADA:* ${server.jornada.toUpperCase()}\n`;
-        details += `*TURNO:* ${server.turno.toUpperCase()}\n`;
-        details += `*STATUS:* ${server.status.toUpperCase()}\n`;
-        details += `*E-MAIL INSTITUCIONAL:* ${server.emailInstitucional.toUpperCase()}\n\n`;
+        if(server.ramal) details += `*RAMAL:* ${server.ramal}\n`;
+        details += `*JORNADA:* ${server.jornada}\n`;
+        details += `*TURNO:* ${server.turno}\n`;
+        if (server.outroTurno) details += `*OUTRO TURNO:* ${server.outroTurno.toUpperCase()}\n`;
+        details += `*STATUS:* ${server.status}\n`;
+        details += `*E-MAIL INSTITUCIONAL:* ${server.emailInstitucional}\n\n`;
 
         details += `*FORMAÇÃO*\n${underline}\n`;
-        details += `*ESCOLARIDADE:* ${server.escolaridade.toUpperCase()}\n`;
-        details += `*CURSO DE GRADUAÇÃO:* ${server.cursoGraduacao.toUpperCase()}\n`;
-        details += `*INSTITUIÇÃO DA GRADUAÇÃO:* ${server.instituicaoGraduacao.toUpperCase()}\n`;
-        details += `*ANO DE CONCLUSÃO (GRAD.):* ${server.anoConclusaoGrad.toUpperCase()}\n`;
-        if (server.escolaridade === 'Pós-Graduação') {
-            details += `*TIPO DE PÓS-GRADUAÇÃO:* ${server.tipoPosGraduacao.toUpperCase()}\n`;
-            details += `*CURSO DE PÓS-GRADUAÇÃO:* ${server.cursoPosGraduacao.toUpperCase()}\n`;
-            details += `*INSTITUIÇÃO DA PÓS-GRAD.:* ${server.instituicaoPosGrad.toUpperCase()}\n`;
-            details += `*ANO DE CONCLUSÃO (PÓS-GRAD.):* ${server.anoConclusaoPosGrad.toUpperCase()}\n`;
+        details += `*ESCOLARIDADE:* ${server.escolaridade}\n`;
+        if(server.instituicaoEnsinoBasico) details += `*INSTITUIÇÃO:* ${server.instituicaoEnsinoBasico.toUpperCase()}\n`;
+        if(server.anoConclusaoEnsinoBasico) details += `*ANO DE CONCLUSÃO:* ${server.anoConclusaoEnsinoBasico}\n`;
+        if(server.cursoGraduacao) details += `*CURSO DE GRADUAÇÃO:* ${server.cursoGraduacao.toUpperCase()}\n`;
+        if(server.instituicaoGraduacao) details += `*INSTITUIÇÃO DA GRADUAÇÃO:* ${server.instituicaoGraduacao.toUpperCase()}\n`;
+        if(server.anoConclusaoGrad) details += `*ANO DE CONCLUSÃO (GRAD.):* ${server.anoConclusaoGrad}\n`;
+        if (server.escolaridade === 'pos-graduacao') {
+            if(server.tipoPosGraduacao) details += `*TIPO DE PÓS-GRADUAÇÃO:* ${server.tipoPosGraduacao.toUpperCase()}\n`;
+            if(server.cursoPosGraduacao) details += `*CURSO DE PÓS-GRADUAÇÃO:* ${server.cursoPosGraduacao.toUpperCase()}\n`;
+            if(server.instituicaoPosGraduacao) details += `*INSTITUIÇÃO DA PÓS-GRAD.:* ${server.instituicaoPosGraduacao.toUpperCase()}\n`;
+            if(server.anoConclusaoPosGrad) details += `*ANO DE CONCLUSÃO (PÓS-GRAD.):* ${server.anoConclusaoPosGrad}\n`;
         }
         details += `\n`;
 
-        details += `*OBSERVAÇÕES*\n${underline}\n`;
-        details += `${server.observacoes.toUpperCase()}\n`;
+        if (server.observacoes) {
+          details += `*OBSERVAÇÕES*\n${underline}\n`;
+          details += `${server.observacoes.toUpperCase()}\n`;
+        }
 
         return details.trim();
     }
@@ -261,21 +276,29 @@ export default function ServerListPage() {
 
       details += "DADOS PESSOAIS\n";
       details += `Nome Completo: ${server.nomeCompleto}\n`;
-      details += `Nome Social: ${server.nomeSocial}\n`;
+      if (server.nomeSocial) details += `Nome Social: ${server.nomeSocial}\n`;
       details += `CPF: ${server.cpf}\n`;
       details += `RG: ${server.rg}\n`;
       details += `Data de Nascimento: ${server.dataNascimento}\n`;
       details += `Gênero: ${server.genero}\n`;
+      if(server.outroGenero) details += `Outro Gênero: ${server.outroGenero}\n`;
       details += `Cor/Raça: ${server.corRaca}\n`;
       details += `Estado Civil: ${server.estadoCivil}\n`;
       details += `Nacionalidade: ${server.nacionalidade}\n`;
       details += `Naturalidade: ${server.naturalidade}\n`;
-      details += `PCD: ${server.pcd}\n\n`;
+      details += `PCD: ${server.isPCD}\n`;
+      if(server.pcdDescricao) details += `Descrição PCD: ${server.pcdDescricao}\n`;
+      details += `\n`;
+
+      details += `Filiação:\n`;
+      details += `Nome da Mãe: ${server.nomeMae}\n`;
+      if (server.nomePai) details += `Nome do Pai: ${server.nomePai}\n`;
+      details += `\n`;
 
       details += "CONTATO\n";
       details += `Telefone Principal: ${server.telefonePrincipal}\n`;
       if (server.telefoneSecundario) details += `Telefone Secundário: ${server.telefoneSecundario}\n`;
-      details += `E-mail Pessoal: ${server.emailPessoal}\n`;
+      if(server.emailPessoal) details += `E-mail Pessoal: ${server.emailPessoal}\n`;
       details += `Contato de Emergência: ${server.contatoEmergenciaNome} - ${server.contatoEmergenciaTelefone}\n\n`;
 
       details += "ENDEREÇO\n";
@@ -294,28 +317,32 @@ export default function ServerListPage() {
       details += `Possui DGA?: ${server.possuiDGA}\n`;
       if (server.especificacaoDGA) details += `Especificação DGA: ${server.especificacaoDGA}\n`;
       details += `Setor: ${server.setor}\n`;
-      details += `Ramal: ${server.ramal}\n`;
+      if(server.ramal) details += `Ramal: ${server.ramal}\n`;
       details += `Jornada: ${server.jornada}\n`;
       details += `Turno: ${server.turno}\n`;
+       if(server.outroTurno) details += `Outro Turno: ${server.outroTurno}\n`;
       details += `Status: ${server.status}\n`;
       details += `E-mail Institucional: ${server.emailInstitucional}\n\n`;
 
       details += "FORMAÇÃO\n";
       details += `Escolaridade: ${server.escolaridade}\n`;
-      details += `Curso de Graduação: ${server.cursoGraduacao}\n`;
-      details += `Instituição da Graduação: ${server.instituicaoGraduacao}\n`;
-      details += `Ano de Conclusão (Grad.): ${server.anoConclusaoGrad}\n`;
-      if (server.escolaridade === 'Pós-Graduação') {
-        details += `Tipo de Pós-Graduação: ${server.tipoPosGraduacao}\n`;
-        details += `Curso de Pós-Graduação: ${server.cursoPosGraduacao}\n`;
-        details += `Instituição da Pós-Grad.: ${server.instituicaoPosGrad}\n`;
-        details += `Ano de Conclusão (Pós-Grad.): ${server.anoConclusaoPosGrad}\n`;
+      if(server.instituicaoEnsinoBasico) details += `Instituição: ${server.instituicaoEnsinoBasico}\n`;
+      if(server.anoConclusaoEnsinoBasico) details += `Ano de Conclusão: ${server.anoConclusaoEnsinoBasico}\n`;
+      if(server.cursoGraduacao) details += `Curso de Graduação: ${server.cursoGraduacao}\n`;
+      if(server.instituicaoGraduacao) details += `Instituição da Graduação: ${server.instituicaoGraduacao}\n`;
+      if(server.anoConclusaoGrad) details += `Ano de Conclusão (Grad.): ${server.anoConclusaoGrad}\n`;
+      if (server.escolaridade === 'pos-graduacao') {
+        if(server.tipoPosGraduacao) details += `Tipo de Pós-Graduação: ${server.tipoPosGraduacao}\n`;
+        if(server.cursoPosGraduacao) details += `Curso de Pós-Graduação: ${server.cursoPosGraduacao}\n`;
+        if(server.instituicaoPosGraduacao) details += `Instituição da Pós-Grad.: ${server.instituicaoPosGraduacao}\n`;
+        if(server.anoConclusaoPosGrad) details += `Ano de Conclusão (Pós-Grad.): ${server.anoConclusaoPosGrad}\n`;
       }
       details += `\n`;
 
-      details += "OBSERVAÇÕES\n";
-      details += `${server.observacoes}\n`;
-
+      if (server.observacoes) {
+        details += "OBSERVAÇÕES\n";
+        details += `${server.observacoes}\n`;
+      }
       return details.trim();
   };
 
@@ -472,7 +499,7 @@ const handleExportPDF = async () => {
         y += 15;
 
         // --- DADOS PESSOAIS ---
-        y = checkAndAddPage(y, 65);
+        y = checkAndAddPage(y, 85);
         y = drawSectionHeader(y, 'DADOS PESSOAIS');
         y = drawRow(y, 'Nome Completo', server.nomeCompleto);
         y = drawRow(y, 'Nome Social', server.nomeSocial);
@@ -480,12 +507,21 @@ const handleExportPDF = async () => {
         y = drawRow(y, 'RG', server.rg);
         y = drawRow(y, 'Data de Nascimento', server.dataNascimento);
         y = drawRow(y, 'Gênero', server.genero);
+        y = drawRow(y, 'Outro Gênero', server.outroGenero);
         y = drawRow(y, 'Cor/Raça', server.corRaca);
         y = drawRow(y, 'Estado Civil', server.estadoCivil);
         y = drawRow(y, 'Nacionalidade', server.nacionalidade);
         y = drawRow(y, 'Naturalidade', server.naturalidade);
-        y = drawRow(y, 'PCD', server.pcd);
+        y = drawRow(y, 'PCD', server.isPCD);
+        y = drawRow(y, 'Descrição PCD', server.pcdDescricao);
         y += 5;
+
+        y = checkAndAddPage(y, 25);
+        y = drawSectionHeader(y, 'FILIAÇÃO');
+        y = drawRow(y, 'Nome da Mãe', server.nomeMae);
+        y = drawRow(y, 'Nome do Pai', server.nomePai);
+        y += 5;
+
 
         // --- CONTATO ---
         y = checkAndAddPage(y, 35);
@@ -507,7 +543,7 @@ const handleExportPDF = async () => {
         y += 5;
 
         // --- DADOS PROFISSIONAIS ---
-        y = checkAndAddPage(y, 90);
+        y = checkAndAddPage(y, 100);
         y = drawSectionHeader(y, 'DADOS PROFISSIONAIS');
         y = drawRow(y, 'Vínculo', server.vinculo);
         y = drawRow(y, 'Matrícula', server.matricula);
@@ -520,6 +556,7 @@ const handleExportPDF = async () => {
         y = drawRow(y, 'Ramal', server.ramal);
         y = drawRow(y, 'Jornada', server.jornada);
         y = drawRow(y, 'Turno', server.turno);
+        y = drawRow(y, 'Outro Turno', server.outroTurno);
         y = drawRow(y, 'Status', server.status);
         y = drawRow(y, 'E-mail Institucional', server.emailInstitucional);
         y += 5;
@@ -528,13 +565,15 @@ const handleExportPDF = async () => {
         y = checkAndAddPage(y, 70);
         y = drawSectionHeader(y, 'FORMAÇÃO');
         y = drawRow(y, 'Escolaridade', server.escolaridade);
+        y = drawRow(y, 'Instituição', server.instituicaoEnsinoBasico);
+        y = drawRow(y, 'Ano de Conclusão', server.anoConclusaoEnsinoBasico);
         y = drawRow(y, 'Curso de Graduação', server.cursoGraduacao);
         y = drawRow(y, 'Instituição da Graduação', server.instituicaoGraduacao);
         y = drawRow(y, 'Ano de Conclusão (Grad.)', server.anoConclusaoGrad);
         if (server.escolaridade === 'Pós-Graduação') {
           y = drawRow(y, 'Tipo de Pós-Graduação', server.tipoPosGraduacao);
           y = drawRow(y, 'Curso de Pós-Graduação', server.cursoPosGraduacao);
-          y = drawRow(y, 'Instituição da Pós-Grad.', server.instituicaoPosGrad);
+          y = drawRow(y, 'Instituição da Pós-Grad.', server.instituicaoPosGraduacao);
           y = drawRow(y, 'Ano de Conclusão (Pós-Grad.)', server.anoConclusaoPosGrad);
         }
         y += 5;
@@ -577,6 +616,44 @@ const handleExportPDF = async () => {
      } else {
         router.push(url);
      }
+  };
+
+  const handleGenerateLink = async () => {
+    if (!firestore) return;
+
+    try {
+      const preCadastroRef = await addDoc(collection(firestore, 'preCadastros'), {
+        status: 'pending',
+        createdAt: serverTimestamp(),
+      });
+      const link = `${window.location.origin}/pre-cadastro/${preCadastroRef.id}`;
+      setGeneratedLink(link);
+      setIsLinkDialogOpen(true);
+    } catch (error) {
+      console.error("Erro ao gerar link de pré-cadastro:", error);
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: "Não foi possível gerar o link de pré-cadastro.",
+      });
+    }
+  };
+
+   const handleCopyLink = () => {
+    navigator.clipboard.writeText(generatedLink).then(() => {
+      toast({
+        title: 'Link copiado!',
+        description: 'O link de pré-cadastro foi copiado para a área de transferência.',
+      });
+      setIsLinkDialogOpen(false);
+    }).catch(err => {
+      console.error('Erro ao copiar o link:', err);
+      toast({
+        variant: "destructive",
+        title: 'Erro ao copiar',
+        description: 'Não foi possível copiar o link.',
+      });
+    });
   };
 
   return (
@@ -667,11 +744,10 @@ const handleExportPDF = async () => {
                 </Button>
             )}
 
-            {!isMobile && (
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
+             <Button onClick={handleGenerateLink} className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                <Link2 className="mr-2 h-4 w-4" />
                 Partilhar Formulário
-              </Button>
-            )}
+            </Button>
           </div>
         </>
       ) : (
@@ -725,6 +801,26 @@ const handleExportPDF = async () => {
             </AlertDialog>
         </div>
       )}
+
+      <AlertDialog open={isLinkDialogOpen} onOpenChange={setIsLinkDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Link de Pré-Cadastro Gerado</AlertDialogTitle>
+            <AlertDialogDescription>
+              Copie e envie este link para o novo servidor. O link é de uso único.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="relative">
+            <Input value={generatedLink} readOnly />
+            <Button size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={handleCopyLink}>
+              <Copy className="h-4 w-4"/>
+            </Button>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Fechar</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
 
       <Card>
