@@ -177,7 +177,7 @@ export function ServerList() {
                           </Avatar>
                            <div className="flex flex-col items-center gap-1">
                             {server.status && (
-                              <Badge variant="outline" className={cn("text-xs border-border", getStatusClass(server.status))}>
+                              <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
                                 {getStatusIcon(server.status)}
                                 {server.status}
                               </Badge>
@@ -249,7 +249,7 @@ export function ServerList() {
                         </div>
                       </TableCell>
                       <TableCell>
-                         <Badge variant="outline" className={cn("border-border", getStatusClass(server.status))}>
+                         <Badge variant="outline" className={cn(getStatusClass(server.status))}>
                             {getStatusIcon(server.status)}
                             {server.status}
                           </Badge>

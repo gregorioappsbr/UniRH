@@ -744,7 +744,7 @@ export default function ServerProfilePage() {
                 {getStatusIcon(server.status)}
                 {server.status}
               </Badge>
-              <Badge variant="outline" className={cn("font-semibold border-border", getRatingClass(calculatedRating))}>
+              <Badge variant="outline" className={cn("font-semibold", getRatingClass(calculatedRating))}>
                 <Award className="h-3 w-3 mr-1" />
                 Nota: {calculatedRating.toFixed(1)}
               </Badge>
@@ -831,7 +831,7 @@ export default function ServerProfilePage() {
                       Adicionar Falta
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className={cn("sm:max-w-md", color)}>
+                  <DialogContent className="sm:max-w-md bg-background">
                     <DialogHeader>
                       <DialogTitle>{editingFalta ? 'Editar Falta' : 'Registrar Nova Falta'}</DialogTitle>
                     </DialogHeader>
@@ -845,7 +845,7 @@ export default function ServerProfilePage() {
                               value={faltaDia}
                               onChange={(e) => setFaltaDia(e.target.value)}
                               maxLength={2}
-                              className="bg-background/80"
+                              className="bg-muted"
                             />
                              <Input
                               type="number"
@@ -853,7 +853,7 @@ export default function ServerProfilePage() {
                               value={faltaMes}
                               onChange={(e) => setFaltaMes(e.target.value)}
                               maxLength={2}
-                              className="bg-background/80"
+                              className="bg-muted"
                             />
                              <Input
                               type="number"
@@ -861,7 +861,7 @@ export default function ServerProfilePage() {
                               value={faltaAno}
                               onChange={(e) => setFaltaAno(e.target.value)}
                               maxLength={4}
-                              className="bg-background/80"
+                              className="bg-muted"
                             />
                           </div>
                        </div>
@@ -872,13 +872,13 @@ export default function ServerProfilePage() {
                           placeholder="Adicione uma descrição ou observação..."
                           value={faltaReason}
                           onChange={(e) => setFaltaReason(e.target.value)}
-                          className="bg-background/80"
+                          className="bg-muted"
                         />
                       </div>
                     </div>
                     <DialogFooter>
                       <Button variant="ghost" onClick={() => setIsFaltaDialogOpen(false)}>Cancelar</Button>
-                      <Button onClick={handleSaveFalta} className="bg-background/80 text-foreground hover:bg-background/70">Salvar</Button>
+                      <Button onClick={handleSaveFalta}>Salvar</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -923,7 +923,7 @@ export default function ServerProfilePage() {
                             <span className="md:hidden font-semibold">Data: </span>{falta.date}
                           </TableCell>
                           <TableCell className="text-muted-foreground p-0 md:p-4">
-                             <span className="md:hidden font-semibold text-foreground">Descrição: </span>{falta.reason || 'Sem justificativa'}
+                             <span className="md:hidden font-semibold">Descrição: </span>{falta.reason || 'Sem justificativa'}
                           </TableCell>
                           <TableCell className="p-0 md:p-4 mt-2 md:mt-0 text-right">
                              <div className="flex items-center justify-end gap-2">
@@ -977,7 +977,7 @@ export default function ServerProfilePage() {
                       Adicionar Licença
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className={cn("sm:max-w-md", color)}>
+                  <DialogContent className="sm:max-w-md bg-background">
                     <DialogHeader>
                       <DialogTitle>{editingLicenca ? 'Editar Licença' : 'Registrar Nova Licença'}</DialogTitle>
                     </DialogHeader>
@@ -985,7 +985,7 @@ export default function ServerProfilePage() {
                        <div className="space-y-2">
                             <Label htmlFor="licenca-type">Tipo de Licença</Label>
                             <Select value={licencaType} onValueChange={setLicencaType}>
-                                <SelectTrigger id="licenca-type" className="bg-background/80">
+                                <SelectTrigger id="licenca-type" className="bg-muted">
                                     <SelectValue placeholder="Selecione o tipo..." />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -1009,24 +1009,24 @@ export default function ServerProfilePage() {
                                     placeholder="Descreva o tipo de licença..."
                                     value={licencaReason}
                                     onChange={(e) => setLicencaReason(e.target.value)}
-                                    className="bg-background/80"
+                                    className="bg-muted"
                                 />
                             </div>
                         )}
                         <div className="space-y-2">
                             <Label>Data de Início</Label>
                             <div className="grid grid-cols-3 gap-2">
-                                <Input type="number" placeholder="Dia" value={licencaStartDia} onChange={(e) => setLicencaStartDia(e.target.value)} maxLength={2} className="bg-background/80" />
-                                <Input type="number" placeholder="Mês" value={licencaStartMes} onChange={(e) => setLicencaStartMes(e.target.value)} maxLength={2} className="bg-background/80" />
-                                <Input type="number" placeholder="Ano" value={licencaStartAno} onChange={(e) => setLicencaStartAno(e.target.value)} maxLength={4} className="bg-background/80" />
+                                <Input type="number" placeholder="Dia" value={licencaStartDia} onChange={(e) => setLicencaStartDia(e.target.value)} maxLength={2} className="bg-muted" />
+                                <Input type="number" placeholder="Mês" value={licencaStartMes} onChange={(e) => setLicencaStartMes(e.target.value)} maxLength={2} className="bg-muted" />
+                                <Input type="number" placeholder="Ano" value={licencaStartAno} onChange={(e) => setLicencaStartAno(e.target.value)} maxLength={4} className="bg-muted" />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label>Data de Fim</Label>
                             <div className="grid grid-cols-3 gap-2">
-                                <Input type="number" placeholder="Dia" value={licencaEndDia} onChange={(e) => setLicencaEndDia(e.target.value)} maxLength={2} className="bg-background/80" />
-                                <Input type="number" placeholder="Mês" value={licencaEndMes} onChange={(e) => setLicencaEndMes(e.target.value)} maxLength={2} className="bg-background/80" />
-                                <Input type="number" placeholder="Ano" value={licencaEndAno} onChange={(e) => setLicencaEndAno(e.target.value)} maxLength={4} className="bg-background/80" />
+                                <Input type="number" placeholder="Dia" value={licencaEndDia} onChange={(e) => setLicencaEndDia(e.target.value)} maxLength={2} className="bg-muted" />
+                                <Input type="number" placeholder="Mês" value={licencaEndMes} onChange={(e) => setLicencaEndMes(e.target.value)} maxLength={2} className="bg-muted" />
+                                <Input type="number" placeholder="Ano" value={licencaEndAno} onChange={(e) => setLicencaEndAno(e.target.value)} maxLength={4} className="bg-muted" />
                             </div>
                         </div>
                        {licencaType !== 'outro' && (
@@ -1037,14 +1037,14 @@ export default function ServerProfilePage() {
                             placeholder="Adicione uma descrição ou observação..."
                             value={licencaReason}
                             onChange={(e) => setLicencaReason(e.target.value)}
-                            className="bg-background/80"
+                            className="bg-muted"
                             />
                         </div>
                        )}
                     </div>
                     <DialogFooter>
                       <Button variant="ghost" onClick={() => setIsLicencaDialogOpen(false)}>Cancelar</Button>
-                      <Button onClick={handleSaveLicenca} className="bg-background/80 text-foreground hover:bg-background/70">Salvar</Button>
+                      <Button onClick={handleSaveLicenca}>Salvar</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -1093,7 +1093,7 @@ export default function ServerProfilePage() {
                             <span className="md:hidden font-semibold">Período: </span>{`${licenca.startDate} - ${licenca.endDate}`}
                           </TableCell>
                           <TableCell className="text-muted-foreground p-0 md:p-4">
-                            <span className="md:hidden font-semibold text-foreground">Descrição: </span>{licenca.reason || '-'}
+                            <span className="md:hidden font-semibold">Descrição: </span>{licenca.reason || '-'}
                           </TableCell>
                           <TableCell className="p-0 md:p-4 mt-2 md:mt-0 text-right">
                              <div className="flex items-center justify-end gap-2">
@@ -1147,7 +1147,7 @@ export default function ServerProfilePage() {
                                 Adicionar Férias
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className={cn("sm:max-w-lg", color)}>
+                        <DialogContent className="sm:max-w-lg bg-background">
                             <DialogHeader>
                                 <DialogTitle>{editingFeria ? 'Editar Férias' : 'Registrar Novas Férias'}</DialogTitle>
                             </DialogHeader>
@@ -1160,14 +1160,14 @@ export default function ServerProfilePage() {
                                       value={feriaPeriodoAquisitivo}
                                       onChange={(e) => setFeriaPeriodoAquisitivo(e.target.value)}
                                       disabled={!!editingFeria}
-                                      className="bg-background/80"
+                                      className="bg-muted"
                                     />
                                 </div>
                                 { !editingFeria &&
                                   <div className="space-y-2">
                                       <Label htmlFor="ferias-parcelamento">Parcelamento de Férias</Label>
                                       <Select value={feriasParcelamento} onValueChange={setFeriasParcelamento}>
-                                          <SelectTrigger id="ferias-parcelamento" className="bg-background/80">
+                                          <SelectTrigger id="ferias-parcelamento" className="bg-muted">
                                               <SelectValue placeholder="Selecione o parcelamento..." />
                                           </SelectTrigger>
                                           <SelectContent>
@@ -1222,7 +1222,7 @@ export default function ServerProfilePage() {
                             </div>
                             <DialogFooter>
                                 <Button variant="ghost" onClick={() => setIsFeriaDialogOpen(false)}>Cancelar</Button>
-                                <Button onClick={handleSaveFeria} className="bg-background/80 text-foreground hover:bg-background/70">Salvar</Button>
+                                <Button onClick={handleSaveFeria}>Salvar</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>

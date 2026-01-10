@@ -678,7 +678,7 @@ const handleExportPDF = async () => {
         <div className="grid grid-cols-2 gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="text-foreground w-full">
+                <Button variant="outline" className="w-full">
                   <Share className="mr-2 h-4 w-4"/>
                   Compartilhar ({selectionCount})
                 </Button>
@@ -757,7 +757,7 @@ const handleExportPDF = async () => {
                           </Avatar>
                           <div className="flex flex-col items-center gap-1 mt-1">
                             {server.status && (
-                              <Badge variant="outline" className={cn("text-xs border-border", getStatusClass(server.status))}>
+                              <Badge variant="outline" className={cn("text-xs", getStatusClass(server.status))}>
                                 {getStatusIcon(server.status)}
                                 {server.status}
                               </Badge>
@@ -852,7 +852,7 @@ const handleExportPDF = async () => {
                             </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline" className={cn("w-fit border-border", getStatusClass(server.status))}>
+                          <Badge variant="outline" className={cn(getStatusClass(server.status))}>
                               {getStatusIcon(server.status)}
                               {server.status}
                           </Badge>
