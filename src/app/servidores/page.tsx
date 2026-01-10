@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown, CheckSquare } from 'lucide-react';
+import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown, CheckSquare, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -151,9 +151,9 @@ export default function ServerListPage() {
 
 
   const getRatingClass = (rating: number) => {
-    if (rating >= 8) return 'text-green-400';
-    if (rating >= 4) return 'text-yellow-400';
-    return 'text-red-400';
+    if (rating >= 8) return 'text-green-500';
+    if (rating >= 4) return 'text-yellow-500';
+    return 'text-red-500';
   };
 
   const getStatusClass = (status: string) => {
@@ -163,7 +163,7 @@ export default function ServerListPage() {
   };
 
   const getStatusIcon = (status: string) => {
-    if (status === 'Ativo') return <KeyRound className="w-3 h-3 mr-1" />;
+    if (status === 'Ativo') return <CheckCircle className="w-3 h-3 mr-1" />;
     if (status === 'Licença') return <AlertCircle className="w-3 h-3 mr-1" />;
     return <MinusCircle className="w-3 h-3 mr-1" />;
   }
@@ -738,7 +738,7 @@ const handleExportPDF = async () => {
                       <Card
                         key={server.id}
                         className={cn(
-                          "cursor-pointer transition-all text-white",
+                          "cursor-pointer transition-all",
                           colorClass,
                           selectedServers[server.id] && 'border-4 border-primary'
                         )}
@@ -756,7 +756,7 @@ const handleExportPDF = async () => {
                           </Avatar>
                           <div className="flex flex-col items-center gap-1 mt-1">
                             {server.status && (
-                              <Badge variant="outline" className={cn("text-xs border-white/50", getStatusClass(server.status))}>
+                              <Badge variant="outline" className={cn("text-xs border-border", getStatusClass(server.status))}>
                                 {getStatusIcon(server.status)}
                                 {server.status}
                               </Badge>
@@ -768,18 +768,18 @@ const handleExportPDF = async () => {
                           </div>
                         </div>
                         <div className="flex-1 space-y-1 overflow-hidden">
-                          <p className="font-semibold">{server.nomeCompleto}</p>
-                          <p className="text-sm text-white/80 break-words">{server.emailInstitucional}</p>
+                          <p className="font-semibold dark:text-white text-black">{server.nomeCompleto}</p>
+                          <p className="text-sm dark:text-white/80 text-black/80 break-words">{server.emailInstitucional}</p>
                           {server.funcao && (
-                            <div className="flex items-center gap-2 text-sm text-white/80">
+                            <div className="flex items-center gap-2 text-sm dark:text-white/80 text-black/80">
                               {getFuncaoIcon(server.funcao)}
                               <span>{server.funcao}</span>
                             </div>
                           )}
                            {server.telefonePrincipal && (
                               <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-2 text-base" onClick={(e) => e.stopPropagation()}>
-                                <WhatsAppIcon className="h-4 w-4 text-green-400" />
-                                <span className="text-blue-300">{server.telefonePrincipal}</span>
+                                <WhatsAppIcon className="h-4 w-4 text-green-500" />
+                                <span className="text-sm text-blue-500">{server.telefonePrincipal}</span>
                               </a>
                             )}
                         </div>
@@ -816,7 +816,7 @@ const handleExportPDF = async () => {
                     return (
                       <TableRow 
                         key={server.id} 
-                        className={cn("cursor-pointer text-white", colorClass)}
+                        className={cn("cursor-pointer", colorClass)}
                         onClick={(e) => {
                             const target = e.target as HTMLElement;
                             if (target.tagName.toLowerCase() === 'a' || target.closest('a')) {
@@ -845,14 +845,14 @@ const handleExportPDF = async () => {
                                     <AvatarFallback className="text-lg text-black">{server.initials}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <p className="font-semibold">{server.nomeCompleto}</p>
-                                    <p className="text-sm text-white/80 break-all">{server.emailInstitucional}</p>
+                                    <p className="font-semibold dark:text-white text-black">{server.nomeCompleto}</p>
+                                    <p className="text-sm dark:text-white/80 text-black/80 break-all">{server.emailInstitucional}</p>
                                 </div>
                             </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex flex-col items-start gap-1">
-                            <Badge variant="outline" className={cn("w-fit border-white/50", getStatusClass(server.status))}>
+                            <Badge variant="outline" className={cn("w-fit border-border", getStatusClass(server.status))}>
                                 {getStatusIcon(server.status)}
                                 {server.status}
                             </Badge>
@@ -863,15 +863,15 @@ const handleExportPDF = async () => {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2 text-sm text-white/80">
+                          <div className="flex items-center gap-2 text-sm dark:text-white/80 text-black/80">
                              {getFuncaoIcon(server.funcao)}
                             <span>{server.funcao}</span>
                           </div>
                         </TableCell>
                          <TableCell className="text-right pr-8 whitespace-nowrap">
                            <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base justify-end" onClick={(e) => e.stopPropagation()}>
-                              <WhatsAppIcon className="h-4 w-4 text-green-400" />
-                              <span className="text-blue-300">{server.telefonePrincipal}</span>
+                              <WhatsAppIcon className="h-4 w-4 text-green-500" />
+                              <span className="text-sm text-blue-500">{server.telefonePrincipal}</span>
                           </a>
                         </TableCell>
                       </TableRow>

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog, PenTool, GraduationCap, ArrowUpRight } from 'lucide-react';
+import { Award, KeyRound, Briefcase, MinusCircle, AlertCircle, Code, UserCog, PenTool, GraduationCap, ArrowUpRight, CheckCircle } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -99,9 +99,9 @@ export function ServerList() {
     }, [sortedServers, firestore]);
 
     const getRatingClass = (rating: number) => {
-        if (rating >= 8) return 'text-green-400';
-        if (rating >= 4) return 'text-yellow-400';
-        return 'text-red-400';
+        if (rating >= 8) return 'text-green-500';
+        if (rating >= 4) return 'text-yellow-500';
+        return 'text-red-500';
     };
 
     const getStatusClass = (status: string) => {
@@ -111,7 +111,7 @@ export function ServerList() {
     };
 
     const getStatusIcon = (status: string) => {
-      if (status === 'Ativo') return <KeyRound className="w-3 h-3 mr-1" />;
+      if (status === 'Ativo') return <CheckCircle className="w-3 h-3 mr-1" />;
       if (status === 'Licença') return <AlertCircle className="w-3 h-3 mr-1" />;
       return <MinusCircle className="w-3 h-3 mr-1" />;
     }
@@ -159,7 +159,7 @@ export function ServerList() {
                   return (
                     <Card
                       key={server.id}
-                      className={cn("cursor-pointer text-white", colorClass)}
+                      className={cn("cursor-pointer", colorClass)}
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (target.closest('a')) {
@@ -176,7 +176,7 @@ export function ServerList() {
                           </Avatar>
                            <div className="flex flex-col items-center gap-1">
                             {server.status && (
-                              <Badge variant="outline" className={cn("text-xs border-white/50", getStatusClass(server.status))}>
+                              <Badge variant="outline" className={cn("text-xs border-border", getStatusClass(server.status))}>
                                 {getStatusIcon(server.status)}
                                 {server.status}
                               </Badge>
@@ -188,18 +188,18 @@ export function ServerList() {
                           </div>
                         </div>
                         <div className="flex-1 space-y-1">
-                          <p className="font-semibold whitespace-nowrap">{server.nomeCompleto}</p>
-                          <p className="text-sm text-white/80">{server.emailInstitucional}</p>
+                          <p className="font-semibold whitespace-nowrap dark:text-white text-black">{server.nomeCompleto}</p>
+                          <p className="text-sm dark:text-white/80 text-black/80">{server.emailInstitucional}</p>
                            {server.funcao && (
-                            <div className="flex items-center gap-2 text-sm text-white/80">
+                            <div className="flex items-center gap-2 text-sm dark:text-white/80 text-black/80">
                               {getFuncaoIcon(server.funcao)}
                               <span>{server.funcao}</span>
                             </div>
                           )}
                           {server.telefonePrincipal && (
                             <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 pt-1 text-base">
-                              <WhatsAppIcon className="h-4 w-4 text-green-400" />
-                              <span className="text-blue-300">{server.telefonePrincipal}</span>
+                              <WhatsAppIcon className="h-4 w-4 text-green-500" />
+                              <span className="text-sm text-blue-500">{server.telefonePrincipal}</span>
                             </a>
                           )}
                         </div>
@@ -226,7 +226,7 @@ export function ServerList() {
                     return (
                     <TableRow
                       key={server.id}
-                      className={cn("cursor-pointer text-white", colorClass)}
+                      className={cn("cursor-pointer", colorClass)}
                       onClick={(e) => {
                         const target = e.target as HTMLElement;
                         if (target.closest('a')) {
@@ -242,13 +242,13 @@ export function ServerList() {
                                 <AvatarFallback className="text-lg text-black">{server.initials}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <p className="font-semibold">{server.nomeCompleto}</p>
-                                <p className="text-sm text-white/80">{server.emailInstitucional}</p>
+                                <p className="font-semibold dark:text-white text-black">{server.nomeCompleto}</p>
+                                <p className="text-sm dark:text-white/80 text-black/80">{server.emailInstitucional}</p>
                             </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                         <Badge variant="outline" className={cn("border-white/50", getStatusClass(server.status))}>
+                         <Badge variant="outline" className={cn("border-border", getStatusClass(server.status))}>
                             {getStatusIcon(server.status)}
                             {server.status}
                           </Badge>
@@ -260,15 +260,15 @@ export function ServerList() {
                           </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2 text-sm text-white/80">
+                        <div className="flex items-center gap-2 text-sm dark:text-white/80 text-black/80">
                            {getFuncaoIcon(server.funcao)}
                           <span>{server.funcao}</span>
                         </div>
                       </TableCell>
                        <TableCell className="whitespace-nowrap">
                          <a href={formatWhatsAppLink(server.telefonePrincipal)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base">
-                            <WhatsAppIcon className="h-4 w-4 text-green-400" />
-                            <span className="text-blue-300">{server.telefonePrincipal}</span>
+                            <WhatsAppIcon className="h-4 w-4 text-green-500" />
+                            <span className="text-sm text-blue-500">{server.telefonePrincipal}</span>
                         </a>
                       </TableCell>
                     </TableRow>
