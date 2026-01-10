@@ -26,6 +26,7 @@ export default function Home() {
       href: '/servidores?vinculo=efetivo',
       quantidade: servers?.filter(s => s.vinculo === 'Efetivo').length ?? 0,
       color: 'text-blue-500',
+      bgColor: 'bg-blue-500/10',
     },
     {
       nome: 'Terceirizado',
@@ -33,6 +34,7 @@ export default function Home() {
       href: '/servidores?vinculo=terceirizado',
       quantidade: servers?.filter(s => s.vinculo === 'Terceirizado').length ?? 0,
       color: 'text-green-500',
+      bgColor: 'bg-green-500/10',
     },
     {
       nome: 'Cedido',
@@ -40,6 +42,7 @@ export default function Home() {
       href: '/servidores?vinculo=cedido',
       quantidade: servers?.filter(s => s.vinculo === 'Cedido').length ?? 0,
       color: 'text-purple-500',
+      bgColor: 'bg-purple-500/10',
     },
     {
       nome: 'Contratado',
@@ -47,6 +50,7 @@ export default function Home() {
       href: '/servidores?vinculo=contratado',
       quantidade: servers?.filter(s => s.vinculo === 'Contratado').length ?? 0,
       color: 'text-orange-500',
+      bgColor: 'bg-orange-500/10',
     },
     {
       nome: 'Comissionado',
@@ -54,6 +58,7 @@ export default function Home() {
       href: '/servidores?vinculo=comissionado',
       quantidade: servers?.filter(s => s.vinculo === 'Comissionado').length ?? 0,
       color: 'text-indigo-500',
+      bgColor: 'bg-indigo-500/10',
     },
   ];
 
@@ -85,9 +90,9 @@ export default function Home() {
             <AccordionContent>
               <CardContent>
                  <p className="text-xs text-muted-foreground mb-4 ml-2">Detalhes por vínculo:</p>
-                 <div className="space-y-4">
+                 <div className="space-y-2">
                   {vinculos.map((vinculo) => (
-                    <Link href={vinculo.href} key={vinculo.nome} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 cursor-pointer">
+                    <Link href={vinculo.href} key={vinculo.nome} className={`flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 cursor-pointer ${vinculo.bgColor}`}>
                       <div className="flex items-center gap-4">
                         <vinculo.icon className={`h-5 w-5 ${vinculo.color}`} />
                         <span className="font-medium">{vinculo.nome}</span>
