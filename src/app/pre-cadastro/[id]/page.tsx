@@ -22,7 +22,7 @@ type PreCadastro = {
 };
 
 export default function PreCadastroPage({ params }: { params: { id: string } }) {
-    const { id } = params;
+    const id = params.id;
     const { toast } = useToast();
     const firestore = useFirestore();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -748,3 +748,5 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
     </div>
   )
 }
+
+    
