@@ -796,7 +796,7 @@ export default function ServerProfilePage() {
           <TabsContent value="ficha" className="mt-0 flex-1 flex flex-col md:mt-0 p-2 border border-t-0 rounded-b-lg">
             <Accordion type="single" collapsible className="w-full space-y-2">
               {fichaItems.map((item, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className={cn("border border-border rounded-lg bg-card bg-white/60", `dark:${color}`)}>
+                <AccordionItem key={index} value={`item-${index}`} className={cn("border border-border rounded-lg bg-white/60", `dark:${color}`)}>
                   <AccordionTrigger className="p-4 hover:no-underline">
                     <div className="flex items-center gap-3">
                       <item.icon className="h-5 w-5 text-primary" />
@@ -826,7 +826,7 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isFaltaDialogOpen} onOpenChange={setIsFaltaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" onClick={() => setEditingFalta(null)} className={cn(color)}>
+                    <Button size="sm" onClick={() => setEditingFalta(null)} className="bg-blue-500 hover:bg-blue-600 text-white">
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Falta
                     </Button>
@@ -972,7 +972,7 @@ export default function ServerProfilePage() {
                 </div>
                  <Dialog open={isLicencaDialogOpen} onOpenChange={setIsLicencaDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" onClick={() => setEditingLicenca(null)} className={cn(color)}>
+                    <Button size="sm" onClick={() => setEditingLicenca(null)} className="bg-blue-500 hover:bg-blue-600 text-white">
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Adicionar Licença
                     </Button>
@@ -1142,7 +1142,7 @@ export default function ServerProfilePage() {
                     </div>
                     <Dialog open={isFeriaDialogOpen} onOpenChange={setIsFeriaDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button size="sm" onClick={() => setEditingFeria(null)} className={cn(color)}>
+                            <Button size="sm" onClick={() => setEditingFeria(null)} className="bg-blue-500 hover:bg-blue-600 text-white">
                                 <PlusCircle className="h-4 w-4 mr-2" />
                                 Adicionar Férias
                             </Button>
@@ -1312,4 +1312,5 @@ export default function ServerProfilePage() {
     </div>
   );
 }
+
 
