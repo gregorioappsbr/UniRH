@@ -25,6 +25,7 @@ import { collection, deleteDoc, doc, getDocs, query, writeBatch, addDoc, serverT
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { getServerColor } from '@/lib/color-utils';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 const statusOptions = ['Ativo', 'Inativo', 'Licença'];
 const vinculoOptions = ['Efetivo', 'Terceirizado', 'Cedido', 'Contratado', 'Comissionado'];
@@ -640,7 +641,8 @@ const handleExportPDF = async () => {
   };
 
    const handleCopyLink = () => {
-    navigator.clipboard.writeText(generatedLink).then(() => {
+    const textToCopy = `Por favor, preencha o formulário de registro de servidor: ${generatedLink}`;
+    navigator.clipboard.writeText(textToCopy).then(() => {
       toast({
         title: 'Link copiado!',
         description: 'O link de pré-cadastro foi copiado para a área de transferência.',
@@ -810,13 +812,20 @@ const handleExportPDF = async () => {
               Copie e envie este link para o novo servidor. O link é de uso único.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="relative">
-            <Input value={generatedLink} readOnly />
-            <Button size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={handleCopyLink}>
-              <Copy className="h-4 w-4"/>
-            </Button>
+          <div className="space-y-2">
+             <Label htmlFor="link-text">Mensagem para compartilhar</Label>
+            <Textarea 
+              id="link-text"
+              readOnly 
+              value={`Por favor, preencha o formulário de registro de servidor: ${generatedLink}`} 
+              rows={3}
+            />
           </div>
           <AlertDialogFooter>
+             <Button variant="secondary" onClick={handleCopyLink}>
+              <Copy className="mr-2 h-4 w-4"/>
+              Copiar
+            </Button>
             <AlertDialogCancel>Fechar</AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
