@@ -18,7 +18,7 @@ import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
 import { doc, collection, addDoc, deleteDoc, serverTimestamp, setDoc, writeBatch, getDocs } from 'firebase/firestore';
 import { useState, useMemo, useEffect } from 'react';
@@ -119,8 +119,9 @@ type FeriasPeriodo = {
   endAno: string;
 };
 
-export default function ServerProfilePage({ params }: { params: { id: string } }) {
-    const id = params.id;
+export default function ServerProfilePage() {
+    const params = useParams();
+    const id = params.id as string;
     const searchParams = useSearchParams();
     const router = useRouter();
     const color = searchParams.get('color') || 'bg-card';
