@@ -692,12 +692,12 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
                   <DropdownMenuItem onSelect={() => router.push('/servidores/novo')}>
-                    <FileSignature className="mr-2 h-4 w-4" />
+                    <FileSignature className="mr-2 h-4 w-4 text-blue-500" />
                     <span>Adicionar Manualmente</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                    <DropdownMenuItem onSelect={() => setIsShareDialogOpen(true)}>
-                    <Link2 className="mr-2 h-4 w-4" />
+                    <Link2 className="mr-2 h-4 w-4 text-green-500" />
                     <span>Compartilhar Link de Cadastro</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
