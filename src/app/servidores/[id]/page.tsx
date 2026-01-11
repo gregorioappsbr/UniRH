@@ -678,7 +678,7 @@ export default function ServerProfilePage() {
           ...(server.vinculo === 'Efetivo' ? [{ label: "Matrícula", value: server.matricula }] : []),
           { label: "Cargo", value: server.cargo },
           { label: "Função", value: server.funcao },
-          { label: "Data de Início", value: server.dataInicio },
+          { label: "Início de Exercício", value: server.dataInicio },
           { label: "Possui DGA?", value: server.possuiDGA },
           ...(server.possuiDGA === 'sim' ? [{ label: "Especificação DGA", value: server.especificacaoDGA }] : []),
           { label: "Setor / Lotação", value: server.setor },
@@ -1375,3 +1375,5 @@ export default function ServerProfilePage() {
     </div>
   );
 }
+
+    

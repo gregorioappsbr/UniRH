@@ -1,3 +1,4 @@
+
 'use client';
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -478,7 +479,7 @@ export default function CadastroServidorPage() {
                         <Input id="funcao" placeholder="Ex: Coordenador de Curso" {...register("funcao")} className="bg-muted" />
                     </div>
                     <div className="space-y-2 w-[90%] md:w-full">
-                        <Label htmlFor="data-inicio">Data de Início</Label>
+                        <Label htmlFor="data-inicio">Início de Exercício</Label>
                         <Input id="data-inicio" type="text" placeholder="dd/mm/aaaa" {...register("dataInicio")} onChange={applyMask(maskDate)} maxLength={10} className="bg-muted" />
                     </div>
                     <div className="space-y-2">
@@ -723,5 +724,7 @@ export default function CadastroServidorPage() {
     </div>
   );
 }
+
+    
 
     
