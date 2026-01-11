@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { BottomNav } from './bottom-nav';
 import { ScrollText } from 'lucide-react';
 
-const publicPaths = ['/login', '/signup', '/pre-cadastro'];
+const publicPaths = ['/login', '/signup', '/servidores/cadastro'];
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
