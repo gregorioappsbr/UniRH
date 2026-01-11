@@ -629,6 +629,9 @@ const handleExportPDF = async () => {
 
 
 const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') => {
+    setIsShareDialogOpen(false); // Close dialog immediately
+    await new Promise(resolve => setTimeout(resolve, 100)); // Short delay to allow UI to update
+
     const textToShare = `${customShareMessage}\n${cadastroLink}`;
 
     if (shareOption === 'native' && navigator.share) {
@@ -637,7 +640,6 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
                 title: 'Formulário de Cadastro',
                 text: textToShare,
             });
-            setIsShareDialogOpen(false);
             return;
         } catch (error) {
             if (!(error instanceof DOMException && error.name === 'AbortError')) {
@@ -663,8 +665,12 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
             description: 'A mensagem e o link de cadastro foram copiados.',
         });
     }
-    setIsShareDialogOpen(false);
 };
+
+const openShareDialog = () => {
+  setCustomShareMessage('Por favor, preencha o formulário de registro de servidor:');
+  setIsShareDialogOpen(true);
+}
 
 
   return (
@@ -696,7 +702,7 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
                     <span>Adicionar Manualmente</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                   <DropdownMenuItem onSelect={() => setIsShareDialogOpen(true)}>
+                   <DropdownMenuItem onSelect={openShareDialog}>
                     <Link2 className="mr-2 h-4 w-4 text-green-500" />
                     <span>Compartilhar Link de Cadastro</span>
                   </DropdownMenuItem>
@@ -1024,3 +1030,5 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
     </div>
   );
 }
+
+    
