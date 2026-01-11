@@ -1,4 +1,5 @@
 
+
 'use client'
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
@@ -64,10 +65,8 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
             const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
             const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
             
-            const serverCollectionRef = collection(firestore, 'servers');
-            await addDoc(serverCollectionRef, newServer);
+            await addDoc(collection(firestore, 'servers'), newServer);
 
-            // After successfully creating the server, update the link status.
             if (preCadastroRef) {
                 await setDoc(preCadastroRef, { status: 'completed' }, { merge: true });
             }
@@ -753,3 +752,4 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
     </div>
   );
 }
+
