@@ -6,27 +6,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { AuthGuard } from '@/components/AuthGuard';
 import { useEffect } from 'react';
-import { BottomNav } from '@/components/bottom-nav';
-import { usePathname } from 'next/navigation';
-import { useUser } from '@/firebase';
-
-function AppLayout({ children }: { children: React.ReactNode }) {
-  const { user } = useUser();
-  const pathname = usePathname();
-  const publicPaths = ['/login', '/signup', '/pre-cadastro'];
-  const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
-
-  return (
-    <AuthGuard>
-      <div className="relative flex flex-col min-h-screen">
-        <main className="flex-1 pb-20">
-          {children}
-        </main>
-        {!isPublicPath && user && <BottomNav />}
-      </div>
-    </AuthGuard>
-  );
-}
 
 export default function RootLayout({
   children,
@@ -61,9 +40,9 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseClientProvider>
-          <AppLayout>
+          <AuthGuard>
             {children}
-          </AppLayout>
+          </AuthGuard>
         </FirebaseClientProvider>
         <Toaster />
       </body>

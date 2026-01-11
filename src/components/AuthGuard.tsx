@@ -9,6 +9,18 @@ import { ScrollText } from 'lucide-react';
 
 const publicPaths = ['/login', '/signup', '/servidores/cadastro'];
 
+// This component contains the main layout of the app with the bottom nav
+function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="relative flex flex-col min-h-screen">
+      <main className="flex-1 pb-20">
+        {children}
+      </main>
+      <BottomNav />
+    </div>
+  );
+}
+
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
@@ -20,8 +32,6 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     if (!isUserLoading) {
       if (!user && !isPublicPath) {
         router.push('/login');
-      } else if (user && pathname === '/login') { // Only redirect from /login if logged in
-        router.push('/');
       }
     }
   }, [user, isUserLoading, router, pathname, isPublicPath]);
@@ -45,14 +55,14 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
             </div>
         );
     }
-    
-    if (user && pathname === '/login') {
-        return null; // Don't render anything while redirecting
-    }
+
+  if (isPublicPath) {
+    return <>{children}</>;
+  }
 
   return (
-    <>
+    <AppLayout>
       {children}
-    </>
+    </AppLayout>
   );
 }
