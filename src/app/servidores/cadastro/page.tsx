@@ -52,48 +52,36 @@ export default function CadastroServidorPage() {
             toast({
               variant: "destructive",
               title: `Erro de conexão`,
-              description: `Não foi possível conectar ao banco de dados.`,
+              description: `Não foi possível conectar ao banco de dados. Tente novamente.`,
             });
             setIsSubmitting(false);
             return;
         }
         
-        // Safely generate initials or a fallback
         const initials = data.nomeCompleto ? data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() : '?';
         const serverPayload = { ...data, initials };
 
         try {
             const serversRef = collection(firestore, "servers");
 
+            // Only check for existing user if CPF is provided
             if (data.cpf) {
                 const q = query(serversRef, where("cpf", "==", data.cpf), limit(1));
                 const querySnapshot = await getDocs(q);
 
                 if (!querySnapshot.empty) {
-                    // Update existing server
+                    // Update existing server if CPF matches
                     const existingServerDoc = querySnapshot.docs[0];
                     await setDoc(existingServerDoc.ref, serverPayload, { merge: true });
-                     toast({
-                        title: "Cadastro Atualizado!",
-                        description: "Seus dados foram atualizados com sucesso.",
-                    });
                 } else {
-                    // Add new server
+                    // Add new server if CPF is new
                     const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
                     await addDoc(serversRef, newServer);
-                     toast({
-                        title: "Cadastro Enviado!",
-                        description: "Seu cadastro foi enviado com sucesso.",
-                    });
                 }
             } else {
-                 // Add new server if no CPF
+                 // Add new server if no CPF is provided
                  const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
                  await addDoc(serversRef, newServer);
-                  toast({
-                    title: "Cadastro Enviado!",
-                    description: "Seu cadastro foi enviado com sucesso.",
-                });
             }
             
             router.push('/servidores/cadastro/sucesso');
@@ -103,7 +91,7 @@ export default function CadastroServidorPage() {
           toast({
               variant: "destructive",
               title: `Erro ao enviar`,
-              description: `Não foi possível enviar seu cadastro. Tente novamente.`,
+              description: `Não foi possível enviar seu cadastro. Por favor, tente novamente.`,
           });
         } finally {
             setIsSubmitting(false);
@@ -755,3 +743,5 @@ export default function CadastroServidorPage() {
     </div>
   );
 }
+
+    
