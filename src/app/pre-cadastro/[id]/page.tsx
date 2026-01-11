@@ -65,6 +65,7 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
             const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
             await addDoc(collection(firestore, 'servers'), newServer);
             
+            // Mark the pre-registration link as completed
             if (preCadastroRef) {
                 await setDoc(preCadastroRef, { status: 'completed' }, { merge: true });
             }
@@ -750,5 +751,3 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
     </div>
   );
 }
-
-    

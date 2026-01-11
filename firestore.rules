@@ -3,9 +3,18 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    
     // Allow anyone to read from the pre-registration collection to verify link status
+    // and allow writing to update the status once completed.
     match /preCadastros/{preCadastroId} {
       allow read, write; 
+    }
+
+    // Allow anyone to create a new server document via the pre-registration form.
+    // Disallow reading, updating, or deleting for unauthenticated users.
+    match /servers/{serverId} {
+      allow create;
+      allow read, update, delete: if request.auth != null;
     }
 
     // Secure all other documents to only be accessible by authenticated users.
