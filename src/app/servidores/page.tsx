@@ -698,55 +698,13 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
 
       {selectionCount === 0 ? (
         <>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2">
             <Button asChild className="w-full bg-blue-500 hover:bg-blue-600 text-white">
               <Link href="/servidores/novo">
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Adicionar Servidor
               </Link>
             </Button>
-             <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
-              <DialogTrigger asChild>
-                  <Button variant="outline" className="w-full" onClick={handleOpenShareDialog}>
-                      <Link2 className="mr-2 h-4 w-4 text-yellow-500" />
-                      Formulário
-                  </Button>
-              </DialogTrigger>
-              <DialogContent>
-                  <DialogHeader>
-                      <DialogTitle>Compartilhar Formulário de Cadastro</DialogTitle>
-                      <DialogDescription>
-                          Envie este link para que novos servidores possam preencher seus próprios dados. O link é de uso único.
-                      </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                      <div className="space-y-2">
-                          <Label htmlFor="custom-message">Mensagem Personalizada</Label>
-                          <Textarea 
-                              id="custom-message"
-                              value={customShareMessage}
-                              onChange={(e) => setCustomShareMessage(e.target.value)}
-                              placeholder="Insira uma mensagem para acompanhar o link..."
-                          />
-                      </div>
-                      <div className="space-y-2">
-                          <Label htmlFor="share-link">Link de Pré-Cadastro</Label>
-                          <Input id="share-link" readOnly value={preCadastroLink} />
-                      </div>
-                  </div>
-                  <DialogFooter className="flex-col sm:flex-col gap-2">
-                      <Button className="w-full" onClick={() => handleShareAction('copy')}>
-                          <Copy className="mr-2 h-4 w-4" /> Copiar Mensagem e Link
-                      </Button>
-                      <Button className="w-full bg-green-500 hover:bg-green-600" onClick={() => handleShareAction('whatsapp')}>
-                          <WhatsAppIcon className="mr-2 h-4 w-4" /> Enviar no WhatsApp
-                      </Button>
-                       <Button variant="secondary" className="w-full" onClick={() => handleShareAction('native')}>
-                          <Share className="mr-2 h-4 w-4" /> Mais Opções
-                      </Button>
-                  </DialogFooter>
-              </DialogContent>
-            </Dialog>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
@@ -1030,6 +988,4 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
     </div>
   );
 }
-
-
 
