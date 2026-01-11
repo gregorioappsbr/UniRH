@@ -150,16 +150,15 @@ export default function CadastroServidorPage() {
                         <Input id="nome-social" placeholder="Ex: João" {...register("nomeSocial")} className="bg-muted" />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="cpf">CPF <span className="text-red-500">*</span></Label>
+                        <Label htmlFor="cpf">CPF</Label>
                         <Input 
                             id="cpf" 
                             placeholder="000.000.000-00" 
-                            {...register("cpf", { required: "O CPF é obrigatório." })} 
+                            {...register("cpf")} 
                             onChange={applyMask(maskCPF)} 
                             maxLength={14} 
                             className="bg-muted" 
                         />
-                        {errors.cpf && <p className="text-red-500 text-sm mt-1">{errors.cpf.message as string}</p>}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="rg">RG</Label>
