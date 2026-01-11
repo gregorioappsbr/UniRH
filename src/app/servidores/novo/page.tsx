@@ -71,7 +71,7 @@ export default function NewServerPage() {
         setAvatarPreview(result);
         setValue('avatarUrl', result);
       };
-      reader.readDataURL(file);
+      reader.readAsDataURL(file);
     }
   };
 

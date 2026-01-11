@@ -57,25 +57,29 @@ export default function CadastroServidorPage() {
             setIsSubmitting(false);
             return;
         }
-
-        const initials = data.nomeCompleto ? data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() : '?';
-        const serverPayload = { ...data, initials };
         
+        // Safely generate initials or a fallback
+        const initials = data.nomeCompleto?.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() || '?';
+        const serverPayload = { ...data, initials };
+
         try {
+            const serversRef = collection(firestore, "servers");
+
             if (data.cpf) {
-                const serversRef = collection(firestore, "servers");
                 const q = query(serversRef, where("cpf", "==", data.cpf), limit(1));
                 const querySnapshot = await getDocs(q);
 
                 if (!querySnapshot.empty) {
+                    // Update existing server
                     const existingServerDoc = querySnapshot.docs[0];
                     await setDoc(existingServerDoc.ref, serverPayload, { merge: true });
                 } else {
+                    // Add new server
                     const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
                     await addDoc(serversRef, newServer);
                 }
             } else {
-                 const serversRef = collection(firestore, "servers");
+                 // Add new server if no CPF
                  const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
                  await addDoc(serversRef, newServer);
             }
@@ -150,15 +154,18 @@ export default function CadastroServidorPage() {
                         <Input id="nome-social" placeholder="Ex: João" {...register("nomeSocial")} className="bg-muted" />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="cpf">CPF</Label>
+                        <Label htmlFor="cpf" className="flex items-center">
+                          CPF <span className="text-red-500 ml-1">*</span>
+                        </Label>
                         <Input 
                             id="cpf" 
                             placeholder="000.000.000-00" 
-                            {...register("cpf")} 
+                            {...register("cpf", { required: "O CPF é obrigatório." })} 
                             onChange={applyMask(maskCPF)} 
                             maxLength={14} 
                             className="bg-muted" 
                         />
+                        {errors.cpf && <p className="text-sm text-red-500 mt-1">{errors.cpf.message as string}</p>}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="rg">RG</Label>
@@ -735,3 +742,5 @@ export default function CadastroServidorPage() {
     </div>
   );
 }
+
+    
