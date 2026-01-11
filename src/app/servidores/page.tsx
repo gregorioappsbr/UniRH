@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
@@ -246,7 +247,7 @@ export default function ServerListPage() {
         if (server.matricula) details += `*MATRÍCULA:* ${server.matricula}\n`;
         details += `*CARGO:* ${server.cargo.toUpperCase()}\n`;
         details += `*FUNÇÃO:* ${server.funcao.toUpperCase()}\n`;
-        details += `*DATA DE INÍCIO:* ${server.dataInicio}\n`;
+        details += `*Início de Exercício:* ${server.dataInicio}\n`;
         details += `*POSSUI DGA?:* ${server.possuiDGA}\n`;
         if (server.especificacaoDGA) details += `*ESPECIFICAÇÃO DGA:* ${server.especificacaoDGA.toUpperCase()}\n`;
         details += `*SETOR:* ${server.setor.toUpperCase()}\n`;
@@ -321,7 +322,7 @@ export default function ServerListPage() {
       if (server.matricula) details += `Matrícula: ${server.matricula}\n`;
       details += `Cargo: ${server.cargo}\n`;
       details += `Função: ${server.funcao}\n`;
-      details += `Data de Início: ${server.dataInicio}\n`;
+      details += `Início de Exercício: ${server.dataInicio}\n`;
       details += `Possui DGA?: ${server.possuiDGA}\n`;
       if (server.especificacaoDGA) details += `Especificação DGA: ${server.especificacaoDGA}\n`;
       details += `Setor: ${server.setor}\n`;
@@ -557,7 +558,7 @@ const handleExportPDF = async () => {
         y = drawRow(y, 'Matrícula', server.matricula);
         y = drawRow(y, 'Cargo', server.cargo);
         y = drawRow(y, 'Função', server.funcao);
-        y = drawRow(y, 'Data de Início', server.dataInicio);
+        y = drawRow(y, 'Início de Exercício', server.dataInicio);
         y = drawRow(y, 'Possui DGA?', server.possuiDGA);
         y = drawRow(y, 'Especificação DGA', server.especificacaoDGA);
         y = drawRow(y, 'Setor', server.setor);
@@ -686,7 +687,7 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
                 <DropdownMenuTrigger asChild>
                   <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white">
                     <UserPlus className="mr-2 h-4 w-4" />
-                    Adicionar Servidor
+                    Adicionar Novo Servidor
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
@@ -695,7 +696,7 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
                     <span>Adicionar Manualmente</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onSelect={() => setIsShareDialogOpen(true)}>
+                   <DropdownMenuItem onSelect={() => setIsShareDialogOpen(true)}>
                     <Link2 className="mr-2 h-4 w-4" />
                     <span>Compartilhar Link de Cadastro</span>
                   </DropdownMenuItem>
