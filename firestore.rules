@@ -7,13 +7,6 @@ service cloud.firestore {
     // PUBLIC-FACING RULES (no auth required)
     // ======================================
 
-    // Allow anyone to read/write to pre-registration links.
-    // This is necessary for the pre-registration flow to work.
-    // Security is handled by the non-guessable, single-use nature of the IDs.
-    match /preCadastros/{preCadastroId} {
-      allow read, write;
-    }
-
     // Allow anyone to CREATE a new server via the pre-registration form.
     // Other operations on servers require authentication (see below).
     match /servers/{serverId} {
@@ -40,3 +33,5 @@ service cloud.firestore {
     }
   }
 }
+
+    

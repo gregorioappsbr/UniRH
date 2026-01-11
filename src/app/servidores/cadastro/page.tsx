@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/componentsui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
@@ -39,7 +39,7 @@ export default function CadastroServidorPage() {
           setAvatarPreview(result);
           setValue('avatarUrl', result);
         };
-        reader.readDataURL(file);
+        reader.readAsDataURL(file);
       }
     };
 
@@ -723,3 +723,5 @@ export default function CadastroServidorPage() {
     </div>
   );
 }
+
+    

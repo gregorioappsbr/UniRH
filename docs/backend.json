@@ -44,24 +44,6 @@
         "highlightColor",
         "font"
       ]
-    },
-    "PreCadastro": {
-      "title": "PreCadastro",
-      "type": "object",
-      "description": "Represents a one-time pre-registration link for a new server.",
-      "properties": {
-        "status": {
-          "type": "string",
-          "description": "The status of the pre-registration link.",
-          "enum": ["pending", "completed"]
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The timestamp when the pre-registration link was created."
-        }
-      },
-      "required": ["status", "createdAt"]
     }
   },
   "auth": {
@@ -91,18 +73,10 @@
             }
           ]
         }
-      },
-      {
-        "path": "/preCadastros/{preCadastroId}",
-        "definition": {
-          "entityName": "PreCadastro",
-          "schema": {
-            "$ref": "#/backend/entities/PreCadastro"
-          },
-          "description": "Stores one-time use pre-registration links for new servers."
-        }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to securely store application details created by users. Each user has their own collection of applications, providing a clear ownership model and simplified security rules. The `applications` subcollection under each user document ensures that only the user can access and modify their own application data. This design adheres to the principle of Authorization Independence by avoiding dependencies on parent document data within the rules. All data required to authorize a request is available within the application document itself, allowing for atomic operations and easier debugging. This design supports secure list operations (QAPs) by scoping application data to individual users. The `preCadastros` collection is added to manage one-time pre-registration links."
+    "reasoning": "The Firestore data structure is designed to securely store application details created by users. Each user has their own collection of applications, providing a clear ownership model and simplified security rules. The `applications` subcollection under each user document ensures that only the user can access and modify their own application data. This design adheres to the principle of Authorization Independence by avoiding dependencies on parent document data within the rules. All data required to authorize a request is available within the application document itself, allowing for atomic operations and easier debugging. This design supports secure list operations (QAPs) by scoping application data to individual users."
   }
 }
+
+    
