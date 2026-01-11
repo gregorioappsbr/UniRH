@@ -18,9 +18,9 @@ import { ArrowLeft, Mail, Type, Building, Edit, Trash2, Award, CheckCircle, User
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useDoc, useFirestore, useMemoFirebase, useCollection } from '@/firebase';
-import { doc, collection, addDoc, deleteDoc, serverTimestamp, setDoc, writeBatch } from 'firebase/firestore';
+import { doc, collection, addDoc, deleteDoc, serverTimestamp, setDoc, writeBatch, getDocs } from 'firebase/firestore';
 import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -122,6 +122,7 @@ type FeriasPeriodo = {
 export default function ServerProfilePage({ params }: { params: { id: string } }) {
     const { id } = params;
     const searchParams = useSearchParams();
+    const router = useRouter();
     const color = searchParams.get('color') || 'bg-card';
     const firestore = useFirestore();
     const { toast } = useToast();
@@ -498,6 +499,46 @@ export default function ServerProfilePage({ params }: { params: { id: string } }
             toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível remover o registro de férias.' });
         }
     };
+    
+    const handleDeleteServer = async () => {
+        if (!firestore || !id) return;
+
+        try {
+            const batch = writeBatch(firestore);
+            
+            // Subcollections to delete
+            const subcollections = ['faltas', 'licencas', 'ferias'];
+
+            // Delete all documents in each subcollection
+            for (const sub of subcollections) {
+                const subcollectionRef = collection(firestore, 'servers', id, sub);
+                const snapshot = await getDocs(subcollectionRef);
+                snapshot.forEach((doc) => {
+                    batch.delete(doc.ref);
+                });
+            }
+
+            // Delete the main server document
+            const serverDocRef = doc(firestore, 'servers', id);
+            batch.delete(serverDocRef);
+
+            await batch.commit();
+
+            toast({
+                title: 'Servidor Excluído!',
+                description: 'O servidor e todos os seus dados foram removidos.',
+            });
+
+            router.push('/servidores');
+        } catch (error) {
+            console.error("Erro ao excluir servidor:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Erro ao Excluir',
+                description: 'Não foi possível remover o servidor. Tente novamente.',
+            });
+        }
+    };
 
 
     const filteredFaltas = useMemo(() => {
@@ -780,10 +821,28 @@ export default function ServerProfilePage({ params }: { params: { id: string } }
                 Editar Perfil
               </Link>
             </Button>
-            <Button variant="destructive" className="bg-red-500/80 hover:bg-red-500">
-              <Trash2 className="h-4 w-4 mr-2" />
-              Excluir
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                  <Button variant="destructive" className="bg-red-500/80 hover:bg-red-500">
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Excluir
+                  </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Essa ação não pode ser desfeita. Isso excluirá permanentemente o servidor e todos os seus dados associados (faltas, licenças, etc).
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteServer} className="bg-red-600 hover:bg-red-700">
+                    Excluir
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </CardContent>
       </Card>
