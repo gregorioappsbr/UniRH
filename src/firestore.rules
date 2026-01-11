@@ -7,17 +7,10 @@ service cloud.firestore {
     // PUBLIC-FACING RULES (no auth required)
     // ======================================
 
-    // Allow anyone to read/write to pre-registration links.
-    // This is necessary for the pre-registration flow to work.
-    // Security is handled by the non-guessable, single-use nature of the IDs.
-    match /preCadastros/{preCadastroId} {
-      allow read, write;
-    }
-
-    // Allow anyone to CREATE a new server via the pre-registration form.
-    // Other operations on servers require authentication (see below).
+    // Allow anyone to CREATE or UPDATE a server via the public registration form.
+    // Update is needed for the logic that avoids duplicate entries based on CPF.
     match /servers/{serverId} {
-      allow create;
+      allow create, update;
     }
 
     // AUTHENTICATED-ONLY RULES
@@ -28,10 +21,10 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // All other operations on servers (read, update, delete) require authentication.
-    // This also secures all server sub-collections (faltas, licencas, etc.).
+    // Authenticated users can read and delete servers and their sub-collections.
+    // Create/update is handled by the public rule above.
     match /servers/{serverId}/{allPaths=**} {
-      allow read, update, delete: if request.auth != null;
+      allow read, delete: if request.auth != null;
     }
     
     // Notes are only accessible by authenticated users.

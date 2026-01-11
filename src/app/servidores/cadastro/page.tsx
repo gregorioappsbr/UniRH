@@ -45,37 +45,38 @@ export default function CadastroServidorPage() {
     };
 
     const onSubmit = async (data: any) => {
-        if (!firestore) return;
+        if (!firestore || !data.cpf) {
+             toast({
+              variant: "destructive",
+              title: `Erro`,
+              description: `O CPF é obrigatório.`,
+          });
+            return;
+        }
         setIsSubmitting(true);
         
         try {
             const serversRef = collection(firestore, "servers");
-            let existingServerDoc = null;
-
-            // Only check for duplicates if CPF is provided
-            if (data.cpf) {
-                const q = query(serversRef, where("cpf", "==", data.cpf), limit(1));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    existingServerDoc = querySnapshot.docs[0];
-                }
-            }
+            const q = query(serversRef, where("cpf", "==", data.cpf), limit(1));
+            const querySnapshot = await getDocs(q);
 
             const initials = data.nomeCompleto ? data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() : '?';
+            const serverPayload = { ...data, initials };
 
-            if (existingServerDoc) {
-                // Update existing server
-                await setDoc(existingServerDoc.ref, { ...data, initials }, { merge: true });
+            if (!querySnapshot.empty) {
+                // Found existing server, update it.
+                const existingServerDoc = querySnapshot.docs[0];
+                await setDoc(existingServerDoc.ref, serverPayload, { merge: true });
                 toast({
                     title: "Cadastro Atualizado!",
-                    description: "Já encontramos um servidor com este CPF. Seus dados foram atualizados.",
+                    description: "Seus dados foram atualizados com sucesso.",
                 });
             } else {
-                // Create new server
-                const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
+                // No existing server, create a new one.
+                const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
                 await addDoc(serversRef, newServer);
                 toast({
-                    title: "Cadastro enviado!",
+                    title: "Cadastro Enviado!",
                     description: "Seus dados foram enviados com sucesso. Obrigado!",
                 });
             }
@@ -87,9 +88,7 @@ export default function CadastroServidorPage() {
               description: `Não foi possível enviar seu cadastro. Tente novamente.`,
           });
         } finally {
-            // Keep submitting state to prevent re-submission.
-            // Page needs to be reloaded for a new entry.
-            // setIsSubmitting(false); // Can be enabled if re-submission is desired
+            setIsSubmitting(true); // Keep button disabled to prevent multiple submissions
         }
     };
 
@@ -736,5 +735,3 @@ export default function CadastroServidorPage() {
     </div>
   );
 }
-
-    
