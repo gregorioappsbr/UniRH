@@ -1,40 +1,25 @@
-
-
-'use client'
+'use client';
 import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/componentsui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { Save, ServerCrash, ScrollText } from "lucide-react"
-import React, { useEffect, useState } from "react"
+import { Save, ScrollText } from "lucide-react"
+import React, { useState } from "react"
 import { useForm, Controller } from "react-hook-form";
 import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
-import { useDoc, useFirestore, useMemoFirebase } from "@/firebase"
-import { collection, addDoc, doc, setDoc } from "firebase/firestore"
+import { useFirestore } from "@/firebase"
+import { collection, addDoc, doc, setDoc, getDocs, query, where, limit } from "firebase/firestore"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-type PreCadastro = {
-  status: 'pending' | 'completed';
-  createdAt: any;
-};
-
-export default function PreCadastroPage({ params }: { params: { id: string } }) {
-    const { id } = params;
+export default function CadastroServidorPage() {
     const { toast } = useToast();
     const firestore = useFirestore();
     const [isSubmitting, setIsSubmitting] = useState(false);
     
-    const preCadastroRef = useMemoFirebase(() => {
-        if (!firestore || !id) return null;
-        return doc(firestore, 'preCadastros', id);
-    }, [firestore, id]);
-
-    const { data: preCadastroData, isLoading: isLoadingPreCadastro } = useDoc<PreCadastro>(preCadastroRef);
-
     const { register, handleSubmit, watch, control, setValue } = useForm();
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
@@ -62,75 +47,60 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
         if (!firestore) return;
         setIsSubmitting(true);
         try {
-            const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
-            const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
-            
-            await addDoc(collection(firestore, 'servers'), newServer);
+            // Verifica se um servidor com o mesmo CPF já existe
+            const serversRef = collection(firestore, "servers");
+            const q = query(serversRef, where("cpf", "==", data.cpf), limit(1));
+            const querySnapshot = await getDocs(q);
 
-            if (preCadastroRef) {
-                // Mark the link as completed
-                await setDoc(preCadastroRef, { status: 'completed' }, { merge: true });
+            if (!querySnapshot.empty) {
+                // Encontrou um servidor com o mesmo CPF, atualiza o existente.
+                const existingServerDoc = querySnapshot.docs[0];
+                await setDoc(existingServerDoc.ref, data, { merge: true });
+                toast({
+                    title: "Cadastro Atualizado!",
+                    description: "Já encontramos um servidor com este CPF. Seus dados foram atualizados.",
+                });
+            } else {
+                // Não encontrou duplicata, cria um novo servidor.
+                const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
+                const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
+                await addDoc(collection(firestore, 'servers'), newServer);
+                toast({
+                    title: "Cadastro enviado!",
+                    description: "Seus dados foram enviados com sucesso. Obrigado!",
+                });
             }
-
-            toast({
-                title: "Cadastro enviado!",
-                description: "Seus dados foram enviados com sucesso. Obrigado!",
-            });
+             // Idealmente, redirecionar ou mostrar uma mensagem de sucesso permanente
+             // Como não temos um router aqui, vamos apenas desabilitar o botão.
+             // Em uma app real, um redirecionamento seria melhor.
+             // router.push('/sucesso'); 
 
         } catch (error) {
-          console.error("Erro ao salvar pré-cadastro:", error);
+          console.error("Erro ao salvar cadastro:", error);
           toast({
               variant: "destructive",
               title: `Erro ao enviar`,
               description: `Não foi possível enviar seu cadastro. Tente novamente.`,
           });
         } finally {
-            setIsSubmitting(false);
+            // Mantém o estado de submissão para evitar reenvios.
+            // A página pode ser recarregada para um novo envio se necessário.
         }
     };
 
     const applyMask = (masker: (value: string) => string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       e.target.value = masker(e.target.value);
     };
-    
-    if (isLoadingPreCadastro) {
-        return (
-            <div className="flex items-center justify-center min-h-screen p-4 bg-background">
-                <ScrollText className="h-16 w-16 animate-spin text-primary" />
-            </div>
-        );
-    }
-
-    if (!isLoadingPreCadastro && (!preCadastroData || preCadastroData.status === 'completed')) {
-       return (
-            <div className="flex items-center justify-center min-h-screen p-4 bg-background">
-                <Card className="w-full max-w-md text-center">
-                    <CardHeader>
-                        <div className="flex justify-center mb-4">
-                            <ServerCrash className="h-16 w-16 text-destructive"/>
-                        </div>
-                        <CardTitle className="text-2xl">Link Expirado ou Inválido</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <CardDescription>
-                            Este link de pré-cadastro já foi utilizado ou não existe. Por favor, solicite um novo link ao administrador.
-                        </CardDescription>
-                    </CardContent>
-                </Card>
-            </div>
-       );
-    }
-
 
   return (
     <div className="flex justify-center min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
         <form onSubmit={handleSubmit(onSubmit)} className="p-4 h-full flex flex-col w-full max-w-4xl">
         <header className="relative flex flex-col items-center justify-center mb-6 text-center">
           <h1 className="text-3xl font-bold">Formulário de</h1>
-          <h2 className="text-3xl font-bold text-primary">Pré-Cadastro</h2>
+          <h2 className="text-3xl font-bold text-primary">Cadastro de Servidor</h2>
         </header>
         <p className="text-center text-muted-foreground mb-6">
-            Por favor, preencha todos os campos com atenção para a atualização do seu cadastro.
+            Por favor, preencha todos os campos com atenção para realizar ou atualizar seu cadastro.
         </p>
 
         <Tabs defaultValue="pessoais" className="w-full flex-1 flex flex-col overflow-hidden">
@@ -753,7 +723,3 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
     </div>
   );
 }
-
-
-
-    

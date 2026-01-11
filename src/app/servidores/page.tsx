@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
@@ -50,7 +48,7 @@ export default function ServerListPage() {
   const [selectedServers, setSelectedServers] = useState<Record<string, boolean>>({});
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [vinculoFilters, setVinculoFilters] = useState<string[]>([]);
-  const [preCadastroLink, setPreCadastroLink] = useState('');
+  const [cadastroLink, setCadastroLink] = useState('');
   const [customShareMessage, setCustomShareMessage] = useState('Por favor, preencha o formulário de registro de servidor:');
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   
@@ -58,6 +56,12 @@ export default function ServerListPage() {
     if (!servers) return [];
     return [...servers].sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
   }, [servers]);
+
+  useEffect(() => {
+    // Set the fixed registration link once the window object is available
+    setCadastroLink(`${window.location.origin}/servidores/cadastro`);
+  }, []);
+
 
   useEffect(() => {
     const calculateRatings = async () => {
@@ -623,34 +627,13 @@ const handleExportPDF = async () => {
   };
 
 
-const handleOpenShareDialog = async () => {
-    if (!firestore) return;
-
-    try {
-        const preCadastroRef = await addDoc(collection(firestore, 'preCadastros'), {
-            status: 'pending',
-            createdAt: serverTimestamp(),
-        });
-        const link = `${window.location.origin}/pre-cadastro/${preCadastroRef.id}`;
-        setPreCadastroLink(link);
-        setIsShareDialogOpen(true);
-    } catch (error) {
-        console.error("Erro ao gerar link de pré-cadastro:", error);
-        toast({
-            variant: "destructive",
-            title: "Erro",
-            description: "Não foi possível gerar o link de pré-cadastro.",
-        });
-    }
-};
-
 const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') => {
-    const textToShare = `${customShareMessage}\n${preCadastroLink}`;
+    const textToShare = `${customShareMessage}\n${cadastroLink}`;
 
     if (shareOption === 'native' && navigator.share) {
         try {
             await navigator.share({
-                title: 'Formulário de Pré-Cadastro',
+                title: 'Formulário de Cadastro',
                 text: textToShare,
             });
             setIsShareDialogOpen(false);
@@ -658,7 +641,6 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
         } catch (error) {
             if (!(error instanceof DOMException && error.name === 'AbortError')) {
                 console.error("Web Share API error:", error);
-                // Fallback to copy if native share fails for other reasons
                 await navigator.clipboard.writeText(textToShare);
                 toast({
                     title: 'Falha no Compartilhamento',
@@ -677,7 +659,7 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
         await navigator.clipboard.writeText(textToShare);
         toast({
             title: 'Link copiado!',
-            description: 'A mensagem e o link de pré-cadastro foram copiados.',
+            description: 'A mensagem e o link de cadastro foram copiados.',
         });
     }
     setIsShareDialogOpen(false);
@@ -713,9 +695,9 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
                     <span>Adicionar Manualmente</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onSelect={handleOpenShareDialog}>
+                  <DropdownMenuItem onSelect={() => setIsShareDialogOpen(true)}>
                     <Link2 className="mr-2 h-4 w-4" />
-                    <span>Gerar Link de Convite</span>
+                    <span>Compartilhar Link de Cadastro</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -723,7 +705,7 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
                   <DialogHeader>
                       <DialogTitle>Compartilhar Formulário de Cadastro</DialogTitle>
                       <DialogDescription>
-                          Envie este link para que novos servidores possam preencher seus próprios dados. O link é de uso único.
+                          Envie este link para que novos servidores possam preencher seus próprios dados. O link é reutilizável.
                       </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4 py-2">
@@ -738,8 +720,8 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
                           />
                       </div>
                       <div className="space-y-2">
-                          <Label htmlFor="pre-cadastro-link">Link de Pré-Cadastro</Label>
-                          <Input id="pre-cadastro-link" value={preCadastroLink} readOnly className="bg-muted"/>
+                          <Label htmlFor="cadastro-link">Link de Cadastro</Label>
+                          <Input id="cadastro-link" value={cadastroLink} readOnly className="bg-muted"/>
                       </div>
                   </div>
                   <DialogFooter className="grid grid-cols-1 sm:grid-cols-3 gap-2">
