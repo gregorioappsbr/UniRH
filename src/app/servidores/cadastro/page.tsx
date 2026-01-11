@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { Save, ScrollText } from "lucide-react"
+import { Save } from "lucide-react"
 import React, { useState } from "react"
 import { useForm, Controller } from "react-hook-form";
 import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
@@ -47,35 +47,37 @@ export default function CadastroServidorPage() {
     const onSubmit = async (data: any) => {
         if (!firestore) return;
         setIsSubmitting(true);
+        
         try {
-            // Verifica se um servidor com o mesmo CPF já existe
             const serversRef = collection(firestore, "servers");
-            const q = query(serversRef, where("cpf", "==", data.cpf), limit(1));
-            const querySnapshot = await getDocs(q);
+            let existingServerDoc = null;
 
-            if (!querySnapshot.empty) {
-                // Encontrou um servidor com o mesmo CPF, atualiza o existente.
-                const existingServerDoc = querySnapshot.docs[0];
+            // Only check for duplicates if CPF is provided
+            if (data.cpf) {
+                const q = query(serversRef, where("cpf", "==", data.cpf), limit(1));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    existingServerDoc = querySnapshot.docs[0];
+                }
+            }
+
+            if (existingServerDoc) {
+                // Update existing server
                 await setDoc(existingServerDoc.ref, data, { merge: true });
                 toast({
                     title: "Cadastro Atualizado!",
                     description: "Já encontramos um servidor com este CPF. Seus dados foram atualizados.",
                 });
             } else {
-                // Não encontrou duplicata, cria um novo servidor.
-                const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
+                // Create new server
+                const initials = data.nomeCompleto ? data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() : '?';
                 const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
-                await addDoc(collection(firestore, 'servers'), newServer);
+                await addDoc(serversRef, newServer);
                 toast({
                     title: "Cadastro enviado!",
                     description: "Seus dados foram enviados com sucesso. Obrigado!",
                 });
             }
-             // Idealmente, redirecionar ou mostrar uma mensagem de sucesso permanente
-             // Como não temos um router aqui, vamos apenas desabilitar o botão.
-             // Em uma app real, um redirecionamento seria melhor.
-             // router.push('/sucesso'); 
-
         } catch (error) {
           console.error("Erro ao salvar cadastro:", error);
           toast({
@@ -84,8 +86,9 @@ export default function CadastroServidorPage() {
               description: `Não foi possível enviar seu cadastro. Tente novamente.`,
           });
         } finally {
-            // Mantém o estado de submissão para evitar reenvios.
-            // A página pode ser recarregada para um novo envio se necessário.
+            // Keep submitting state to prevent re-submission.
+            // Page needs to be reloaded for a new entry.
+            // setIsSubmitting(false); // Can be enabled if re-submission is desired
         }
     };
 
@@ -122,7 +125,7 @@ export default function CadastroServidorPage() {
                         <Avatar className="h-20 w-20">
                         <AvatarImage src={avatarPreview} />
                         <AvatarFallback className="text-2xl">
-                            {watch('nomeCompleto')?.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() || '?'}
+                            {watch('nomeCompleto') ? watch('nomeCompleto').split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() : '?'}
                         </AvatarFallback>
                         </Avatar>
                         <div className="space-y-2 flex-1">
@@ -724,7 +727,5 @@ export default function CadastroServidorPage() {
     </div>
   );
 }
-
-    
 
     
