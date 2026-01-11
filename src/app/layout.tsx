@@ -10,27 +10,22 @@ import { BottomNav } from '@/components/bottom-nav';
 import { usePathname } from 'next/navigation';
 import { useUser } from '@/firebase';
 
-// export const metadata: Metadata = {
-//   title: 'UniRH',
-//   description: 'Gestão de Recursos Humanos',
-// };
+function AppLayout({ children }: { children: React.ReactNode }) {
+  const { user } = useUser();
+  const pathname = usePathname();
+  const publicPaths = ['/login', '/signup', '/pre-cadastro'];
+  const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
 
-function AppContent({ children }: { children: React.ReactNode }) {
-    const { user } = useUser();
-    const pathname = usePathname();
-    const publicPaths = ['/login', '/signup', '/pre-cadastro'];
-    const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
-
-    return (
-        <>
-            <div className="relative flex flex-col min-h-screen">
-                <main className="flex-1 pb-20">
-                    {children}
-                </main>
-            </div>
-            {!isPublicPath && user && <BottomNav />}
-        </>
-    )
+  return (
+    <AuthGuard>
+      <div className="relative flex flex-col min-h-screen">
+        <main className="flex-1 pb-20">
+          {children}
+        </main>
+        {!isPublicPath && user && <BottomNav />}
+      </div>
+    </AuthGuard>
+  );
 }
 
 export default function RootLayout({
@@ -38,7 +33,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    useEffect(() => {
+
+  useEffect(() => {
     const theme = localStorage.getItem('theme') || 'dark';
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
@@ -53,7 +49,7 @@ export default function RootLayout({
 
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-       <head>
+      <head>
         <title>UniRH</title>
         <meta name="description" content="Gestão de Recursos Humanos" />
         <link rel="manifest" href="/manifest.json" />
@@ -65,11 +61,9 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseClientProvider>
-            <AuthGuard>
-              <AppContent>
-                {children}
-              </AppContent>
-            </AuthGuard>
+          <AppLayout>
+            {children}
+          </AppLayout>
         </FirebaseClientProvider>
         <Toaster />
       </body>
