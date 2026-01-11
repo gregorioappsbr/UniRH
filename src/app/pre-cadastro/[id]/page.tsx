@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react"
 import { useForm, Controller } from "react-hook-form";
 import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
 import { useDoc, useFirestore, useMemoFirebase } from "@/firebase"
-import { collection, addDoc, doc, setDoc, serverTimestamp } from "firebase/firestore"
+import { collection, addDoc, doc, setDoc } from "firebase/firestore"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 type PreCadastro = {
@@ -64,10 +64,10 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
             const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
             const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
             
-            // Add server and update pre-cadastro in a batch
             const serverCollectionRef = collection(firestore, 'servers');
             await addDoc(serverCollectionRef, newServer);
 
+            // After successfully creating the server, update the link status.
             if (preCadastroRef) {
                 await setDoc(preCadastroRef, { status: 'completed' }, { merge: true });
             }

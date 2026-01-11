@@ -4,21 +4,28 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Allow anyone to read from the pre-registration collection to verify link status
-    // and allow writing to update the status once completed.
+    // Allow reading by anyone to check link status.
+    // Allow authenticated users to create/update to manage links.
     match /preCadastros/{preCadastroId} {
-      allow read, write; 
+      allow read;
+      allow write: if request.auth != null;
     }
 
-    // Allow anyone to create a new server document via the pre-registration form.
-    // Disallow reading, updating, or deleting for unauthenticated users.
+    // Allow anyone to create a new server (for the pre-registration form).
+    // Secure all other operations to authenticated users only.
     match /servers/{serverId} {
       allow create;
       allow read, update, delete: if request.auth != null;
+
+      // Also secure subcollections to authenticated users
+      match /{allPaths=**} {
+        allow read, write: if request.auth != null;
+      }
     }
 
-    // Secure all other documents to only be accessible by authenticated users.
-    match /{document=**} {
+    // Secure all other top-level collections to only be accessible by authenticated users.
+    // This is a good default security practice.
+    match /{document}/{id} {
       allow read, write: if request.auth != null;
     }
   }
