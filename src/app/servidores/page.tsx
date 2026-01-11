@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown, CheckSquare, CheckCircle, Link2, ScrollText } from 'lucide-react';
+import { Users, PlusCircle, Filter, Award, MinusCircle, AlertCircle, Briefcase, Code, PenTool, GraduationCap, UserCog, KeyRound, Share, Trash2, FileText, Copy, FileDown, CheckSquare, CheckCircle, Link2, ScrollText, UserPlus, FileSignature } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -16,7 +16,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Sheet, SheetTrigger, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFooter, SheetClose } from '@/components/ui/sheet';
 import { Label } from '@/components/ui/label';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { jsPDF } from "jspdf";
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -699,12 +699,65 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
       {selectionCount === 0 ? (
         <>
           <div className="grid grid-cols-1 gap-2">
-            <Button asChild className="w-full bg-blue-500 hover:bg-blue-600 text-white">
-              <Link href="/servidores/novo">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Adicionar Servidor
-              </Link>
-            </Button>
+            <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white">
+                    <UserPlus className="mr-2 h-4 w-4" />
+                    Adicionar Servidor
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
+                  <DropdownMenuItem onSelect={() => router.push('/servidores/novo')}>
+                    <FileSignature className="mr-2 h-4 w-4" />
+                    <span>Adicionar Manualmente</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={handleOpenShareDialog}>
+                    <Link2 className="mr-2 h-4 w-4" />
+                    <span>Gerar Link de Convite</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DialogContent>
+                  <DialogHeader>
+                      <DialogTitle>Compartilhar Formulário de Cadastro</DialogTitle>
+                      <DialogDescription>
+                          Envie este link para que novos servidores possam preencher seus próprios dados. O link é de uso único.
+                      </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-2">
+                      <div className="space-y-2">
+                          <Label htmlFor="custom-message">Mensagem Personalizada</Label>
+                          <Textarea 
+                              id="custom-message"
+                              value={customShareMessage}
+                              onChange={(e) => setCustomShareMessage(e.target.value)}
+                              placeholder="Adicione uma mensagem personalizada aqui..."
+                              className="bg-muted"
+                          />
+                      </div>
+                      <div className="space-y-2">
+                          <Label htmlFor="pre-cadastro-link">Link de Pré-Cadastro</Label>
+                          <Input id="pre-cadastro-link" value={preCadastroLink} readOnly className="bg-muted"/>
+                      </div>
+                  </div>
+                  <DialogFooter className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      <Button variant="outline" onClick={() => handleShareAction('copy')}>
+                          <Copy className="mr-2 h-4 w-4" />
+                          Copiar
+                      </Button>
+                      <Button variant="outline" onClick={() => handleShareAction('whatsapp')}>
+                          <WhatsAppIcon className="mr-2 h-4 w-4 text-green-500" />
+                          WhatsApp
+                      </Button>
+                      <Button onClick={() => handleShareAction('native')}>
+                          <Share className="mr-2 h-4 w-4" />
+                          Mais Opções
+                      </Button>
+                  </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
@@ -988,4 +1041,3 @@ const handleShareAction = async (shareOption: 'copy' | 'whatsapp' | 'native') =>
     </div>
   );
 }
-
