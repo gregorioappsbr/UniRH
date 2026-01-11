@@ -15,10 +15,12 @@ import { maskCPF, maskRG, maskCEP, maskPhone, maskDate } from "@/lib/masks"
 import { useFirestore } from "@/firebase"
 import { collection, addDoc, doc, setDoc, getDocs, query, where, limit } from "firebase/firestore"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useRouter } from "next/navigation"
 
 export default function CadastroServidorPage() {
     const { toast } = useToast();
     const firestore = useFirestore();
+    const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     
     const { register, handleSubmit, watch, control, setValue, formState: { errors } } = useForm();
@@ -45,41 +47,41 @@ export default function CadastroServidorPage() {
     };
 
     const onSubmit = async (data: any) => {
-        if (!firestore || !data.cpf) {
-             toast({
+        setIsSubmitting(true);
+        if (!firestore) {
+            toast({
               variant: "destructive",
-              title: `Erro`,
-              description: `O CPF é obrigatório.`,
-          });
+              title: `Erro de conexão`,
+              description: `Não foi possível conectar ao banco de dados.`,
+            });
+            setIsSubmitting(false);
             return;
         }
-        setIsSubmitting(true);
+
+        const initials = data.nomeCompleto ? data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() : '?';
+        const serverPayload = { ...data, initials };
         
         try {
-            const serversRef = collection(firestore, "servers");
-            const q = query(serversRef, where("cpf", "==", data.cpf), limit(1));
-            const querySnapshot = await getDocs(q);
+            if (data.cpf) {
+                const serversRef = collection(firestore, "servers");
+                const q = query(serversRef, where("cpf", "==", data.cpf), limit(1));
+                const querySnapshot = await getDocs(q);
 
-            const initials = data.nomeCompleto ? data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() : '?';
-            const serverPayload = { ...data, initials };
-
-            if (!querySnapshot.empty) {
-                // Found existing server, update it.
-                const existingServerDoc = querySnapshot.docs[0];
-                await setDoc(existingServerDoc.ref, serverPayload, { merge: true });
-                toast({
-                    title: "Cadastro Atualizado!",
-                    description: "Seus dados foram atualizados com sucesso.",
-                });
+                if (!querySnapshot.empty) {
+                    const existingServerDoc = querySnapshot.docs[0];
+                    await setDoc(existingServerDoc.ref, serverPayload, { merge: true });
+                } else {
+                    const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
+                    await addDoc(serversRef, newServer);
+                }
             } else {
-                // No existing server, create a new one.
-                const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
-                await addDoc(serversRef, newServer);
-                toast({
-                    title: "Cadastro Enviado!",
-                    description: "Seus dados foram enviados com sucesso. Obrigado!",
-                });
+                 const serversRef = collection(firestore, "servers");
+                 const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
+                 await addDoc(serversRef, newServer);
             }
+            
+            router.push('/servidores/cadastro/sucesso');
+
         } catch (error) {
           console.error("Erro ao salvar cadastro:", error);
           toast({
@@ -87,8 +89,7 @@ export default function CadastroServidorPage() {
               title: `Erro ao enviar`,
               description: `Não foi possível enviar seu cadastro. Tente novamente.`,
           });
-        } finally {
-            setIsSubmitting(true); // Keep button disabled to prevent multiple submissions
+          setIsSubmitting(false);
         }
     };
 
