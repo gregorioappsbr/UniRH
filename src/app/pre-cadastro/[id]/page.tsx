@@ -53,7 +53,7 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
           setAvatarPreview(result);
           setValue('avatarUrl', result);
         };
-        reader.readAsDataURL(file);
+        reader.readDataURL(file);
       }
     };
 
@@ -63,9 +63,11 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
         try {
             const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
             const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
-            await addDoc(collection(firestore, 'servers'), newServer);
             
-            // Mark the pre-registration link as completed
+            // Add server and update pre-cadastro in a batch
+            const serverCollectionRef = collection(firestore, 'servers');
+            await addDoc(serverCollectionRef, newServer);
+
             if (preCadastroRef) {
                 await setDoc(preCadastroRef, { status: 'completed' }, { merge: true });
             }
@@ -99,7 +101,7 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
         );
     }
 
-    if (!preCadastroData || preCadastroData.status === 'completed') {
+    if (!isLoadingPreCadastro && (!preCadastroData || preCadastroData.status === 'completed')) {
        return (
             <div className="flex items-center justify-center min-h-screen p-4 bg-background">
                 <Card className="w-full max-w-md text-center">
@@ -751,5 +753,3 @@ export default function PreCadastroPage({ params }: { params: { id: string } }) 
     </div>
   );
 }
-
-    
