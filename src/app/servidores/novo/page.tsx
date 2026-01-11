@@ -79,11 +79,14 @@ export default function NewServerPage() {
     if (!firestore) return;
     setIsSubmitting(true);
 
+    const initials = data.nomeCompleto ? data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() : '?';
+    const serverPayload = { ...data, initials };
+
     try {
         if (isEditing && serverId) {
             // Se estamos editando, apenas salvamos as alterações no documento existente.
             const docRef = doc(firestore, 'servers', serverId);
-            await setDoc(docRef, data, { merge: true });
+            await setDoc(docRef, serverPayload, { merge: true });
             toast({
                 title: "Servidor atualizado!",
                 description: "Os dados do servidor foram atualizados com sucesso.",
@@ -95,18 +98,17 @@ export default function NewServerPage() {
             const q = query(serversRef, where("cpf", "==", data.cpf), limit(1));
             const querySnapshot = await getDocs(q);
 
-            if (!querySnapshot.empty) {
+            if (!querySnapshot.empty && data.cpf) {
                 // Encontrou um servidor com o mesmo CPF, atualiza o existente.
                 const existingServerDoc = querySnapshot.docs[0];
-                await setDoc(existingServerDoc.ref, data, { merge: true });
+                await setDoc(existingServerDoc.ref, serverPayload, { merge: true });
                 toast({
                     title: "Cadastro Atualizado!",
                     description: "Já encontramos um servidor com este CPF. Seus dados foram atualizados.",
                 });
             } else {
                 // Não encontrou duplicata, cria um novo servidor.
-                const initials = data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase();
-                const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
+                const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
                 await addDoc(collection(firestore, 'servers'), newServer);
                 toast({
                     title: "Servidor adicionado!",

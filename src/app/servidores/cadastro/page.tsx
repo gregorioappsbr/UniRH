@@ -61,16 +61,17 @@ export default function CadastroServidorPage() {
                 }
             }
 
+            const initials = data.nomeCompleto ? data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() : '?';
+
             if (existingServerDoc) {
                 // Update existing server
-                await setDoc(existingServerDoc.ref, data, { merge: true });
+                await setDoc(existingServerDoc.ref, { ...data, initials }, { merge: true });
                 toast({
                     title: "Cadastro Atualizado!",
                     description: "Já encontramos um servidor com este CPF. Seus dados foram atualizados.",
                 });
             } else {
                 // Create new server
-                const initials = data.nomeCompleto ? data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() : '?';
                 const newServer = { ...data, initials, rating: 10, status: 'Ativo' };
                 await addDoc(serversRef, newServer);
                 toast({
