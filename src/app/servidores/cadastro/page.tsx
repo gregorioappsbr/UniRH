@@ -59,7 +59,7 @@ export default function CadastroServidorPage() {
         }
         
         // Safely generate initials or a fallback
-        const initials = data.nomeCompleto?.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() || '?';
+        const initials = data.nomeCompleto ? data.nomeCompleto.split(' ').map((n: string) => n[0]).join('').substring(0, 3).toUpperCase() : '?';
         const serverPayload = { ...data, initials };
 
         try {
@@ -73,15 +73,27 @@ export default function CadastroServidorPage() {
                     // Update existing server
                     const existingServerDoc = querySnapshot.docs[0];
                     await setDoc(existingServerDoc.ref, serverPayload, { merge: true });
+                     toast({
+                        title: "Cadastro Atualizado!",
+                        description: "Seus dados foram atualizados com sucesso.",
+                    });
                 } else {
                     // Add new server
                     const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
                     await addDoc(serversRef, newServer);
+                     toast({
+                        title: "Cadastro Enviado!",
+                        description: "Seu cadastro foi enviado com sucesso.",
+                    });
                 }
             } else {
                  // Add new server if no CPF
                  const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
                  await addDoc(serversRef, newServer);
+                  toast({
+                    title: "Cadastro Enviado!",
+                    description: "Seu cadastro foi enviado com sucesso.",
+                });
             }
             
             router.push('/servidores/cadastro/sucesso');
@@ -93,7 +105,8 @@ export default function CadastroServidorPage() {
               title: `Erro ao enviar`,
               description: `Não foi possível enviar seu cadastro. Tente novamente.`,
           });
-          setIsSubmitting(false);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
