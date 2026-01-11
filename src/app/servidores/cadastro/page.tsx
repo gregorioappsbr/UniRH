@@ -21,7 +21,7 @@ export default function CadastroServidorPage() {
     const firestore = useFirestore();
     const [isSubmitting, setIsSubmitting] = useState(false);
     
-    const { register, handleSubmit, watch, control, setValue } = useForm();
+    const { register, handleSubmit, watch, control, setValue, formState: { errors } } = useForm();
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
     const possuiCNH = watch('possuiCNH', 'nao');
@@ -149,8 +149,16 @@ export default function CadastroServidorPage() {
                         <Input id="nome-social" placeholder="Ex: João" {...register("nomeSocial")} className="bg-muted" />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="cpf">CPF</Label>
-                        <Input id="cpf" placeholder="000.000.000-00" {...register("cpf")} onChange={applyMask(maskCPF)} maxLength={14} className="bg-muted" />
+                        <Label htmlFor="cpf">CPF <span className="text-red-500">*</span></Label>
+                        <Input 
+                            id="cpf" 
+                            placeholder="000.000.000-00" 
+                            {...register("cpf", { required: "O CPF é obrigatório." })} 
+                            onChange={applyMask(maskCPF)} 
+                            maxLength={14} 
+                            className="bg-muted" 
+                        />
+                        {errors.cpf && <p className="text-red-500 text-sm mt-1">{errors.cpf.message as string}</p>}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="rg">RG</Label>
@@ -727,5 +735,3 @@ export default function CadastroServidorPage() {
     </div>
   );
 }
-
-    
