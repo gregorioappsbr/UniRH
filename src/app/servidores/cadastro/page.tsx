@@ -64,22 +64,18 @@ export default function CadastroServidorPage() {
         try {
             const serversRef = collection(firestore, "servers");
 
-            // Only check for existing user if CPF is provided
             if (data.cpf) {
                 const q = query(serversRef, where("cpf", "==", data.cpf), limit(1));
                 const querySnapshot = await getDocs(q);
 
                 if (!querySnapshot.empty) {
-                    // Update existing server if CPF matches
                     const existingServerDoc = querySnapshot.docs[0];
                     await setDoc(existingServerDoc.ref, serverPayload, { merge: true });
                 } else {
-                    // Add new server if CPF is new
                     const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
                     await addDoc(serversRef, newServer);
                 }
             } else {
-                 // Add new server if no CPF is provided
                  const newServer = { ...serverPayload, rating: 10, status: 'Ativo' };
                  await addDoc(serversRef, newServer);
             }
