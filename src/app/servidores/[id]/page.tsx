@@ -120,7 +120,7 @@ type FeriasPeriodo = {
 };
 
 export default function ServerProfilePage({ params }: { params: { id: string } }) {
-    const { id } = params;
+    const id = params.id;
     const searchParams = useSearchParams();
     const router = useRouter();
     const color = searchParams.get('color') || 'bg-card';
