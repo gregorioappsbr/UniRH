@@ -1,0 +1,37 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Allow reading and writing by anyone to manage pre-registration links.
+    // This is necessary for the pre-registration form to work, as users
+    // accessing the link are not yet authenticated. The security is handled
+    // by the unique, non-guessable IDs of the links themselves.
+    match /preCadastros/{preCadastroId} {
+      allow read, write;
+    }
+
+    // Allow anyone to create a new server (for the pre-registration form).
+    // Secure all other operations to authenticated users only.
+    match /servers/{serverId} {
+      allow create;
+      allow read, update, delete: if request.auth != null;
+
+      // Also secure subcollections to authenticated users
+      match /{allPaths=**} {
+        allow read, write: if request.auth != null;
+      }
+    }
+
+    // Secure all other top-level collections to only be accessible by authenticated users.
+    // This is a good default security practice.
+    match /notes/{noteId} {
+        allow read, write: if request.auth != null;
+    }
+
+    match /users/{userId}/{allPaths=**} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
